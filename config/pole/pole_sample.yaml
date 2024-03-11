@@ -1,0 +1,12 @@
+# 支持的种类 -> 1个
+#  3 marker wand
+
+
+# 3 marker wand
+# 配置 
+# 长度单位 mm m
+# d = d1 + d2 , 其中 d1<d2
+# index定义: 0-1 -> d1  1-2 -> d2
+length_unit: "mm"
+d1: 250
+d2: 510

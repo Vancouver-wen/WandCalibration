@@ -1,0 +1,4 @@
+2024-03-10 09:22:41.693 | INFO     | __main__:__init__:19 - {'cam_num': 6, 'board': None, 'pole': {'length_unit': 'mm', 'd1': 250, 'd2': 510}, 'image_path': '/home/wenzihao/Desktop/wandCalibration/imageCollect', 'maskBlobParam': {'minThreshold': 220, 'minAreaRatio': 1e-07, 'maxAreaRatio': 0.01, 'expandSize': 3}, 'poleBlobParam': {'minThreshold': 240, 'minAreaRatio': 5e-06, 'maxAreaRatio': 0.00065, 'minCircularity': 0.2, 'minConvexity': 0.2, 'minInertiaRatio': 0.1, 'lineAngle': 2}}
+2024-03-10 09:22:41.693 | INFO     | intrinsicParameter.intrinsicCalibration.get_intrinsic:get_intrinsic:19 - find existed intrinsic.json file and load it successfully
+2024-03-10 09:22:45.446 | INFO     | extrinsicParameter.poleDetection.poleDetection:get_pole:160 - find and load existed pole.pkl successfully
+2024-03-10 09:22:45.446 | INFO     | extrinsicParameter.poleDetection.poleDetection:get_pole:168 - available pole number: [343, 307, 309, 325, 356, 243]

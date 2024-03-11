@@ -1,0 +1,78 @@
+import os
+import sys
+
+import cv2
+import yaml
+from easydict import EasyDict
+from loguru import logger
+logger.add("./logs/{time}.log")
+
+from utils.yamlLoader import get_yaml_data
+from intrinsicParameter.intrinsicCalibration.get_intrinsic import get_intrinsic
+from extrinsicParameter.poleDetection.maskGeneration import get_mask
+from extrinsicParameter.poleDetection.poleDetection import get_pole
+from extrinsicParameter.initPose.initPose import get_init_pose
+from extrinsicParameter.refinePose.refinePose import get_refine_pose
+
+class OptiTrack(object):
+    def __init__(self,config_path):
+        self.config=EasyDict(get_yaml_data(config_path))
+        logger.info(self.config)
+    def add_intrinsic(self):
+        self.intrinsic=get_intrinsic(self.config.cam_num,self.config.board,self.config.image_path)
+    def add_mask(self):
+        self.mask=get_mask(
+            cam_num=self.config.cam_num,
+            resolutions=[each_intrinsic.image_size for each_intrinsic in self.intrinsic],
+            maskBlobParam=self.config.maskBlobParam,
+            image_path=os.path.join(self.config.image_path,'empty'),
+            mask_path=os.path.join(self.config.image_path,'mask')
+        )
+    def add_pole(self):
+        self.pole=get_pole(
+            cam_num=self.config.cam_num,
+            resolutions=[each_intrinsic.image_size for each_intrinsic in self.intrinsic],
+            poleBlobParam=self.config.poleBlobParam,
+            image_path=os.path.join(self.config.image_path,'pole'),
+            masks=self.mask
+        )
+    def init_pose(self):
+        self.pose=get_init_pose(
+            cam_num=self.config.cam_num,
+            pole_lists=self.pole,
+            intrinsics=self.intrinsic,
+            pole_param=self.config.pole,
+            save_path=os.path.join(self.config.image_path,'init_pose.json')
+        )
+    def refine_pose(self):
+        self.poses=get_refine_pose(
+            cam_num=self.config.cam_num,
+            pole_lists=self.pole,
+            intrinsics=self.intrinsic,
+            pole_param=self.config.pole,
+            init_poses=self.pose,
+            save_path=os.path.join(self.config.image_path,'refine_pose.json')
+        )
+    def vis_pose(self):
+        pass
+    def format_params(self):
+        pass
+    def run(self,vis=False):
+        self.add_intrinsic()
+        self.add_mask()
+        self.add_pole()
+        self.init_pose()
+        self.refine_pose()
+        if vis:
+            self.vis_pose()
+        self.format_params()
+        return None
+
+
+def main():
+    myOptitrack=OptiTrack(config_path="./config/config.yaml")
+    myOptitrack.run()
+
+
+if __name__=="__main__":
+    main()
