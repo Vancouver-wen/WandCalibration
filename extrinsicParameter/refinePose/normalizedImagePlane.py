@@ -9,11 +9,20 @@ def verify_undistort_points(
         undistorted_blobs,
         intrinsic
     ):
+    """
+    证明 undistorted_blobs 确实在 归一化图像坐标系下
+    """
     # blobs 在 像素坐标系 下
     # undistorted_blobs 在 归一化图像坐标系 下
     # blobs 应该与  K@undistorted_blobs  差不多
     K=np.array(intrinsic['K'])
-    new_blobs=K@undistorted_blobs
+    new_blobs=K@np.concatenate(
+        (np.squeeze(undistorted_blobs),np.array([[1],[1],[1]])),
+        axis=1
+    ).T
+    new_blobs=new_blobs[:2].T
+    diff=new_blobs-blobs
+    # 观察 diff 大小 , 单位是 pixel
     import pdb;pdb.set_trace()
 
 def get_undistort_points(
@@ -37,19 +46,10 @@ def get_undistort_points(
                 src=blobs,
                 cameraMatrix=K,
                 distCoeffs=dist,
-                P=K
-            )
-            undistorted_blobs=np.linalg.inv(K)@np.squeeze(undistorted_blobs)
-            undistorted_blobs=cv2.undistortPoints(
-                src=blobs,
-                cameraMatrix=K,
-                distCoeffs=dist,
                 # P=K
             )
-            # import pdb;pdb.set_trace()
-            # undistorted_blobs=undistorted_blobs/1000 # 把单位从mm换算成m
             # verify_undistort_points(
-            #     blobs,
+            #     blobs=blobs,
             #     undistorted_blobs=undistorted_blobs,
             #     intrinsic=intrinsic
             # )
