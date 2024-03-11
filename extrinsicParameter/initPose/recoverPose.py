@@ -10,18 +10,6 @@ def get_unscaled_intrinsic(pole_pairs,cam1_intrinsic,cam2_intrinsic):
     K2=np.array(cam2_intrinsic.K)
     dist1=np.array(cam1_intrinsic.dist[0])
     dist2=np.array(cam2_intrinsic.dist[0])
-    # E,mask=cv2.findEssentialMat(
-    #     points1=blob_pairs[0],
-    #     points2=blob_pairs[1],
-    #     cameraMatrix1=K1,
-    #     cameraMatrix2=K2,
-    #     distCoeffs1=dist1,
-    #     distCoeffs2=dist2,
-    #     method=cv2.FM_RANSAC,
-    #     prob=0.999, 
-    #     threshold=10,
-    #     mask=None
-    # )
     retval, E, R, t, mask=cv2.recoverPose(
         # revocerPose的重载函数非常多
         points1=blob_pairs[0],
@@ -30,7 +18,6 @@ def get_unscaled_intrinsic(pole_pairs,cam1_intrinsic,cam2_intrinsic):
         cameraMatrix2=K2,
         distCoeffs1=dist1,
         distCoeffs2=dist2
-
     )
     return R,t
 
@@ -82,6 +69,8 @@ def get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intri
         d2=np.linalg.norm(blob3d[1]-blob3d[2])
         # d1/d2 的比例应该与标定杆保持一致
         d=d1+d2
+        # print({'state':'init','d1':d1,'d2':d2})
+        # 从这个地方发现, 误差实际上是非常大的
         d_average+=d/len(blob3ds)
     t_ratio=pole_length/d_average
     return t_ratio
