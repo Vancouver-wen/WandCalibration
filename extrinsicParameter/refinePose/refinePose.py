@@ -22,7 +22,8 @@ def get_refine_pose(
     pole_3ds=normalized_pole_triangulate(
         cam_num=cam_num,
         normalized_pole_lists=undistorted_pole_lists,
-        poses=init_poses
+        poses=init_poses,
+        intrinsics=intrinsics
     )
     # 筛选用于 boundle adjustment 的 list
     mask=[pole_3d is not None for pole_3d in pole_3ds]

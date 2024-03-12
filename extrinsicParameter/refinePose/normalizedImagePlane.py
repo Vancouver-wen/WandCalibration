@@ -21,9 +21,8 @@ def verify_undistort_points(
         axis=1
     ).T
     new_blobs=new_blobs[:2].T
-    diff=new_blobs-blobs
-    # 观察 diff 大小 , 单位是 pixel
-    import pdb;pdb.set_trace()
+    # 观察 new_blobs 与 blobs
+    # import pdb;pdb.set_trace()
 
 def get_undistort_points(
         cam_num,
@@ -43,16 +42,16 @@ def get_undistort_points(
                 continue
             blobs=pole[0]
             undistorted_blobs=cv2.undistortPoints(
-                src=blobs,
+                src=np.copy(blobs),
                 cameraMatrix=K,
                 distCoeffs=dist,
                 # P=K
             )
-            # verify_undistort_points(
-            #     blobs=blobs,
-            #     undistorted_blobs=undistorted_blobs,
-            #     intrinsic=intrinsic
-            # )
+            verify_undistort_points(
+                blobs=blobs,
+                undistorted_blobs=undistorted_blobs,
+                intrinsic=intrinsic
+            )
             undistorted_pole_list.append(undistorted_blobs)
         undistorted_pole_lists.append(undistorted_pole_list)
     return undistorted_pole_lists

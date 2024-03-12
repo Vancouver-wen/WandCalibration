@@ -13,12 +13,12 @@ def integrate_pose(cam_num,mst_extrinsic):
     poses=[None for _ in range(cam_num)]
     poses[0]={
         'R':np.array([
-            [1,0,0],
-            [0,1,0],
-            [0,0,1]
+            [1,1e-5,1e-5],
+            [1e-5,1,1e-5],
+            [1e-5,1e-5,1]
         ]),
         't':np.array(
-            [0,0,0]
+            [1e-5,1e-5,1e-5]
         )
     }
     for i in range(cam_num):

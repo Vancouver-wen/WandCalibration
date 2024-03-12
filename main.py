@@ -11,6 +11,7 @@ from utils.yamlLoader import get_yaml_data
 from intrinsicParameter.intrinsicCalibration.get_intrinsic import get_intrinsic
 from extrinsicParameter.poleDetection.maskGeneration import get_mask
 from extrinsicParameter.poleDetection.poleDetection import get_pole
+from visualize.vis_pole_detection import vis_pole
 from extrinsicParameter.initPose.initPose import get_init_pose
 from extrinsicParameter.refinePose.refinePose import get_refine_pose
 
@@ -40,6 +41,12 @@ class OptiTrack(object):
             image_path=os.path.join(self.config.image_path,'pole'),
             masks=self.mask
         )
+        # vis_pole(
+        #     cam_num=self.config.cam_num,
+        #     image_path=os.path.join(self.config.image_path,'pole'),
+        #     pole_lists=self.pole
+        # )
+        # import pdb;pdb.set_trace()
     def init_pose(self):
         self.pose=get_init_pose(
             cam_num=self.config.cam_num,

@@ -98,7 +98,7 @@ class BoundleAdjustment(nn.Module):
         """
         # import pdb;pdb.set_trace()
         N=X.shape[1]
-        k1,k2,k3,p1,p2=Kd[0],Kd[1],Kd[2],Kd[3],Kd[4]
+        k1,k2,p1,p2,k3=Kd[0],Kd[1],Kd[2],Kd[3],Kd[4]
         pixels=[]
         for i in range(N):
             x = R@X[:,i] + t

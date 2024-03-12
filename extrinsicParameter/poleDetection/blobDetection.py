@@ -101,8 +101,7 @@ class SimpleBlobDetection():
 def get_cam_list(root_path,cam_num):
     temps=[]
     for cam_index in range(cam_num):
-        cam_index+=1
-        img_folder=os.path.join(root_path,f'cam{cam_index}')
+        img_folder=os.path.join(root_path,f'cam{cam_index+1}')
         img_names=natsorted(os.listdir(img_folder))
         img_paths=[os.path.join(img_folder,img_name) for img_name in img_names]
         temps.append(img_paths)

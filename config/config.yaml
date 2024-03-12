@@ -24,7 +24,7 @@ maskBlobParam:
 
 poleBlobParam:
   minThreshold: 240
-  minAreaRatio: 5.0e-6
+  minAreaRatio: 2.0e-6
   maxAreaRatio: 6.5e-4
   minCircularity: 0.2
   minConvexity: 0.2

@@ -21,7 +21,7 @@ def get_unscaled_intrinsic(pole_pairs,cam1_intrinsic,cam2_intrinsic):
     )
     return R,t
 
-def get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic):
+def get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic,state="init"):
     """
     两个相机的三角化，求出杆子的平均长度
     根据杆子的平均长度,对t进行scale
@@ -31,9 +31,10 @@ def get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intri
     K1=np.array(cam1_intrinsic.K)
     dist1=np.array(cam1_intrinsic.dist[0])
     cam1_Rt=np.array(
-        [[1,0,0,0],
-        [0,1,0,0],
-        [0,0,1,0]]
+        object=[[1,1e-5,1e-5,1e-5],
+        [1e-5,1,1e-5,1e-5],
+        [1e-5,1e-5,1,1e-5]],
+        dtype=np.float64
     )
     cam1_proj=K1@cam1_Rt
 
@@ -69,18 +70,21 @@ def get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intri
         d2=np.linalg.norm(blob3d[1]-blob3d[2])
         # d1/d2 的比例应该与标定杆保持一致
         d=d1+d2
-        # print({'state':'init','d1':d1,'d2':d2})
+        if state == "init":
+            pass
+        else:
+            print({'state':state,'d1':d1,'d2':d2})
         # 从这个地方发现, 误差实际上是非常大的
         d_average+=d/len(blob3ds)
     t_ratio=pole_length/d_average
     return t_ratio
 
 def get_scaled_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic):
-    t_ratio=get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic)
+    t_ratio=get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic,"init")
     return R21,t21*t_ratio
 
 def verify_scaled_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic):
-    t_ratio=get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic)
+    t_ratio=get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic,"verify_init")
     import pdb;pdb.set_trace()
 
 if __name__=="__main__":

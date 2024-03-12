@@ -40,6 +40,7 @@ def get_init_pose(cam_num,pole_lists,intrinsics,pole_param,save_path):
         logger.info(f"find and load {save_path} successfully")
         return poses
     mst=get_mst(cam_num,pole_lists)
+    logger.info(f"maximum spanning tree:{mst}")
     pole_length=get_pole_len(pole_param)
     mst_extrinsic=[]
     for edge in mst:

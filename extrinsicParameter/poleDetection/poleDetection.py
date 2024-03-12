@@ -10,6 +10,7 @@ from tqdm import tqdm
 import glob
 from joblib import Parallel,delayed
 from loguru import logger
+from tqdm import tqdm
 
 from .blobDetection import get_cam_list,get_image_list,SimpleBlobDetection
 
@@ -119,6 +120,7 @@ def get_pole(
     ):
     assert cam_num==len(resolutions),"camera num quantity is ambiguous"
     if not os.path.exists(os.path.join(image_path,'pole.pkl')):
+        logger.info("detecting poles ...")
         detectors=[]
         for resolution in resolutions:
             # 生成 detector
@@ -150,10 +152,11 @@ def get_pole(
         frame_lists=get_cam_list(image_path,cam_num)
         output=Parallel(n_jobs=-1,backend="threading")(
             delayed(get_each_pole)(frame_list,detectors,masks)
-            for frame_list in frame_lists
+            for frame_list in tqdm(frame_lists)
         )
         with open(os.path.join(image_path,'pole.pkl'),'wb') as f:
             pickle.dump(output,f)
+        logger.info(f"pole detection complete! save result in {os.path.join(image_path,'pole.pkl')}")
     else:
         with open(os.path.join(image_path,'pole.pkl'),'rb') as f:
             output=pickle.load(f)
@@ -165,7 +168,7 @@ def get_pole(
             if item is None:
                 continue
             pole_sum[step]+=1
-    logger.info(f"available pole number: {pole_sum}")
+    logger.info(f"available pole number: {pole_sum}/{len(output)}")
     return output
 
 
