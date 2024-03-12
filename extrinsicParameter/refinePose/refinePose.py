@@ -8,6 +8,7 @@ import torch
 from .normalizedImagePlane import get_undistort_points
 from .multiViewTriangulate import normalized_pole_triangulate
 from .boundleAdjustment import BoundleAdjustment
+from utils.verifyAccuracy import verify_accuracy
 
 def get_refine_pose(
         cam_num,
@@ -45,20 +46,28 @@ def get_refine_pose(
         init_extrinsic=init_poses,
         image_num=np.array(mask).sum(),
         init_pole_3ds=masked_pole_3ds,
-        detected_pole_2ds=masked_pole_lists
+        detected_pole_2ds=masked_pole_lists,
+        save_path=save_path
     )
     lr=2e-5
     optimizer = torch.optim.SGD(myBoundAdjustment.parameters(), lr=lr)
-    epoch = 1000
-    for i in range(epoch):
-        if epoch%100==0 and epoch!=0:
-            lr/=3
+    iteration = 4000
+    for i in range(iteration):
+        if iteration%100==0:
+            output=myBoundAdjustment.get_dict() # 保存结果
+            verify_accuracy(
+                camera_params=output['calibration'],
+                pole_3ds=output['poles'],
+                pole_lists=pole_lists,
+            )
+        if iteration%400==0:
+            lr/=2
         loss=myBoundAdjustment()
         print(f"{i} : {loss.item()}")
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-
+    
 
 
 if __name__=="__main__":

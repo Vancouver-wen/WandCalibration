@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 import cv2
 import numpy as np
@@ -18,7 +19,8 @@ class BoundleAdjustment(nn.Module):
             init_extrinsic,
             image_num,
             init_pole_3ds,
-            detected_pole_2ds
+            detected_pole_2ds,
+            save_path,
         ):
         super().__init__()
         # 常量: pole
@@ -91,6 +93,28 @@ class BoundleAdjustment(nn.Module):
                 requires_grad=True
             )
             self.pole3d_posotions.append(position)
+        self.save_path=save_path
+    
+    def get_dict(self):
+        camera_params=[]
+        for camera_param in self.camera_params:
+            K=camera_param['K'].tolist()
+            dist=camera_param['dist'].tolist()
+            R=camera_param['R'].tolist()
+            t=camera_param['t'].tolist()
+            camera_params.append({
+                'K':K,'dist':dist,'R':R,'t':t
+            })
+        pole_3ds=[]
+        for pole_3d in self.pole3d_posotions:
+            pole_3ds.append(pole_3d.tolist())
+        output={
+            'calibration':camera_params,
+            'poles':pole_3ds
+        }
+        with open(self.save_path,'w') as f:
+            json.dump(output,f)
+        return output
     
     def projectPoints(self,X, K, R, t, Kd):
         """

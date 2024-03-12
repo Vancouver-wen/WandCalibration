@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 import cv2
 import yaml
@@ -14,6 +15,7 @@ from extrinsicParameter.poleDetection.poleDetection import get_pole
 from visualize.vis_pole_detection import vis_pole
 from extrinsicParameter.initPose.initPose import get_init_pose
 from extrinsicParameter.refinePose.refinePose import get_refine_pose
+from utils.verifyAccuracy import verify_accuracy
 
 class OptiTrack(object):
     def __init__(self,config_path):
@@ -56,17 +58,24 @@ class OptiTrack(object):
             save_path=os.path.join(self.config.image_path,'init_pose.json')
         )
     def refine_pose(self):
-        self.poses=get_refine_pose(
+        save_path=os.path.join(self.config.image_path,'refine_pose.json')
+        get_refine_pose(
             cam_num=self.config.cam_num,
             pole_lists=self.pole,
             intrinsics=self.intrinsic,
             pole_param=self.config.pole,
             init_poses=self.pose,
-            save_path=os.path.join(self.config.image_path,'refine_pose.json')
+            save_path=save_path
         )
-    def vis_pose(self):
-        pass
-    def format_params(self):
+        with open(save_path,'r') as f:
+            self.output=json.load(f)
+    def verify_accuracy(self):
+        verify_accuracy(
+            camera_params=self.output['calibration'],
+            pole_3ds=self.output['poles'],
+            pole_lists=self.pole,
+        )
+    def visualize(self):
         pass
     def run(self,vis=False):
         self.add_intrinsic()
@@ -74,10 +83,9 @@ class OptiTrack(object):
         self.add_pole()
         self.init_pose()
         self.refine_pose()
+        self.verify_accuracy()
         if vis:
-            self.vis_pose()
-        self.format_params()
-        return None
+            self.visualize()
 
 
 def main():
