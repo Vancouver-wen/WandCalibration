@@ -6,8 +6,7 @@ from loguru import logger
 from natsort import natsorted
 from easydict import EasyDict
 
-def get_intrinsic(cam_num,board_config,image_root_path):
-    image_path=os.path.join(image_root_path,"board")
+def get_intrinsic(cam_num,board_config,image_path):
     # 检查是否有 intrinsic.json
     if os.path.exists(os.path.join(image_path,"intrinsic.json")):
         intrinsic=[]

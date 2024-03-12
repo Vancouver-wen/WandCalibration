@@ -24,7 +24,7 @@ def multi_view_triangulate(
         D.append(point_2d[1]*P_matrix[2]-P_matrix[1])
     D=np.array(D)
     if solve_method=="SVD":
-        U,sigma,VT = np.linalg.svd(D)
+        U,sigma,VT = np.linalg.svd(D,full_matrices=True)
         vector=VT[:,-1]
         point_3d=vector[:3]/vector[3]
     else:
@@ -69,10 +69,10 @@ def normalized_pole_triangulate(
                 poses=masked_pose_list
             )
             point_3ds.append(point_3d)
-        # d1=np.linalg.norm(point_3ds[0]-point_3ds[1])
-        # d2=np.linalg.norm(point_3ds[1]-point_3ds[2])
-        # print({'cam_num':len(mask),'d1':d1,'d2':d2})
-        # import pdb;pdb.set_trace()
+        d1=np.linalg.norm(point_3ds[0]-point_3ds[1])
+        d2=np.linalg.norm(point_3ds[1]-point_3ds[2])
+        print({'cam_num':np.array(mask).sum(),'d1':d1,'d2':d2})
+        import pdb;pdb.set_trace()
         # 这个地方误差非常大是很正常的
         pole_3ds.append(point_3ds)
     return pole_3ds

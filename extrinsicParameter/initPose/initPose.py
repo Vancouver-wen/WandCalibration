@@ -34,6 +34,11 @@ def get_pole_pairs(cam1_index,cam2_index,pole_lists):
     return np.array(pole_pairs)
 
 def get_init_pose(cam_num,pole_lists,intrinsics,pole_param,save_path):
+    if os.path.exists(save_path):
+        with open(save_path,'r') as f:
+            poses=json.load(f)
+        logger.info(f"find and load {save_path} successfully")
+        return poses
     mst=get_mst(cam_num,pole_lists)
     pole_length=get_pole_len(pole_param)
     mst_extrinsic=[]

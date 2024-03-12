@@ -51,7 +51,7 @@ class BoundleAdjustment(nn.Module):
             )
             dist=nn.Parameter(
                 data=torch.tensor(
-                    data=init_intrinsic[i]['dist'],
+                    data=init_intrinsic[i]['dist'][0],
                     dtype=torch.float32
                 ),
                 requires_grad=True
@@ -97,26 +97,31 @@ class BoundleAdjustment(nn.Module):
         or cv2.projectPoints
         """
         # import pdb;pdb.set_trace()
-        x = R@X + t.repeat(X.shape[1],1).T
-        x[0:2, :] = x[0:2, :] / (x[2, :] + 1e-5)
-        r = x[0, :] * x[0, :] + x[1, :] * x[1, :]
-        x[0, :] = x[0, :] * (1 + Kd[0] * r + Kd[1] * r * r + Kd[4] * r * r * r
-                            ) + 2 * Kd[2] * x[0, :] * x[1, :] + Kd[3] * (
-                                r + 2 * x[0, :] * x[0, :])
-        x[1, :] = x[1, :] * (1 + Kd[0] * r + Kd[1] * r * r + Kd[4] * r * r * r
-                            ) + 2 * Kd[3] * x[0, :] * x[1, :] + Kd[2] * (
-                                r + 2 * x[1, :] * x[1, :])
-        x[0, :] = K[0, 0] * x[0, :] + K[0, 1] * x[1, :] + K[0, 2]
-        x[1, :] = K[1, 0] * x[0, :] + K[1, 1] * x[1, :] + K[1, 2]
-        return x
+        N=X.shape[1]
+        k1,k2,k3,p1,p2=Kd[0],Kd[1],Kd[2],Kd[3],Kd[4]
+        pixels=[]
+        for i in range(N):
+            x = R@X[:,i] + t
+            x=torch.divide(x,x[-1])
+            r=torch.norm(x[:2])
+            x_undistorted=x[0]*(1+k1*pow(r,2)+k2*pow(r,4)+k3*pow(r,6))+2*p1*x[0]*x[1]+p2*(pow(r,2)+2*pow(x[0],2))
+            y_undistorted=x[1]*(1+k1*pow(r,2)+k2*pow(r,4)+k3*pow(r,6))+p1*(pow(r,2)+2*pow(x[1],2))+2*p2*x[0]*x[1]
+            f_x,f_y,u_0,v_0=K[0][0],K[1][1],K[0,2],K[1,2]
+            u=f_x*x_undistorted + u_0
+            v=f_y*y_undistorted + v_0
+            pixel=torch.cat((torch.unsqueeze(u,dim=0),torch.unsqueeze(v,dim=0)))
+            pixels.append(pixel)
+        output=torch.stack(pixels,dim=0)
+        return output.T
         
     def forward(
             self,
-            line_weight=1,
-            length_weight=1,
-            
+            line_weight=1.0e-2,
+            length_weight=1.0e-2,
+            reproj_weight=1.0e-2
         ):
         loss=0
+        number=len(self.pole3d_posotions)
         for pole_2d_list,pole_3d in list(zip(self.pole_2d_lists,self.pole3d_posotions)):
             # 三个点在一条直线上
             except_pole_3d_1=self.pole[1]/self.pole.sum()*pole_3d[0]+self.pole[0]/self.pole.sum()*pole_3d[2]
@@ -124,7 +129,7 @@ class BoundleAdjustment(nn.Module):
             # 三点长度为760
             loss_length=torch.abs(torch.norm(pole_3d[0]-pole_3d[2])-self.pole.sum())
             # 3 marker wand loss
-            loss_wand=loss_line+loss_length
+            loss_wand=line_weight*loss_line+length_weight*loss_length
             # 重投影误差
             loss_reproj=0
             masks=[pole_2d is not None for pole_2d in pole_2d_list]
@@ -136,16 +141,23 @@ class BoundleAdjustment(nn.Module):
                     dtype=torch.float32
                 )
                 expect_pole_2d=self.projectPoints(
-                    X=pole_3d.T,
+                    X=pole_3d.T, # 转换成每一列是一点3d点
                     K=cam_param['K'],
                     R=cam_param['R'],
                     t=cam_param['t'],
                     Kd=cam_param['dist']
                 )
-                import pdb;pdb.set_trace()
-
-            
-            return self.camera_params # 先骗一下
+                diff=pole_2d-expect_pole_2d.T
+                loss_reproj+=reproj_weight*torch.sigmoid(torch.norm(diff,dim=1).sum())
+            loss+=(loss_wand+loss_reproj)/number
+            print({
+                'loss_wand':loss_wand,
+                'loss_reproj':loss_reproj,
+                'loss':loss
+            })
+            # import pdb;pdb.set_trace() 
+        import pdb;pdb.set_trace() 
+        return loss
 
 
 

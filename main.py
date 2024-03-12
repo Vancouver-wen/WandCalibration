@@ -19,7 +19,11 @@ class OptiTrack(object):
         self.config=EasyDict(get_yaml_data(config_path))
         logger.info(self.config)
     def add_intrinsic(self):
-        self.intrinsic=get_intrinsic(self.config.cam_num,self.config.board,self.config.image_path)
+        self.intrinsic=get_intrinsic(
+            cam_num=self.config.cam_num,
+            board_config=self.config.board,
+            image_path=os.path.join(self.config.image_path,"board")
+        )
     def add_mask(self):
         self.mask=get_mask(
             cam_num=self.config.cam_num,

@@ -11,10 +11,10 @@
 
 cam_num: 6
 
-board: !include "/home/wenzihao/Desktop/wandCalibration/config/board/board_sample.yaml"
-pole: !include "/home/wenzihao/Desktop/wandCalibration/config/pole/pole760.yaml"
+board: !include "/home/wenzihao/Desktop/WandCalibration/config/board/board_sample.yaml"
+pole: !include "/home/wenzihao/Desktop/WandCalibration/config/pole/pole760.yaml"
 
-image_path: "/home/wenzihao/Desktop/wandCalibration/imageCollect"
+image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollect"
 
 maskBlobParam:
   minThreshold: 220
