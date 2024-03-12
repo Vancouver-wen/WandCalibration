@@ -190,7 +190,7 @@ def normalized_pole_triangulate(
             point_3ds.append(point_3d)
         d1=np.linalg.norm(point_3ds[0]-point_3ds[1])
         d2=np.linalg.norm(point_3ds[1]-point_3ds[2])
-        print({'cam_num':np.array(mask).sum(),'d1':d1,'d2':d2})
+        # print({'cam_num':np.array(mask).sum(),'d1':d1,'d2':d2})
         pole_3ds.append(point_3ds)
     return pole_3ds
         

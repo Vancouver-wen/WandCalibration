@@ -7,6 +7,8 @@ import torch
 from torch import nn
 from torch.utils.data import Dataset
 
+from joblib import Parallel,delayed
+
 class BoundleAdjustment(nn.Module):
     def __init__(
             self,
@@ -40,7 +42,7 @@ class BoundleAdjustment(nn.Module):
         # 常量: 2d检测点 -> 含有None
         self.pole_2d_lists=detected_pole_2ds
         # 优化量: camera_param 
-        self.camera_params=[]
+        self.camera_params=nn.ParameterList()
         for i in range(cam_num):
             K=nn.Parameter(
                 data=torch.tensor(
@@ -70,14 +72,16 @@ class BoundleAdjustment(nn.Module):
                 ),
                 requires_grad=True
             )
-            self.camera_params.append({
+            camera_param=nn.ParameterDict({
                 'K':K,
                 'dist':dist,
                 'R':R,
                 't':t
             })
+            
+            self.camera_params.append(camera_param)
         # 优化量: 3d points
-        self.pole3d_posotions=[]
+        self.pole3d_posotions=nn.ParameterList()
         for i in range(image_num):
             position=nn.Parameter(
                 data=torch.tensor(
@@ -113,50 +117,54 @@ class BoundleAdjustment(nn.Module):
             pixels.append(pixel)
         output=torch.stack(pixels,dim=0)
         return output.T
-        
+    
+    def forward_iter(
+            self,
+            pole_2d_list,
+            pole_3d,
+            line_weight,
+            length_weight,
+            reproj_weight
+        ):
+        # 三个点在一条直线上
+        except_pole_3d_1=self.pole[1]/self.pole.sum()*pole_3d[0]+self.pole[0]/self.pole.sum()*pole_3d[2]
+        loss_line=torch.norm(pole_3d[1]-except_pole_3d_1)
+        # 三点长度为760
+        loss_length=torch.abs(torch.norm(pole_3d[0]-pole_3d[2])-self.pole.sum())
+        # 3 marker wand loss
+        loss_wand=line_weight*loss_line+length_weight*loss_length
+        # 重投影误差
+        loss_reproj=0
+        masks=[pole_2d is not None for pole_2d in pole_2d_list]
+        for mask,pole_2d,cam_param in list(zip(masks,pole_2d_list,self.camera_params)):
+            if mask is False:
+                continue
+            pole_2d=torch.tensor(
+                data=pole_2d[0],
+                dtype=torch.float32
+            )
+            expect_pole_2d=self.projectPoints(
+                X=pole_3d.T, # 转换成每一列是一点3d点
+                K=cam_param['K'],
+                R=cam_param['R'],
+                t=cam_param['t'],
+                Kd=cam_param['dist']
+            )
+            diff=pole_2d-expect_pole_2d.T
+            loss_reproj+=reproj_weight*torch.norm(diff,dim=1).sum()
+        return torch.unsqueeze(loss_wand+loss_reproj,dim=0)
+
     def forward(
             self,
             line_weight=1.0e-2,
             length_weight=1.0e-2,
             reproj_weight=1.0e-2
         ):
-        loss=0
-        number=len(self.pole3d_posotions)
-        for pole_2d_list,pole_3d in list(zip(self.pole_2d_lists,self.pole3d_posotions)):
-            # 三个点在一条直线上
-            except_pole_3d_1=self.pole[1]/self.pole.sum()*pole_3d[0]+self.pole[0]/self.pole.sum()*pole_3d[2]
-            loss_line=torch.norm(pole_3d[1]-except_pole_3d_1)
-            # 三点长度为760
-            loss_length=torch.abs(torch.norm(pole_3d[0]-pole_3d[2])-self.pole.sum())
-            # 3 marker wand loss
-            loss_wand=line_weight*loss_line+length_weight*loss_length
-            # 重投影误差
-            loss_reproj=0
-            masks=[pole_2d is not None for pole_2d in pole_2d_list]
-            for mask,pole_2d,cam_param in list(zip(masks,pole_2d_list,self.camera_params)):
-                if mask is False:
-                    continue
-                pole_2d=torch.tensor(
-                    data=pole_2d[0],
-                    dtype=torch.float32
-                )
-                expect_pole_2d=self.projectPoints(
-                    X=pole_3d.T, # 转换成每一列是一点3d点
-                    K=cam_param['K'],
-                    R=cam_param['R'],
-                    t=cam_param['t'],
-                    Kd=cam_param['dist']
-                )
-                diff=pole_2d-expect_pole_2d.T
-                loss_reproj+=reproj_weight*torch.sigmoid(torch.norm(diff,dim=1).sum())
-            loss+=(loss_wand+loss_reproj)/number
-            print({
-                'loss_wand':loss_wand,
-                'loss_reproj':loss_reproj,
-                'loss':loss
-            })
-            # import pdb;pdb.set_trace() 
-        import pdb;pdb.set_trace() 
+        losses=Parallel(n_jobs=-1,backend="threading")(
+            delayed(self.forward_iter)(pole_2d_list,pole_3d,line_weight,length_weight,reproj_weight)
+            for pole_2d_list,pole_3d in list(zip(self.pole_2d_lists,self.pole3d_posotions))
+        )
+        loss=torch.mean(torch.concat(losses))
         return loss
 
 
