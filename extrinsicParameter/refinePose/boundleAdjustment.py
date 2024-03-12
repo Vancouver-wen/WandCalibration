@@ -158,7 +158,7 @@ class BoundleAdjustment(nn.Module):
         # 3 marker wand loss
         loss_wand=line_weight*loss_line+length_weight*loss_length
         # 重投影误差
-        loss_reproj=0
+        loss_reproj=[]
         masks=[pole_2d is not None for pole_2d in pole_2d_list]
         for mask,pole_2d,cam_param in list(zip(masks,pole_2d_list,self.camera_params)):
             if mask is False:
@@ -175,16 +175,23 @@ class BoundleAdjustment(nn.Module):
                 Kd=cam_param['dist']
             )
             diff=pole_2d-expect_pole_2d.T
-            loss_reproj+=reproj_weight*torch.norm(diff,dim=1).sum()
-        return torch.unsqueeze(loss_wand+loss_reproj,dim=0)
+            loss_reproj.append(
+                torch.unsqueeze(
+                    reproj_weight*torch.norm(diff,dim=1).mean(),
+                    dim=0
+                )
+            )
+        loss_reproj=torch.concat(loss_reproj,dim=0).mean()
+        loss=loss_wand+loss_reproj
+        return torch.unsqueeze(loss,dim=0)
 
     def forward(
             self,
-            line_weight=1.0e-2,
-            length_weight=1.0e-2,
-            reproj_weight=1.0e-2
+            line_weight=1.0,
+            length_weight=1.0,
+            reproj_weight=1.0
         ):
-        losses=Parallel(n_jobs=-1,backend="threading")(
+        losses=Parallel(n_jobs=1,backend="threading")(
             delayed(self.forward_iter)(pole_2d_list,pole_3d,line_weight,length_weight,reproj_weight)
             for pole_2d_list,pole_3d in list(zip(self.pole_2d_lists,self.pole3d_posotions))
         )

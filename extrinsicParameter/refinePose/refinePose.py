@@ -49,7 +49,7 @@ def get_refine_pose(
         detected_pole_2ds=masked_pole_lists,
         save_path=save_path
     )
-    lr=2e-5
+    lr=1e-6
     optimizer = torch.optim.SGD(myBoundAdjustment.parameters(), lr=lr)
     iteration = 4000
     for i in range(iteration):
