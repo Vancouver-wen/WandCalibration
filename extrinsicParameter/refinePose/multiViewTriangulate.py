@@ -6,6 +6,7 @@ import numpy as np
 import cv2
 from natsort import natsorted
 import glob
+from matplotlib import pyplot as plt
 
 from utils.imageConcat import show_multi_imgs
 
@@ -29,8 +30,36 @@ def ray_multi_view_triangulation(
         mask,
     ):
     # 射线可视化验证三角化
-    pass
-
+    fig = plt.figure()
+    ax = plt.axes(projection='3d')
+    ax.scatter3D(point_3d[0],point_3d[1],point_3d[2],color='red')
+    ax.set_xlim(-10, 10) 
+    ax.set_ylim(-10, 10) 
+    ax.set_zlim(-10, 10) 
+    # 获取相机的位置 与 关键点位置
+    cam_positions=[]
+    point_positions=[]
+    for pose,point_2d in list(zip(poses,point_2ds)):
+        R=np.array(pose['R'])
+        t=np.array(pose['t'])
+        cam_position=np.linalg.inv(R)@(-t)
+        cam_positions.append(cam_position)
+        point_2d_position=np.append(point_2d,[1])*10
+        point_2d_position=np.linalg.inv(R)@(point_2d_position-t)
+        point_positions.append(point_2d_position)
+    for cam_position in cam_positions:
+        ax.scatter3D(cam_position[0],cam_position[1],cam_position[2],s=3,color='blue')
+    for point_position in point_positions:
+        ax.scatter3D(point_position[0],point_position[1],point_position[2],s=3,color='green')
+    for cam_position,point_position in list(zip(cam_positions,point_positions)):
+        x_data = np.linspace(cam_position[0],point_position[0], 100)
+        y_data = np.linspace(cam_position[1],point_position[1], 100)
+        z_data = np.linspace(cam_position[2],point_position[2], 100)
+        # import pdb;pdb.set_trace()
+        ax.scatter3D(x_data,y_data,z_data,s=0.2,color="gray")
+    plt.savefig("./ray.jpg",dpi=1000)
+    # plt.show()
+    plt.close()
 
 def reproj_multi_view_triangulation(
         point_2ds,
@@ -92,15 +121,15 @@ def multi_view_triangulate(
         y=point_2d[1]
         A.append(x*P_matrix[2]-P_matrix[0])
         A.append(y*P_matrix[2]-P_matrix[1])
-    A=np.array(A)
+    A=np.array(A).astype(np.float32)
     if solve_method=="SVD":
-        U,sigma,VT = np.linalg.svd(A,full_matrices=True)
-        vector=VT[:,-1]
+        U,sigma,VH = np.linalg.svd(A,full_matrices=True)
+        vector=VH[-1]
         point_3d=vector[:3]/vector[3]
     else:
-        print("T")
-        U,sigma,VT = np.linalg.svd(A.T@A,full_matrices=True)
-        vector=VT[:,-1]
+        # 这个解法不好
+        eigen_value,eigen_vector = np.linalg.eig(A.T@A)
+        vector=eigen_vector[np.argmin(eigen_value)]
         point_3d=vector[:3]/vector[3]
     return point_3d
 
@@ -138,7 +167,7 @@ def normalized_pole_triangulate(
                 point_2ds=point_2d_list,
                 poses=masked_pose_list
             )
-            if point_3d is not None and True: # 使用 True 与 False 控制是否可视化
+            if point_3d is not None and False: # 使用 True 与 False 控制是否可视化
                 # 使用重投影验证误差
                 frame=reproj_multi_view_triangulation(
                     point_2ds=point_2d_list,
@@ -150,7 +179,7 @@ def normalized_pole_triangulate(
                 )
                 cv2.imwrite("/home/wenzihao/Desktop/WandCalibration/reproj.jpg",frame)
                 # 使用射线可视化验证误差
-                frame=ray_multi_view_triangulation(
+                ray_multi_view_triangulation(
                     point_2ds=point_2d_list,
                     poses=masked_pose_list,
                     point_3d=point_3d,
@@ -158,8 +187,6 @@ def normalized_pole_triangulate(
                     frame_id=step,
                     mask=mask
                 )
-                cv2.imwrite("/home/wenzihao/Desktop/WandCalibration/ray.jpg",frame)
-                time.sleep(2)
             point_3ds.append(point_3d)
         d1=np.linalg.norm(point_3ds[0]-point_3ds[1])
         d2=np.linalg.norm(point_3ds[1]-point_3ds[2])
