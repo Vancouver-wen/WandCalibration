@@ -160,7 +160,7 @@ class BoundleAdjustment(nn.Module):
         for mask,pole_2d,cam_param in list(zip(masks,pole_2d_list,self.camera_params)):
             if mask is False: # 此时 pole_2d 是 None
                 continue
-            pole_2d=torch.tensor(
+            origin_pole_2d=torch.tensor(
                 data=pole_2d[0],
                 dtype=torch.float32
             )
@@ -171,7 +171,7 @@ class BoundleAdjustment(nn.Module):
                 t=cam_param['t'],
                 Kd=cam_param['dist']
             )
-            diff=pole_2d-expect_pole_2d.T
+            diff=origin_pole_2d-expect_pole_2d.T
             loss_reproj.append(
                 torch.unsqueeze(
                     self.reproj_weight*torch.norm(diff,dim=1).mean(),
@@ -180,14 +180,18 @@ class BoundleAdjustment(nn.Module):
             )
         loss_reproj=torch.concat(loss_reproj,dim=0).mean()
         loss=loss_wand+loss_reproj
+        # print({
+        #     'loss': loss.item(),
+        #     'loss_wand':loss_wand.item(),
+        #     'loss_reproj':loss_reproj.item()
+        # })
         return torch.unsqueeze(loss,dim=0)
 
-    @torch.compile
     def forward(
             self,
-            line_weight=0,
-            length_weight=0,
-            reproj_weight=1.0
+            line_weight=1.0,
+            length_weight=1.0,
+            reproj_weight=1.0e-2
         ):
         self.line_weight=line_weight
         self.length_weight=length_weight
@@ -200,7 +204,7 @@ class BoundleAdjustment(nn.Module):
         #     )
         #     losses=handle.get()
 
-        losses=Parallel(n_jobs=1,backend="threading")(
+        losses=Parallel(n_jobs=-1,backend="threading")(
             delayed(self.forward_iter)(pole_2d_list,pole_3d)
             for pole_2d_list,pole_3d in list(zip(self.pole_2d_lists,self.pole3d_posotions))
         )

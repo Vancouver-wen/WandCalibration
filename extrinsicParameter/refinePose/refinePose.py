@@ -49,10 +49,15 @@ def get_refine_pose(
         detected_pole_2ds=masked_pole_lists,
         save_path=save_path
     )
-    lr=5e-6
-    optimizer = torch.optim.Adam(myBoundAdjustment.parameters(), lr=lr)
-    iteration = 1000
+    lr=5e-3 # lr=5e-3
+    optimizer = torch.optim.Adam(
+        params=myBoundAdjustment.parameters(),
+        lr=lr
+    )
+    lrSchedular = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.5) # ExponentialLR(optimizer, gamma=0.5)
+    iteration = 1000 # iteration = 1000
     for step in range(iteration):
+        loss=myBoundAdjustment()
         if step%10==0:
             output=myBoundAdjustment.get_dict() # 保存结果
             verify_accuracy(
@@ -60,13 +65,16 @@ def get_refine_pose(
                 pole_3ds=output['poles'],
                 pole_lists=pole_lists,
             )
-        if step%100==0 and step!=0:
-            lr/=5
-        loss=myBoundAdjustment()
-        print(f"{step} : {loss.item()}")
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        if step%100==0 and step!=0:
+            lrSchedular.step()
+        print({
+            'step':f"{step}/{iteration}",
+            'lr':lrSchedular.get_last_lr()[-1],
+            'loss':loss.item()
+        })
     
 
 
