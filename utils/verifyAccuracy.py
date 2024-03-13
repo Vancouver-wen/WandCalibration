@@ -20,6 +20,7 @@ def verify_accuracy(
     ):
     available_pole_lists=get_available_pole_lists(pole_lists)
     errors=[]
+    diffs=[]
     for pole_3d,available_pole_list in list(zip(pole_3ds,available_pole_lists)):
         for available_pole,camera_param in list(zip(available_pole_list,camera_params)):
             if available_pole is None:
@@ -35,10 +36,12 @@ def verify_accuracy(
                 )
                 expect_blob_2d=np.squeeze(expect_blob_2d)
                 diff=blob_2d-expect_blob_2d
+                diffs.append(np.abs(diff))
                 error=np.linalg.norm(diff)
                 errors.append(error)
     mean_error=np.mean(errors)
-    logger.info(f"mean_pixel_error: {mean_error}")
+    mean_diff=np.mean(np.array(diffs),axis=0).tolist()
+    logger.info(f"mean_pixel_error: {mean_error}    mean_coord_error; {mean_diff}")
 
 if __name__=="__main__":
     pass

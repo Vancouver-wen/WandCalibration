@@ -49,21 +49,21 @@ def get_refine_pose(
         detected_pole_2ds=masked_pole_lists,
         save_path=save_path
     )
-    lr=1e-6
-    optimizer = torch.optim.SGD(myBoundAdjustment.parameters(), lr=lr)
-    iteration = 4000
-    for i in range(iteration):
-        if iteration%100==0:
+    lr=5e-6
+    optimizer = torch.optim.Adam(myBoundAdjustment.parameters(), lr=lr)
+    iteration = 1000
+    for step in range(iteration):
+        if step%10==0:
             output=myBoundAdjustment.get_dict() # 保存结果
             verify_accuracy(
                 camera_params=output['calibration'],
                 pole_3ds=output['poles'],
                 pole_lists=pole_lists,
             )
-        if iteration%400==0:
-            lr/=2
+        if step%100==0 and step!=0:
+            lr/=5
         loss=myBoundAdjustment()
-        print(f"{i} : {loss.item()}")
+        print(f"{step} : {loss.item()}")
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()

@@ -7,8 +7,8 @@ import numpy as np
 import torch
 from torch import nn
 from torch.utils.data import Dataset
-
 from joblib import Parallel,delayed
+import  torch.multiprocessing as mp
 
 class BoundleAdjustment(nn.Module):
     def __init__(
@@ -145,23 +145,20 @@ class BoundleAdjustment(nn.Module):
     def forward_iter(
             self,
             pole_2d_list,
-            pole_3d,
-            line_weight,
-            length_weight,
-            reproj_weight
+            pole_3d
         ):
         # 三个点在一条直线上
-        except_pole_3d_1=self.pole[1]/self.pole.sum()*pole_3d[0]+self.pole[0]/self.pole.sum()*pole_3d[2]
+        except_pole_3d_1=(self.pole[1]*pole_3d[0]+self.pole[0]*pole_3d[2])/self.pole.sum()
         loss_line=torch.norm(pole_3d[1]-except_pole_3d_1)
         # 三点长度为760
         loss_length=torch.abs(torch.norm(pole_3d[0]-pole_3d[2])-self.pole.sum())
         # 3 marker wand loss
-        loss_wand=line_weight*loss_line+length_weight*loss_length
+        loss_wand=self.line_weight*loss_line+self.length_weight*loss_length
         # 重投影误差
         loss_reproj=[]
         masks=[pole_2d is not None for pole_2d in pole_2d_list]
         for mask,pole_2d,cam_param in list(zip(masks,pole_2d_list,self.camera_params)):
-            if mask is False:
+            if mask is False: # 此时 pole_2d 是 None
                 continue
             pole_2d=torch.tensor(
                 data=pole_2d[0],
@@ -177,7 +174,7 @@ class BoundleAdjustment(nn.Module):
             diff=pole_2d-expect_pole_2d.T
             loss_reproj.append(
                 torch.unsqueeze(
-                    reproj_weight*torch.norm(diff,dim=1).mean(),
+                    self.reproj_weight*torch.norm(diff,dim=1).mean(),
                     dim=0
                 )
             )
@@ -185,14 +182,26 @@ class BoundleAdjustment(nn.Module):
         loss=loss_wand+loss_reproj
         return torch.unsqueeze(loss,dim=0)
 
+    @torch.compile
     def forward(
             self,
-            line_weight=1.0,
-            length_weight=1.0,
+            line_weight=0,
+            length_weight=0,
             reproj_weight=1.0
         ):
+        self.line_weight=line_weight
+        self.length_weight=length_weight
+        self.reproj_weight=reproj_weight
+        # autograd does not support crossing process boundaries
+        # with mp.Pool(processes=6) as pool:
+        #     handle=pool.starmap_async(
+        #         func=self.forward_iter,
+        #         iterable=list(zip(self.pole_2d_lists,self.pole3d_posotions))
+        #     )
+        #     losses=handle.get()
+
         losses=Parallel(n_jobs=1,backend="threading")(
-            delayed(self.forward_iter)(pole_2d_list,pole_3d,line_weight,length_weight,reproj_weight)
+            delayed(self.forward_iter)(pole_2d_list,pole_3d)
             for pole_2d_list,pole_3d in list(zip(self.pole_2d_lists,self.pole3d_posotions))
         )
         loss=torch.mean(torch.concat(losses))
