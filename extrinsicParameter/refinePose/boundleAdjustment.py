@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+from functools import cache
 
 import cv2
 import numpy as np
@@ -94,6 +95,7 @@ class BoundleAdjustment(nn.Module):
             )
             self.pole3d_posotions.append(position)
         self.save_path=save_path
+        self.vmap_projectPoint=torch.vmap(self.projectPoint,in_dims=(1,None,None,None,None,None,None,None,None))
     
     def get_dict(self):
         camera_params=[]
@@ -116,6 +118,20 @@ class BoundleAdjustment(nn.Module):
             json.dump(output,f)
         return output
     
+    # @torch.compile
+    def projectPoint(self,X,R,t,K,k1,k2,k3,p1,p2):
+        x = R@X+ t
+        x=torch.divide(x,x[-1])
+        r=torch.norm(x[:2])
+        r_2,r_4,r_6=pow(r,2),pow(r,4),pow(r,6)
+        x_undistorted=x[0]*(1+k1*r_2+k2*r_4+k3*r_6)+2*p1*x[0]*x[1]+p2*(r_2+2*pow(x[0],2))
+        y_undistorted=x[1]*(1+k1*r_2+k2*r_4+k3*r_6)+p1*(r_2+2*pow(x[1],2))+2*p2*x[0]*x[1]
+        f_x,f_y,u_0,v_0=K[0][0],K[1][1],K[0,2],K[1,2]
+        u=f_x*x_undistorted + u_0
+        v=f_y*y_undistorted + v_0
+        pixel=torch.cat((torch.unsqueeze(u,dim=0),torch.unsqueeze(v,dim=0)))
+        return pixel
+
     def projectPoints(self,X, K, R, t, Kd):
         """
         Projects points X (3xN) using camera intrinsics K (3x3),
@@ -127,20 +143,24 @@ class BoundleAdjustment(nn.Module):
         # import pdb;pdb.set_trace()
         N=X.shape[1]
         k1,k2,p1,p2,k3=Kd[0],Kd[1],Kd[2],Kd[3],Kd[4]
-        pixels=[]
-        for i in range(N):
-            x = R@X[:,i] + t
-            x=torch.divide(x,x[-1])
-            r=torch.norm(x[:2])
-            x_undistorted=x[0]*(1+k1*pow(r,2)+k2*pow(r,4)+k3*pow(r,6))+2*p1*x[0]*x[1]+p2*(pow(r,2)+2*pow(x[0],2))
-            y_undistorted=x[1]*(1+k1*pow(r,2)+k2*pow(r,4)+k3*pow(r,6))+p1*(pow(r,2)+2*pow(x[1],2))+2*p2*x[0]*x[1]
-            f_x,f_y,u_0,v_0=K[0][0],K[1][1],K[0,2],K[1,2]
-            u=f_x*x_undistorted + u_0
-            v=f_y*y_undistorted + v_0
-            pixel=torch.cat((torch.unsqueeze(u,dim=0),torch.unsqueeze(v,dim=0)))
-            pixels.append(pixel)
-        output=torch.stack(pixels,dim=0)
-        return output.T
+        result=self.vmap_projectPoint(X,R,t,K,k1,k2,k3,p1,p2)
+        # pixels=[]
+        # for i in range(N):
+        #     x = R@X[:,i] + t
+        #     x=torch.divide(x,x[-1])
+        #     r=torch.norm(x[:2])
+        #     r_2,r_4,r_6=pow(r,2),pow(r,4),pow(r,6)
+        #     x_undistorted=x[0]*(1+k1*r_2+k2*r_4+k3*r_6)+2*p1*x[0]*x[1]+p2*(r_2+2*pow(x[0],2))
+        #     y_undistorted=x[1]*(1+k1*r_2+k2*r_4+k3*r_6)+p1*(r_2+2*pow(x[1],2))+2*p2*x[0]*x[1]
+        #     f_x,f_y,u_0,v_0=K[0][0],K[1][1],K[0,2],K[1,2]
+        #     u=f_x*x_undistorted + u_0
+        #     v=f_y*y_undistorted + v_0
+        #     pixel=torch.cat((torch.unsqueeze(u,dim=0),torch.unsqueeze(v,dim=0)))
+        #     pixels.append(pixel)
+        # output=torch.stack(pixels,dim=0)
+        # import pdb;pdb.set_trace()
+        # return output.T
+        return result.T
     
     def forward_iter(
             self,

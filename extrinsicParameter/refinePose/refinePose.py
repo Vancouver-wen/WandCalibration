@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 import cv2
 import numpy as np
@@ -57,7 +58,9 @@ def get_refine_pose(
     lrSchedular = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.5) # ExponentialLR(optimizer, gamma=0.5)
     iteration = 1000 # iteration = 1000
     for step in range(iteration):
+        start=time.time()
         loss=myBoundAdjustment()
+        print(f"=> 正向耗时:{time.time()-start}")
         if step%10==0:
             output=myBoundAdjustment.get_dict() # 保存结果
             verify_accuracy(
@@ -65,9 +68,11 @@ def get_refine_pose(
                 pole_3ds=output['poles'],
                 pole_lists=pole_lists,
             )
+        start=time.time()
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        print(f"=> 反向耗时:{time.time()-start}")
         if step%100==0 and step!=0:
             lrSchedular.step()
         print({
