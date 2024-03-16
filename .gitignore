@@ -1,2 +1,4 @@
 imageCollect/
 logs/
+build/
+dist/
