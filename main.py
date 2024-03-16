@@ -1,11 +1,14 @@
 import os
 import sys
 import json
+import argparse
 
 import cv2
 import yaml
 from easydict import EasyDict
 from loguru import logger
+if not os.path.exists("./logs"):
+    os.mkdir("./logs")
 logger.add("./logs/{time}.log")
 
 from utils.yamlLoader import get_yaml_data
@@ -120,7 +123,10 @@ class OptiTrack(object):
 
 
 def main():
-    myOptitrack=OptiTrack(config_path="./config/config.yaml")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config_path',default="./config/config.yaml",type=str)
+    args = parser.parse_args()
+    myOptitrack=OptiTrack(config_path=args.config_path)
     myOptitrack.run()
 
 
