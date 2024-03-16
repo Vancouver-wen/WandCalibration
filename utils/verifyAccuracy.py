@@ -16,7 +16,8 @@ def get_available_pole_lists(pole_lists):
 def verify_accuracy(
         camera_params,
         pole_3ds,
-        pole_lists
+        pole_lists,
+        time_consume=None
     ):
     available_pole_lists=get_available_pole_lists(pole_lists)
     errors=[]
@@ -41,7 +42,11 @@ def verify_accuracy(
                 errors.append(error)
     mean_error=np.mean(errors)
     mean_diff=np.mean(np.array(diffs),axis=0).tolist()
-    logger.info(f"mean_pixel_error: {mean_error}    mean_coord_error; {mean_diff}")
+    if time_consume is None:
+        logger.info(f"mean_pixel_error: {mean_error:.2f}    mean_coord_error: {mean_diff}")
+    else:
+        mean_diff = [float('{:.2f}'.format(i)) for i in mean_diff]
+        logger.info(f"mean_pixel_error: {mean_error:.2f}    mean_coord_error: {mean_diff}   second_consume: {time_consume:.2f}")
 
 if __name__=="__main__":
     pass

@@ -1,10 +1,13 @@
 import os
 import sys
 import time
+import warnings
+warnings.filterwarnings('ignore')
 
 import cv2
 import numpy as np
 import torch
+from tqdm import tqdm
 
 from .normalizedImagePlane import get_undistort_points
 from .multiViewTriangulate import normalized_pole_triangulate
@@ -57,29 +60,28 @@ def get_refine_pose(
     )
     lrSchedular = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.5) # ExponentialLR(optimizer, gamma=0.5)
     iteration = 1000 # iteration = 1000
-    for step in range(iteration):
-        start=time.time()
+    start=time.time()
+    for step in tqdm(range(iteration)):
         loss=myBoundAdjustment()
-        print(f"=> 正向耗时:{time.time()-start}")
         if step%10==0:
             output=myBoundAdjustment.get_dict() # 保存结果
             verify_accuracy(
                 camera_params=output['calibration'],
                 pole_3ds=output['poles'],
                 pole_lists=pole_lists,
+                time_consume=time.time()-start
             )
-        start=time.time()
+            start=time.time()
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        print(f"=> 反向耗时:{time.time()-start}")
         if step%100==0 and step!=0:
             lrSchedular.step()
-        print({
-            'step':f"{step}/{iteration}",
-            'lr':lrSchedular.get_last_lr()[-1],
-            'loss':loss.item()
-        })
+        # print({
+        #     'step':f"{step}/{iteration}",
+        #     'lr':lrSchedular.get_last_lr()[-1],
+        #     'loss':loss.item()
+        # })
     
 
 
