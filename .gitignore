@@ -1,4 +1,3 @@
 imageCollect/
 logs/
-build/
-dist/
+pyinstaller/
