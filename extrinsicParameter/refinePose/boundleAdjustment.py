@@ -43,7 +43,7 @@ class BoundleAdjustment(nn.Module):
             )
         self.pole=pole_data
         # 常量: 2d检测点 -> 含有None
-        self.pole_2d_lists=detected_pole_2ds
+        self.pole_2d_lists=self.get_pole_2d_lists(detected_pole_2ds)
         # 优化量: camera_param 
         self.camera_params=nn.ParameterList()
         for i in range(cam_num):
@@ -96,7 +96,25 @@ class BoundleAdjustment(nn.Module):
             self.pole3d_posotions.append(position)
         self.save_path=save_path
         self.vmap_projectPoint=torch.vmap(self.projectPoint,in_dims=(1,None,None,None,None,None,None,None,None))
+        self.vmap_projectIter=torch.vmap(self.projectIter,in_dims=(0,None,0,0,0,0))
     
+    def get_pole_2d_lists(self,detected_pole_2d_lists):
+        pole_2d_lists=[]
+        for detected_pole_2d_list in detected_pole_2d_lists:
+            pole_2d_list=[]
+            for detected_pole_2d in detected_pole_2d_list:
+                if detected_pole_2d is None:
+                    pole_2d_list.append(None)
+                else:
+                    pole_2d_list.append(
+                        torch.tensor(
+                            data=detected_pole_2d[0],
+                            dtype=torch.float32
+                        )
+                    )
+            pole_2d_lists.append(pole_2d_list)
+        return pole_2d_lists
+
     def get_dict(self):
         camera_params=[]
         for camera_param in self.camera_params:
@@ -140,11 +158,10 @@ class BoundleAdjustment(nn.Module):
         See http://docs.opencv.org/2.4/doc/tutorials/calib3d/camera_calibration/camera_calibration.html
         or cv2.projectPoints
         """
-        # import pdb;pdb.set_trace()
-        N=X.shape[1]
         k1,k2,p1,p2,k3=Kd[0],Kd[1],Kd[2],Kd[3],Kd[4]
         result=self.vmap_projectPoint(X,R,t,K,k1,k2,k3,p1,p2)
         # pixels=[]
+        # N=X.shape[1]
         # for i in range(N):
         #     x = R@X[:,i] + t
         #     x=torch.divide(x,x[-1])
@@ -162,6 +179,12 @@ class BoundleAdjustment(nn.Module):
         # return output.T
         return result.T
     
+    def projectIter(self,pole_2d,X,K,R,t,Kd):
+        expect_pole_2d=self.projectPoints(X,K,R,t,Kd)
+        diff=pole_2d-expect_pole_2d.T
+        loss_reproj=self.reproj_weight*torch.norm(diff,dim=1).mean()
+        return loss_reproj
+    
     def forward_iter(
             self,
             pole_2d_list,
@@ -175,30 +198,33 @@ class BoundleAdjustment(nn.Module):
         # 3 marker wand loss
         loss_wand=self.line_weight*loss_line+self.length_weight*loss_length
         # 重投影误差
-        loss_reproj=[]
         masks=[pole_2d is not None for pole_2d in pole_2d_list]
-        for mask,pole_2d,cam_param in list(zip(masks,pole_2d_list,self.camera_params)):
-            if mask is False: # 此时 pole_2d 是 None
-                continue
-            origin_pole_2d=torch.tensor(
-                data=pole_2d[0],
-                dtype=torch.float32
-            )
-            expect_pole_2d=self.projectPoints(
-                X=pole_3d.T, # 转换成每一列是一点3d点
-                K=cam_param['K'],
-                R=cam_param['R'],
-                t=cam_param['t'],
-                Kd=cam_param['dist']
-            )
-            diff=origin_pole_2d-expect_pole_2d.T
-            loss_reproj.append(
-                torch.unsqueeze(
-                    self.reproj_weight*torch.norm(diff,dim=1).mean(),
-                    dim=0
-                )
-            )
-        loss_reproj=torch.concat(loss_reproj,dim=0).mean()
+        pole_2ds,Ks,Rs,ts,Kds=[],[],[],[],[]
+        for mask,pole_2d,cam_param in filter(lambda x:x[0],list(zip(masks,pole_2d_list,self.camera_params))):
+            pole_2ds.append(pole_2d)
+            Ks.append(cam_param['K'])
+            Rs.append(cam_param['R'])
+            ts.append(cam_param['t'])
+            Kds.append(cam_param['dist'])
+        pole_2ds,Ks,Rs,ts,Kds=torch.stack(pole_2ds),torch.stack(Ks),torch.stack(Rs),torch.stack(ts),torch.stack(Kds)
+        loss_reproj=self.vmap_projectIter(pole_2ds,pole_3d.T,Ks,Rs,ts,Kds).mean()
+        # loss_reproj=[]
+        # for mask,pole_2d,cam_param in filter(lambda x:x[0],list(zip(masks,pole_2d_list,self.camera_params))):
+        #     # if mask is False: # 此时 pole_2d 是 None
+        #     #     print("skip None")
+        #     #     continue
+        #     origin_pole_2d=pole_2d
+        #     expect_pole_2d=self.projectPoints(
+        #         X=pole_3d.T, # 转换成每一列是一点3d点
+        #         K=cam_param['K'],
+        #         R=cam_param['R'],
+        #         t=cam_param['t'],
+        #         Kd=cam_param['dist']
+        #     )
+        #     diff=origin_pole_2d-expect_pole_2d.T
+        #     loss_reproj.append(self.reproj_weight*torch.norm(diff,dim=1).mean())
+        # loss_reproj=torch.stack(loss_reproj,dim=0).mean()
+        # import pdb;pdb.set_trace()
         loss=loss_wand+loss_reproj
         # print({
         #     'loss': loss.item(),
@@ -224,7 +250,7 @@ class BoundleAdjustment(nn.Module):
         #     )
         #     losses=handle.get()
 
-        losses=Parallel(n_jobs=-1,backend="threading")(
+        losses=Parallel(n_jobs=1,backend="threading")(
             delayed(self.forward_iter)(pole_2d_list,pole_3d)
             for pole_2d_list,pole_3d in list(zip(self.pole_2d_lists,self.pole3d_posotions))
         )
