@@ -19,6 +19,8 @@ def get_intrinsic(cam_num,board_config,image_path):
             return intrinsic
         else:
             logger.warning('the format of intrinsic.json is wrong')
+    # 生成 intrinsic.json
+             
 
 
 if __name__=="__main__":
