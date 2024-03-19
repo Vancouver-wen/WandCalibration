@@ -9,12 +9,12 @@
 #     - [extrinsic.json] # 可选:提供的外参初始值
 #     - cam*
 
-cam_num: 4
+cam_num: 6
 
-board: !include "/home/wenzihao/Desktop/WandCalibration/config/board/board_sample.yaml"
+board: !include "/home/wenzihao/Desktop/WandCalibration/config/board/charucoboard_6_5.yaml"
 pole: !include "/home/wenzihao/Desktop/WandCalibration/config/pole/pole760.yaml"
 
-image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollectArchery"
+image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollectWTT"
 
 maskBlobParam:
   minThreshold: 220

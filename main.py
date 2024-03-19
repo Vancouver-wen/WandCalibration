@@ -65,20 +65,20 @@ class OptiTrack(object):
         )
     def refine_pose(self):
         save_path=os.path.join(self.config.image_path,'refine_pose.json')
-        try:
-            get_refine_pose(
-                cam_num=self.config.cam_num,
-                pole_lists=self.pole,
-                intrinsics=self.intrinsic,
-                pole_param=self.config.pole,
-                init_poses=self.pose,
-                save_path=save_path
-            )
-            pass
-        except:
-            logger.info("early stop!")
-        with open(save_path,'r') as f:
-            self.output=json.load(f)
+        # try:
+        get_refine_pose(
+            cam_num=self.config.cam_num,
+            pole_lists=self.pole,
+            intrinsics=self.intrinsic,
+            pole_param=self.config.pole,
+            init_poses=self.pose,
+            save_path=save_path
+        )
+        pass
+        # except:
+        #     logger.info("early stop!")
+        # with open(save_path,'r') as f:
+        #     self.output=json.load(f)
     def verify_accuracy(self):
         verify_accuracy(
             camera_params=self.output['calibration'],
@@ -124,7 +124,7 @@ class OptiTrack(object):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config_path',default="./config/config.yaml",type=str)
+    parser.add_argument('--config_path',default="./config/cfg_wtt.yaml",type=str)
     args = parser.parse_args()
     myOptitrack=OptiTrack(config_path=args.config_path)
     myOptitrack.run()

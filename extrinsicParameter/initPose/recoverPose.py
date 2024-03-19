@@ -8,8 +8,8 @@ def get_unscaled_intrinsic(pole_pairs,cam1_intrinsic,cam2_intrinsic):
     blob_pairs=pole_pairs.reshape(2,-1,2)
     K1=np.array(cam1_intrinsic.K)
     K2=np.array(cam2_intrinsic.K)
-    dist1=np.array(cam1_intrinsic.dist[0])
-    dist2=np.array(cam2_intrinsic.dist[0])
+    dist1=np.squeeze(np.array(cam1_intrinsic.dist))
+    dist2=np.squeeze(np.array(cam2_intrinsic.dist))
     retval, E, R, t, mask=cv2.recoverPose(
         # revocerPose的重载函数非常多
         points1=blob_pairs[0],
@@ -29,7 +29,7 @@ def get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intri
     # cv2.triangulatePoints的流程
     # https://stackoverflow.com/questions/66361968/is-cv2-triangulatepoints-just-not-very-accurate
     K1=np.array(cam1_intrinsic.K)
-    dist1=np.array(cam1_intrinsic.dist[0])
+    dist1=np.squeeze(np.array(cam1_intrinsic.dist))
     cam1_Rt=np.array(
         object=[[1,1e-5,1e-5,1e-5],
         [1e-5,1,1e-5,1e-5],
@@ -39,7 +39,7 @@ def get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intri
     cam1_proj=K1@cam1_Rt
 
     K2=np.array(cam2_intrinsic.K)
-    dist2=np.array(cam2_intrinsic.dist[0])
+    dist2=np.squeeze(np.array(cam2_intrinsic.dist))
     cam2_Rt=np.concatenate((R21,t21),axis=1)
     cam2_proj=K2@cam2_Rt
 

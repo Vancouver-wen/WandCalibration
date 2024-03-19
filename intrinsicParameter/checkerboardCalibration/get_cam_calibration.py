@@ -36,7 +36,7 @@ class IntrinsicCalibration(object):
         # calibration
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, size, None, None)
         return {
-            "image_size":[img_width,img_height],
+            "image_size":[img_height,img_width],
             "K":np.squeeze(mtx).tolist(),
             "dist":np.squeeze(dist).tolist()
         }

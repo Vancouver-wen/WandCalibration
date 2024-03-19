@@ -36,7 +36,7 @@ class IntrinsicCalibration(object):
                 all_charuco_ids.append(charuco_ids)
         retval, camera_matrix, dist_coeffs, rvecs, tvecs = cv2.aruco.calibrateCameraCharuco(all_charuco_corners, all_charuco_ids, self.board, image.shape[:2], None, None)
         return {
-            "image_size":[img_width,img_height],
+            "image_size":[img_height,img_width],
             "K":np.squeeze(camera_matrix).tolist(),
             "dist":np.squeeze(dist_coeffs).tolist()
         }

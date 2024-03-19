@@ -56,7 +56,7 @@ class BoundleAdjustment(nn.Module):
             )
             dist=nn.Parameter(
                 data=torch.tensor(
-                    data=init_intrinsic[i]['dist'][0],
+                    data=np.squeeze(np.array(init_intrinsic[i]['dist'],dtype=np.float32)),
                     dtype=torch.float32
                 ),
                 requires_grad=True

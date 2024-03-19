@@ -6,6 +6,8 @@ import glob
 from loguru import logger
 from natsort import natsorted
 from easydict import EasyDict
+from tqdm import tqdm
+from joblib import Parallel,delayed
 
 def get_intrinsic(cam_num,board_config,image_path):
     # 检查是否有 intrinsic.json
@@ -23,7 +25,7 @@ def get_intrinsic(cam_num,board_config,image_path):
     # 生成 intrinsic.json
     board_type=board_config.pop("type")
     if board_type=="checkerboard":
-        from intrinsicParameter.checkboardCalibration.get_cam_calibration import IntrinsicCalibration
+        from intrinsicParameter.checkerboardCalibration.get_cam_calibration import IntrinsicCalibration
         height=board_config['height']
         width=board_config['width']
         intrinsicCalibrator=IntrinsicCalibration(height=height,width=width)
@@ -45,14 +47,32 @@ def get_intrinsic(cam_num,board_config,image_path):
         for i in range(cam_num)
     ]
     intrinsics=dict()
-    for step,image_path_list in enumerate(image_path_lists):
-        intrinsic=intrinsicCalibrator(image_path_list=image_path_list)
-        intrinsics[f"cam{step+1}"]=intrinsic
+    Parallel(n_jobs=len(image_path_lists),backend="loky")(
+        delayed(get_each_intrinsic)(
+            intrinsicCalibrator,
+            image_path_list,
+            intrinsics,
+            step
+        )
+        for step,image_path_list in enumerate(image_path_lists)
+    )
+    # for step,image_path_list in enumerate(tqdm(image_path_lists)):
+    #     intrinsic=intrinsicCalibrator(image_path_list=image_path_list)
+    #     intrinsics[f"cam{step+1}"]=intrinsic
+
     # save
     with open(os.path.join(image_path,"intrinsic.json"),'w') as f:
         json.dump(intrinsics,f)
-    return intrinsics
-             
+    # format intrinsic result
+    result=[]
+    for key in natsorted(intrinsics.keys()):
+        result.append(EasyDict(intrinsics[key]))
+    return result
+
+def get_each_intrinsic(intrinsicCalibrator,image_path_list,intrinsics,step):
+    intrinsic=intrinsicCalibrator(image_path_list=image_path_list)
+    intrinsics[f"cam{step+1}"]=intrinsic
+
 
 if __name__=="__main__":
     pass
