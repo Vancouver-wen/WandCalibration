@@ -21,10 +21,11 @@ class IntrinsicCalibration(object):
         img_points = []
         for image_path in image_path_list:
             img = cv2.imread(image_path)
-            img_width, img_height = img.shape[:2]
+            img_height, img_width = img.shape[:2]
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             size = gray.shape[::-1]
-            ret, corners = cv2.findChessboardCorners(gray, (self.height, self.width), None)
+            ret, corners = cv2.findChessboardCorners(gray, (self.height,self.width), None)
+            # print(ret,corners)
             if ret:
                 obj_points.append(self.objp)
                 # 专门用来获取棋盘图上内角点的精确位置的， 即在原角点的基础上寻找亚像素角点
@@ -34,9 +35,16 @@ class IntrinsicCalibration(object):
                 else:
                     img_points.append(corners)
         # calibration
-        ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, size, None, None)
+        ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(
+            objectPoints=obj_points, 
+            imagePoints=img_points, 
+            imageSize=size, 
+            cameraMatrix=None, 
+            distCoeffs=None,
+            flags=cv2.CALIB_USE_LU # LU is much faster than SVD
+        )
         return {
-            "image_size":[img_height,img_width],
+            "image_size":[img_width,img_height],
             "K":np.squeeze(mtx).tolist(),
             "dist":np.squeeze(dist).tolist()
         }

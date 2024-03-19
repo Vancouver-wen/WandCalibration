@@ -5,10 +5,13 @@
 #  april
 #  circlegrid
 
+
+# checkerboard 需要向内收缩 -> 数格子-1
 type: checkerboard
 height: 8
 width: 11
 
+# charucoboard 不需要向内收缩 -> 数格子
 # type: charucoboard
 # height: 6
 # width: 5

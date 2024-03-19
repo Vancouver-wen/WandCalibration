@@ -11,7 +11,7 @@
 
 type: charucoboard
 height: 4
-width: 3
+width: 5
 square_length: 0.2
 marker_length: 0.15
 
