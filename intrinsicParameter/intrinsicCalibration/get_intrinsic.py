@@ -23,13 +23,14 @@ def get_intrinsic(cam_num,board_config,image_path):
         else:
             logger.warning('the format of intrinsic.json is wrong')
     # 生成 intrinsic.json
-    board_type=board_config.pop("type")
+    board_type=board_config.pop("type").strip()
+    # import pdb;pdb.set_trace()
     if board_type=="checkerboard":
         from intrinsicParameter.checkerboardCalibration.get_cam_calibration import IntrinsicCalibration
         height=board_config['height']
         width=board_config['width']
         intrinsicCalibrator=IntrinsicCalibration(height=height,width=width)
-    elif board_config=="charucoboard":
+    elif board_type=="charucoboard":
         height=board_config['height']
         width=board_config['width']
         suqare_length=board_config['square_length']
@@ -47,7 +48,8 @@ def get_intrinsic(cam_num,board_config,image_path):
         for i in range(cam_num)
     ]
     intrinsics=dict()
-    Parallel(n_jobs=len(image_path_lists),backend="loky")(
+    # n_jobs = len(image_path_lists)
+    Parallel(n_jobs=len(image_path_lists),backend="threading")(
         delayed(get_each_intrinsic)(
             intrinsicCalibrator,
             image_path_list,
@@ -59,7 +61,8 @@ def get_intrinsic(cam_num,board_config,image_path):
     # for step,image_path_list in enumerate(tqdm(image_path_lists)):
     #     intrinsic=intrinsicCalibrator(image_path_list=image_path_list)
     #     intrinsics[f"cam{step+1}"]=intrinsic
-
+    # import pdb;pdb.set_trace()
+    intrinsics={k:v for k,v in sorted(intrinsics.items())} # 对字典进行排序
     # save
     with open(os.path.join(image_path,"intrinsic.json"),'w') as f:
         json.dump(intrinsics,f)

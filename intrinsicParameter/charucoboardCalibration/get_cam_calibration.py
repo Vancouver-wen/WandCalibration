@@ -25,11 +25,11 @@ class IntrinsicCalibration(object):
             if marker_ids is None:
                 continue
             charuco_retval, charuco_corners, charuco_ids = cv2.aruco.interpolateCornersCharuco(marker_corners, marker_ids, image, self.board)
-            if charuco_retval>3:
-                print({
-                    "corners":charuco_corners,
-                    "ids":charuco_corners
-                })
+            if charuco_retval>=6:
+                # print({
+                #     "corners":charuco_corners,
+                #     "ids":charuco_corners
+                # })
                 assert len(charuco_corners)==len(charuco_ids),"len(charuco_corners) != len(charuco_ids)"
                 
                 all_charuco_corners.append(charuco_corners)

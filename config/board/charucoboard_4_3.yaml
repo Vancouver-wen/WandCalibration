@@ -1,0 +1,18 @@
+# 支持的种类 -> 4个
+#  checkerboard
+#  charuco
+#  aruco
+#  april
+#  circlegrid
+
+# type: checkerboard
+# height: 8
+# width: 11
+
+type: charucoboard
+height: 4
+width: 3
+square_length: 0.2
+marker_length: 0.15
+
+# TODO
