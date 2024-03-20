@@ -38,7 +38,8 @@ class SimpleBlobDetection():
             filterByConvexity  =   True,
             minConvexity  =   0.4,
             filterByInertia  =   True,
-            minInertiaRatio  =   0.1
+            minInertiaRatio  =   0.1,
+            color="white"
         ) -> None:
         """
         float thresholdStep
@@ -84,7 +85,23 @@ class SimpleBlobDetection():
         self.params.minInertiaRatio  =  minInertiaRatio  
         # 创建检测器
         self.detector = cv2.SimpleBlobDetector_create(self.params)
+        self.color=color
+    def frame_pre_process(self,frame):
+        if self.color=="white":
+            frame=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+            # print(f"frame.shape: {frame.shape}")
+        elif self.color=="red":
+            red_channel=frame[:,:,2].astype(np.int64)-frame[:,:,0].astype(np.int64)-frame[:,:,1].astype(np.int64)
+            red_channel=np.clip(red_channel,a_min=0,a_max=255).astype(np.uint8)
+            frame=red_channel
+            # print(f"frame.shape: {frame.shape}")
+            # exit(0)
+        else:
+            support_list=["white","red"]
+            raise NotImplementedError(f"we only support {support_list}")
+        return frame
     def __call__(self, frame, drawKeypoints=True):
+        frame=self.frame_pre_process(frame)
         keypoints = self.detector.detect(frame)
         if drawKeypoints==True:
             with_keypoints = cv2.drawKeypoints(

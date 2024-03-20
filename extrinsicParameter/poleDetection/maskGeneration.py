@@ -14,7 +14,8 @@ def get_mask(
         resolutions,
         maskBlobParam,
         image_path,
-        mask_path
+        mask_path,
+        color
     )->list:
     assert cam_num==len(resolutions),"camera num quantity is ambiguous"
     masks=[]
@@ -45,7 +46,8 @@ def get_mask(
             filterByConvexity  =   True,
             minConvexity  =   0.01,
             filterByInertia  =   True,
-            minInertiaRatio  =   0.01
+            minInertiaRatio  =   0.01,
+            color=color
         )
         detectors.append(detector)
     # 遍历 空场 图片

@@ -39,7 +39,8 @@ class OptiTrack(object):
             resolutions=[each_intrinsic.image_size for each_intrinsic in self.intrinsic],
             maskBlobParam=self.config.maskBlobParam,
             image_path=os.path.join(self.config.image_path,'empty'),
-            mask_path=os.path.join(self.config.image_path,'mask')
+            mask_path=os.path.join(self.config.image_path,'mask'),
+            color=self.config.pole.color
         )
     def add_pole(self):
         self.pole=get_pole(
@@ -47,7 +48,8 @@ class OptiTrack(object):
             resolutions=[each_intrinsic.image_size for each_intrinsic in self.intrinsic],
             poleBlobParam=self.config.poleBlobParam,
             image_path=os.path.join(self.config.image_path,'pole'),
-            masks=self.mask
+            masks=self.mask,
+            color=self.config.pole.color
         )
         # vis_pole(
         #     cam_num=self.config.cam_num,

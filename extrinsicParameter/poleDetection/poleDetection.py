@@ -33,7 +33,8 @@ class PoleDetection(SimpleBlobDetection):
             filterByConvexity=True, 
             minConvexity=0.4, 
             filterByInertia=True, 
-            minInertiaRatio=0.1
+            minInertiaRatio=0.1,
+            color="white"
         ):
         super().__init__(
             minThreshold, 
@@ -51,7 +52,8 @@ class PoleDetection(SimpleBlobDetection):
             filterByConvexity, 
             minConvexity, 
             filterByInertia, 
-            minInertiaRatio
+            minInertiaRatio,
+            color
         )
         self.lineAngle=lineAngle
     
@@ -73,6 +75,7 @@ class PoleDetection(SimpleBlobDetection):
         # import pdb;pdb.set_trace()
         if mask is None:
             mask=np.zeros_like(frame)
+        frame=self.frame_pre_process(frame)
         keypoints = self.detector.detect(frame)
         points=[keypoint.pt for keypoint in keypoints]
         masked_points=[]
@@ -116,7 +119,8 @@ def get_pole(
         resolutions,
         poleBlobParam,
         image_path,
-        masks
+        masks,
+        color="white"
     ):
     assert cam_num==len(resolutions),"camera num quantity is ambiguous"
     if not os.path.exists(os.path.join(image_path,'pole.pkl')):
@@ -145,7 +149,8 @@ def get_pole(
                 filterByConvexity  =   True,
                 minConvexity  = poleBlobParam.minConvexity,
                 filterByInertia  =   True,
-                minInertiaRatio  =  poleBlobParam.minInertiaRatio
+                minInertiaRatio  =  poleBlobParam.minInertiaRatio,
+                color=color
             )
             detectors.append(detector)
         # 遍历 挥杆 图片
