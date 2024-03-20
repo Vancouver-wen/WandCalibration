@@ -32,8 +32,4 @@ poleBlobParam:
   lineAngle: 2
 
 
-
-
-
-
-
+worldCoordParam: !include "/home/wenzihao/Desktop/WandCalibration/config/point/point_sample.yaml"

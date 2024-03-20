@@ -19,7 +19,7 @@ from visualize.vis_pole_detection import vis_pole
 from extrinsicParameter.initPose.initPose import get_init_pose
 from extrinsicParameter.refinePose.refinePose import get_refine_pose
 from utils.verifyAccuracy import verify_accuracy
-from extrinsicParameter.worldCoord.clickPoint import click_table
+from extrinsicParameter.worldCoord.get_cam0_extrinsic import get_cam0_extrinsic
 from extrinsicParameter.worldCoord.adjustCamParam import adjust_camera_params
 from visualize.visCameraParams import vis_camera_params
 
@@ -67,20 +67,21 @@ class OptiTrack(object):
         )
     def refine_pose(self):
         save_path=os.path.join(self.config.image_path,'refine_pose.json')
-        # try:
-        get_refine_pose(
-            cam_num=self.config.cam_num,
-            pole_lists=self.pole,
-            intrinsics=self.intrinsic,
-            pole_param=self.config.pole,
-            init_poses=self.pose,
-            save_path=save_path
-        )
-        pass
-        # except:
-        #     logger.info("early stop!")
-        # with open(save_path,'r') as f:
-        #     self.output=json.load(f)
+        # support early support
+        try:
+            get_refine_pose(
+                cam_num=self.config.cam_num,
+                pole_lists=self.pole,
+                intrinsics=self.intrinsic,
+                pole_param=self.config.pole,
+                init_poses=self.pose,
+                save_path=save_path
+            )
+            pass
+        except:
+            logger.info("early stop!")
+        with open(save_path,'r') as f:
+            self.output=json.load(f)
     def verify_accuracy(self):
         verify_accuracy(
             camera_params=self.output['calibration'],
@@ -89,15 +90,10 @@ class OptiTrack(object):
         )
     def world_pose(self):
         save_path=os.path.join(self.config.image_path,'world_pose.json')
-        cam0_R,cam0_t=click_table(
+        cam0_R,cam0_t=get_cam0_extrinsic(
             cam_0_param=self.output['calibration'][0],
-            image_path='/home/wenzihao/Desktop/WandCalibration/imageCollect/empty/cam1/0-1709712857753782849.jpeg',
-            table_config={
-                'width':1.525,
-                'length':2.74,
-                'height':0.76,
-                'length_unit':'m'
-            }
+            image_path=self.config.image_path,
+            world_coord_param=self.config.worldCoordParam
         )
         self.world_camera_params=adjust_camera_params(
             cam_0_R=cam0_R,
