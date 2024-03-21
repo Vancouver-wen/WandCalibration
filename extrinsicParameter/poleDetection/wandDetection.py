@@ -14,6 +14,7 @@ from loguru import logger
 from tqdm import tqdm
 
 from .blobDetection import get_cam_list,get_image_list,SimpleBlobDetection
+from utils.imageConcat import show_multi_imgs
 
 class WandDetection(SimpleBlobDetection):
     def __init__(
@@ -97,7 +98,7 @@ def merge_output(cam_num,output):
                         equal=np.allclose(
                             a=point_exist,
                             b=point_new,
-                            atol=3 # 如果误差不超过 3 个像素, 就认为是相同
+                            atol=5 # 如果误差不超过 5 个像素, 就认为是相同
                         )
                         if equal:
                             match=True
@@ -127,6 +128,7 @@ def get_wand(
         # 生成 detector
         minAreaRatio=wand_blob_param.minAreaRatio
         maxAreaRatio=wand_blob_param.maxAreaRatio
+
         minArea=resolution[0]*resolution[1]*minAreaRatio
         maxArea=resolution[0]*resolution[1]*maxAreaRatio
         detector=WandDetection(
@@ -155,5 +157,43 @@ def get_wand(
             delayed(get_each_wand)(frame_list,detectors,masks)
             for frame_list in tqdm(frame_lists)
         )
+    # import pdb;pdb.set_trace()
     output=merge_output(cam_num,output)
+    if len(output)==3*cam_num:
+        logger.info(f"共检测出{len(output)}个点,应为3*cam_num: {3*cam_num}")
+    else:
+        logger.info(f"共检测出{len(output)}个点,应为3*cam_num: {3*cam_num}")
+    # draw_output(output)
     return output
+
+def draw_output(output):
+    cam0_path="/home/wenzihao/Desktop/WandCalibration/imageCollectRedWtt/wand/cam1/0-1711025876107726901.jpeg"
+    cam1_path="/home/wenzihao/Desktop/WandCalibration/imageCollectRedWtt/wand/cam2/0-1711025876107726901.jpeg"
+    cam2_path="/home/wenzihao/Desktop/WandCalibration/imageCollectRedWtt/wand/cam3/0-1711025876107726901.jpeg"
+    cam3_path="/home/wenzihao/Desktop/WandCalibration/imageCollectRedWtt/wand/cam4/0-1711025876107726901.jpeg"
+    cam0_image=cv2.imread(cam0_path)
+    cam1_image=cv2.imread(cam1_path)
+    cam2_image=cv2.imread(cam2_path)
+    cam3_image=cv2.imread(cam3_path)
+    cam_images=[
+        cam0_image,
+        cam1_image,
+        cam2_image,
+        cam3_image
+    ]
+    wand_vis_folder="/home/wenzihao/Desktop/WandCalibration/imageCollectRedWtt/wand_vis"
+    for cam_index,points in enumerate(output):
+        for point in points:
+            cv2.circle(
+                img=cam_images[cam_index],
+                center=point.astype(np.int64).tolist(),
+                radius=3,
+                color=(0,255,0),
+                thickness=-1
+            )
+    frame=show_multi_imgs(scale=1,imglist=cam_images,order=(2,2))
+    save_path=cv2.imwrite(
+        filename="/home/wenzihao/Desktop/WandCalibration/imageCollectRedWtt/wand/vis.jpg",
+        img=frame
+    )
+    

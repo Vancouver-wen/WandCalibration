@@ -4,9 +4,10 @@ import math
 
 import numpy as np
 import cv2
-from sklearn.cluster import DBSCAN
+from sklearn.cluster import DBSCAN,KMeans
 
 from extrinsicParameter.refinePose.multiViewTriangulate import multi_view_triangulate
+from .cluster import cluster
 
 def vis_epipolar_line():
     pass # TODO
@@ -134,6 +135,7 @@ def check_clump_legality(clump):
 
 def triangulate_clump(clump):
     # 检查 clump 合法性
+    # import pdb;pdb.set_trace()
     check_clump_legality(clump)
     # 构建三角化输入
     point_2ds=[]
@@ -159,13 +161,17 @@ def no_id_reconstruct(
     """
     points=dict()
     point_index=0
+    init_cluster=None
     for cam_index,wand in enumerate(wands):
+        if len(wand)==3 and init_cluster is None: # 说明正好有3个点,属于三个类
+            init_cluster=[point_index+i for i in range(3)]
         for point in wand:
             points[point_index]={
                 'point_2d': point.tolist(),
                 'cam_index': cam_index,
             }
             point_index+=1
+    # import pdb;pdb.set_trace() # 检查 init_cluster 是否属于同一个相机
     cost_matrix=np.zeros(
         shape=(len(points),len(points)),
         dtype=np.float64
@@ -178,7 +184,19 @@ def no_id_reconstruct(
                 cam_params=cam_params
             )
     # 对 cost_matrix 进行聚类 -> 获取 clumps
-    labels=DBSCAN(eps=10, min_samples=2, metric="precomputed").fit_predict(cost_matrix)
+    # 从points总获取 初始类中心点
+    assert init_cluster is not None,"no camera can detect complete wand" # 只要应该有一个相机能看到完整的L型标定杆
+    labels=cluster(
+        init_cluster=init_cluster,
+        cost_matrix=cost_matrix
+    )
+    # labels=DBSCAN(eps=10, min_samples=2, metric="precomputed").fit_predict(cost_matrix) # DBSCAN作为密度聚类,并不适合这个任务场景
+    # np.set_printoptions(
+    #     threshold=5000,
+    #     linewidth=5000
+    # )
+    # print(cost_matrix.astype(np.int32))
+    # import pdb;pdb.set_trace()
     max_label=max(labels)+1
     clumps=[[] for _ in range(max_label)]
     for label,point in list(zip(labels,points.items())):

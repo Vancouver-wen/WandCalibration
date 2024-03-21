@@ -93,6 +93,9 @@ class SimpleBlobDetection():
         elif self.color=="red":
             red_channel=frame[:,:,2].astype(np.int64)-np.maximum(frame[:,:,0].astype(np.int64),frame[:,:,1].astype(np.int64))
             red_channel=np.clip(red_channel,a_min=0,a_max=255).astype(np.uint8)
+            # 形态学
+            kernel = np.ones((10,10),np.uint8)
+            red_channel=cv2.morphologyEx(red_channel, cv2.MORPH_CLOSE, kernel,iterations=2)
             frame=red_channel
             # print(f"frame.shape: {frame.shape}")
             # exit(0)
