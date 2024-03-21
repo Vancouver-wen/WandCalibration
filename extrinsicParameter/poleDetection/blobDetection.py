@@ -91,7 +91,7 @@ class SimpleBlobDetection():
             frame=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
             # print(f"frame.shape: {frame.shape}")
         elif self.color=="red":
-            red_channel=frame[:,:,2].astype(np.int64)-frame[:,:,0].astype(np.int64)-frame[:,:,1].astype(np.int64)
+            red_channel=frame[:,:,2].astype(np.int64)-np.maximum(frame[:,:,0].astype(np.int64),frame[:,:,1].astype(np.int64))
             red_channel=np.clip(red_channel,a_min=0,a_max=255).astype(np.uint8)
             frame=red_channel
             # print(f"frame.shape: {frame.shape}")
