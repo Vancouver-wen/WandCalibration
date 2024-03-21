@@ -95,6 +95,7 @@ class BoundleAdjustment(nn.Module):
             )
             self.pole3d_posotions.append(position)
         self.save_path=save_path
+        self.resolutions=[intrinsic['image_size'] for intrinsic in init_intrinsic]
         self.vmap_projectPoint=torch.vmap(self.projectPoint,in_dims=(1,None,None,None,None,None,None,None,None))
         self.vmap_projectIter=torch.vmap(self.projectIter,in_dims=(0,None,0,0,0,0))
     
@@ -117,13 +118,15 @@ class BoundleAdjustment(nn.Module):
 
     def get_dict(self):
         camera_params=[]
-        for camera_param in self.camera_params:
+        for camera_param,resolution in list(zip(self.camera_params,self.resolutions)):
             K=camera_param['K'].tolist()
             dist=camera_param['dist'].tolist()
             R=camera_param['R'].tolist()
             t=camera_param['t'].tolist()
             camera_params.append({
-                'K':K,'dist':dist,'R':R,'t':t
+                'image_size': resolution,
+                'K':K,'dist':dist,
+                'R':R,'t':t
             })
         pole_3ds=[]
         for pole_3d in self.pole3d_posotions:

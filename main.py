@@ -69,15 +69,15 @@ class OptiTrack(object):
         save_path=os.path.join(self.config.image_path,'refine_pose.json')
         # support early support
         try:
-            get_refine_pose(
-                cam_num=self.config.cam_num,
-                pole_lists=self.pole,
-                intrinsics=self.intrinsic,
-                pole_param=self.config.pole,
-                init_poses=self.pose,
-                save_path=save_path
-            )
-            pass
+            # get_refine_pose(
+            #     cam_num=self.config.cam_num,
+            #     pole_lists=self.pole,
+            #     intrinsics=self.intrinsic,
+            #     pole_param=self.config.pole,
+            #     init_poses=self.pose,
+            #     save_path=save_path
+            # )
+            pass # test
         except:
             logger.info("early stop!")
         with open(save_path,'r') as f:
@@ -90,10 +90,14 @@ class OptiTrack(object):
         )
     def world_pose(self):
         save_path=os.path.join(self.config.image_path,'world_pose.json')
+        # import pdb;pdb.set_trace() # p self.output
         cam0_R,cam0_t=get_cam0_extrinsic(
-            cam_0_param=self.output['calibration'][0],
+            cam_num=self.config.cam_num,
+            cam_params=self.output['calibration'],
+            masks=self.mask,
             image_path=self.config.image_path,
-            world_coord_param=self.config.worldCoordParam
+            world_coord_param=self.config.worldCoordParam,
+            wand_blob_param=self.config.wandBlobParam
         )
         self.world_camera_params=adjust_camera_params(
             cam_0_R=cam0_R,

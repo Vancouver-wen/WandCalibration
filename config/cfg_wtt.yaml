@@ -31,5 +31,13 @@ poleBlobParam:
   minInertiaRatio: 0.1
   lineAngle: 2
 
+wandBlobParam:
+  minThreshold: 240
+  minAreaRatio: 2.0e-6
+  maxAreaRatio: 6.5e-4
+  minCircularity: 0.2
+  minConvexity: 0.2
+  minInertiaRatio: 0.1
 
-worldCoordParam: !include "/home/wenzihao/Desktop/WandCalibration/config/point/point_sample.yaml"
+# worldCoordParam: !include "/home/wenzihao/Desktop/WandCalibration/config/point/point_wtt.yaml"
+worldCoordParam: !include "/home/wenzihao/Desktop/WandCalibration/config/wand/wand750.yaml"

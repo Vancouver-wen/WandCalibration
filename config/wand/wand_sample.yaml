@@ -1,3 +1,17 @@
-type: checkerboard
-height: 8
-width: 11
+type: wand
+color: "white"
+# 角B 是直角
+# AB 为短边
+# BC 为长边
+# AC 为斜边
+WandDefinition:
+  - 0.45 
+  - 0.6
+WandPointCoord:
+  - [0,0,1,47]
+  - [0.36,0,1.2]
+  - [0,0,0.72]
+
+# wand definition
+# 1->A  2->B 3->C
+# AB=3 BC=4 AC=5

@@ -65,6 +65,7 @@ def get_refine_pose(
         loss=myBoundAdjustment()
         if step%10==0:
             output=myBoundAdjustment.get_dict() # 保存结果
+            # import pdb;pdb.set_trace() # p intrinsics -> 有 image_size 
             verify_accuracy(
                 camera_params=output['calibration'],
                 pole_3ds=output['poles'],
