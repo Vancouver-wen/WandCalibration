@@ -69,14 +69,14 @@ class OptiTrack(object):
         save_path=os.path.join(self.config.image_path,'refine_pose.json')
         # support early support
         try:
-            # get_refine_pose(
-            #     cam_num=self.config.cam_num,
-            #     pole_lists=self.pole,
-            #     intrinsics=self.intrinsic,
-            #     pole_param=self.config.pole,
-            #     init_poses=self.pose,
-            #     save_path=save_path
-            # )
+            get_refine_pose(
+                cam_num=self.config.cam_num,
+                pole_lists=self.pole,
+                intrinsics=self.intrinsic,
+                pole_param=self.config.pole,
+                init_poses=self.pose,
+                save_path=save_path
+            )
             pass # test
         except:
             logger.info("early stop!")
@@ -126,7 +126,7 @@ class OptiTrack(object):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config_path',default="./config/cfg_wtt.yaml",type=str)
+    parser.add_argument('--config_path',default="./config/cfg_archery.yaml",type=str)
     args = parser.parse_args()
     myOptitrack=OptiTrack(config_path=args.config_path)
     myOptitrack.run()

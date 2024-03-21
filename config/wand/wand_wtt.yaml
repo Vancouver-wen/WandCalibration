@@ -1,0 +1,15 @@
+type: wand
+color: "white"
+# 角B 是直角
+# AB 为短边
+# BC 为长边
+# AC 为斜边
+WandDefinition:
+  - 0.45 
+  - 0.6
+  - 0.75
+
+WandPointCoord:
+  - [ 0,    0.45,  0]
+  - [ 0 ,   0,    0]
+  - [0.6,    0,  0]

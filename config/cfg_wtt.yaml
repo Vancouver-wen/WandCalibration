@@ -40,4 +40,4 @@ wandBlobParam:
   minInertiaRatio: 0.1
 
 # worldCoordParam: !include "/home/wenzihao/Desktop/WandCalibration/config/point/point_wtt.yaml"
-worldCoordParam: !include "/home/wenzihao/Desktop/WandCalibration/config/wand/wand750.yaml"
+worldCoordParam: !include "/home/wenzihao/Desktop/WandCalibration/config/wand/wand_wtt.yaml"
