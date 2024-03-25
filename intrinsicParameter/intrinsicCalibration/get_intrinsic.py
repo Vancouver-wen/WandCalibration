@@ -29,14 +29,14 @@ def get_intrinsic(cam_num,board_config,image_path):
         from intrinsicParameter.checkerboardCalibration.get_cam_calibration import IntrinsicCalibration
         height=board_config['height']
         width=board_config['width']
-        intrinsicCalibrator=IntrinsicCalibration(height=height,width=width)
+        intrinsicCalibrator=IntrinsicCalibration(height=height,width=width,image_path=image_path)
     elif board_type=="charucoboard":
         height=board_config['height']
         width=board_config['width']
         suqare_length=board_config['square_length']
         marker_length=board_config['marker_length']
         from intrinsicParameter.charucoboardCalibration.get_cam_calibration import IntrinsicCalibration
-        intrinsicCalibrator=IntrinsicCalibration(height=height,width=width,square_length=suqare_length,markser_length=marker_length)
+        intrinsicCalibrator=IntrinsicCalibration(height=height,width=width,square_length=suqare_length,markser_length=marker_length,image_path=image_path)
     else:
         support_list=[
             "checkerboard",

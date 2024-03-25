@@ -159,10 +159,15 @@ def get_wand(
         )
     # import pdb;pdb.set_trace()
     output=merge_output(cam_num,output)
-    if len(output)==3*cam_num:
-        logger.info(f"共检测出{len(output)}个点,应为3*cam_num: {3*cam_num}")
+    output_num=0
+    for item in output:
+        for _ in item:
+            output_num+=1
+    # import pdb;pdb.set_trace()
+    if output_num==3*cam_num:
+        logger.info(f"共检测出{output_num}个点,应为3*cam_num: {3*cam_num}")
     else:
-        logger.info(f"共检测出{len(output)}个点,应为3*cam_num: {3*cam_num}")
+        logger.warning(f"共检测出{output_num}个点,应为3*cam_num: {3*cam_num}")
     # draw_output(output)
     return output
 

@@ -51,11 +51,12 @@ class OptiTrack(object):
             masks=self.mask,
             color=self.config.pole.color
         )
-        # vis_pole(
-        #     cam_num=self.config.cam_num,
-        #     image_path=os.path.join(self.config.image_path,'pole'),
-        #     pole_lists=self.pole
-        # )
+        vis_pole(
+            cam_num=self.config.cam_num,
+            image_path=os.path.join(self.config.image_path,'pole'),
+            pole_lists=self.pole,
+            show=False
+        )
         # import pdb;pdb.set_trace()
     def init_pose(self):
         self.pose=get_init_pose(
@@ -126,7 +127,7 @@ class OptiTrack(object):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config_path',default="./config/cfg_wtt_red.yaml",type=str)
+    parser.add_argument('--config_path',default="./config/cfg_wtt.yaml",type=str)
     args = parser.parse_args()
     myOptitrack=OptiTrack(config_path=args.config_path)
     myOptitrack.run()
