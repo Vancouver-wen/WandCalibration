@@ -14,7 +14,7 @@ cam_num: 6
 board: !include "/home/wenzihao/Desktop/WandCalibration/config/board/charucoboard_4_5.yaml"
 pole: !include "/home/wenzihao/Desktop/WandCalibration/config/pole/pole760.yaml"
 
-image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollectWTT"
+image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollect/imageCollectWTT"
 
 maskBlobParam:
   minThreshold: 220

@@ -14,7 +14,7 @@ cam_num: 7
 board: !include "/home/wenzihao/Desktop/WandCalibration/config/board/checkerboard_11_8.yaml"
 pole: !include "/home/wenzihao/Desktop/WandCalibration/config/pole/pole760.yaml"
 
-image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollectOutdoorArchery"
+image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollect/imageCollectOutdoorArchery"
 
 maskBlobParam:
   minThreshold: 220
