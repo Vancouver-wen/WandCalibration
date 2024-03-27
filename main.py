@@ -7,9 +7,6 @@ import cv2
 import yaml
 from easydict import EasyDict
 from loguru import logger
-if not os.path.exists("./logs"):
-    os.mkdir("./logs")
-logger.add("./logs/{time}.log")
 
 from utils.yamlLoader import get_yaml_data
 from intrinsicParameter.intrinsicCalibration.get_intrinsic import get_intrinsic
@@ -134,4 +131,7 @@ def main():
 
 
 if __name__=="__main__":
+    if not os.path.exists("./logs"):
+        os.mkdir("./logs")
+    logger.add("./logs/{time}.log")
     main()
