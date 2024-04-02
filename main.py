@@ -120,6 +120,7 @@ class OptiTrack(object):
         self.world_pose()
         if vis:
             self.visualize()
+        return self.world_camera_params
 
 
 def main():
