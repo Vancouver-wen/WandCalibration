@@ -4,6 +4,7 @@ from threading import Lock
 import os
 import numpy as np
 import cv2
+from tqdm import tqdm
 
 class IntrinsicCalibration(object):
     def __init__(
@@ -25,11 +26,11 @@ class IntrinsicCalibration(object):
             os.mkdir(self.debug_path)
         self.debug_number=0
 
-    def __call__(self, image_path_list):
+    def __call__(self, image_path_list,cam_index=0):
         all_charuco_corners = []
         all_charuco_ids = []
         # start=time.time()
-        for image_file in image_path_list:
+        for image_file in tqdm(image_path_list,position=cam_index):
             image = cv2.imread(image_file)
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             size = image.shape[::-1]

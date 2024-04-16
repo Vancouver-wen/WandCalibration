@@ -56,7 +56,7 @@ def get_intrinsic(cam_num,board_config,image_path):
             intrinsics,
             step
         )
-        for step,image_path_list in enumerate(image_path_lists)
+        for step,image_path_list in enumerate(tqdm(image_path_lists))
     )
     # for step,image_path_list in enumerate(tqdm(image_path_lists)):
     #     intrinsic=intrinsicCalibrator(image_path_list=image_path_list)
@@ -73,7 +73,7 @@ def get_intrinsic(cam_num,board_config,image_path):
     return result
 
 def get_each_intrinsic(intrinsicCalibrator,image_path_list,intrinsics,step):
-    intrinsic=intrinsicCalibrator(image_path_list=image_path_list)
+    intrinsic=intrinsicCalibrator(image_path_list=image_path_list,cam_index=step)
     intrinsics[f"cam{step+1}"]=intrinsic
 
 

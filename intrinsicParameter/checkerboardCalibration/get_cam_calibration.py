@@ -5,6 +5,7 @@ from threading import Lock
 import cv2
 import numpy as np
 import glob
+from tqdm import tqdm
 
 class IntrinsicCalibration(object):
     def __init__(
@@ -28,10 +29,10 @@ class IntrinsicCalibration(object):
             os.mkdir(self.debug_path)
         self.debug_number=0
 
-    def __call__(self, image_path_list):
+    def __call__(self, image_path_list,cam_index=0):
         obj_points = []
         img_points = []
-        for image_path in image_path_list:
+        for image_path in tqdm(image_path_list,position=cam_index):
             img = cv2.imread(image_path)
             img_height, img_width = img.shape[:2]
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
