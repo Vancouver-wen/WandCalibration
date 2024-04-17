@@ -8,6 +8,7 @@ import cv2
 import numpy as np
 import torch
 from tqdm import tqdm
+from loguru import logger
 
 from .normalizedImagePlane import get_undistort_points
 from .multiViewTriangulate import normalized_pole_triangulate
@@ -62,8 +63,13 @@ def get_refine_pose(
     iteration = 1000 # iteration = 1000
     start=time.time()
     for step in tqdm(range(iteration)):
-        loss=myBoundAdjustment()
+        loss=myBoundAdjustment(
+            line_weight=0,
+            length_weight=0,
+            reproj_weight=1.0
+        )
         if step%10==0:
+            logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t loss:{loss.item():.5f}")
             output=myBoundAdjustment.get_dict() # 保存结果
             # import pdb;pdb.set_trace() # p intrinsics -> 有 image_size 
             verify_accuracy(
@@ -78,11 +84,7 @@ def get_refine_pose(
         optimizer.step()
         if step%100==0 and step!=0:
             lrSchedular.step()
-        # print({
-        #     'step':f"{step}/{iteration}",
-        #     'lr':lrSchedular.get_last_lr()[-1],
-        #     'loss':loss.item()
-        # })
+        
     
 
 

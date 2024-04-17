@@ -6,6 +6,7 @@ import numpy as np
 import cv2
 from joblib import Parallel,delayed
 from tqdm import tqdm
+from loguru import logger
 
 from extrinsicParameter.poleDetection.blobDetection import get_cam_list
 from utils.imageConcat import show_multi_imgs
@@ -42,11 +43,19 @@ def vis_each_pole(
     )
     return image
 
+def save_each_pole(
+        pole_list,
+        frame_list,
+        debug_path,
+        step
+    ):
+    image=vis_each_pole(pole_list,frame_list)
+    cv2.imwrite(os.path.join(debug_path,f"{step}.jpg"),image)
+
 def vis_pole(
         cam_num,
         image_path,
         pole_lists,
-        show=False
     ):
     debug_path=os.path.join(image_path,"vis_poles")
     if not os.path.exists(debug_path):
@@ -54,21 +63,12 @@ def vis_pole(
     
     frame_lists=get_cam_list(image_path,cam_num)
     assert len(pole_lists)==len(frame_lists),"len(pole_lists) != len(frame_lists)"
-    if show:
-        cv2.namedWindow("image",cv2.WINDOW_GUI_NORMAL)
-        iteration=list(zip(pole_lists,frame_lists))
-    else:
-        iteration=random.sample(list(zip(pole_lists,frame_lists)),300)
-    for step,(pole_list,frame_list) in enumerate(tqdm(iteration)):
-        image=vis_each_pole(pole_list,frame_list)
-        if show:
-            cv2.imshow("image",image)
-            if cv2.waitKey(1) & 0xFF==ord('q'):
-                break
-        else:
-            cv2.imwrite(os.path.join(debug_path,f"{step}.jpg"),image)
-    if show:
-        cv2.destroyAllWindows()
+    iteration=random.sample(list(zip(pole_lists,frame_lists)),300)
+    logger.info(f"visualize pole detection result ")
+    Parallel(n_jobs=-1,backend="threading")(
+        delayed(save_each_pole)(pole_list,frame_list,debug_path,step)
+        for step,(pole_list,frame_list) in enumerate(tqdm(iteration))
+    )
 
 
 if __name__=="__main__":

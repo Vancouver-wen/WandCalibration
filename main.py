@@ -19,6 +19,7 @@ from utils.verifyAccuracy import verify_accuracy
 from extrinsicParameter.worldCoord.get_cam0_extrinsic import get_cam0_extrinsic
 from extrinsicParameter.worldCoord.adjustCamParam import adjust_camera_params
 from visualize.visCameraParams import vis_camera_params
+from visualize.vis_reproj_error import vis_reproj_error
 
 class OptiTrack(object):
     def __init__(self,config_path):
@@ -48,12 +49,14 @@ class OptiTrack(object):
             masks=self.mask,
             color=self.config.pole.color
         )
-        vis_pole(
-            cam_num=self.config.cam_num,
-            image_path=os.path.join(self.config.image_path,'pole'),
-            pole_lists=self.pole,
-            show=False
-        )
+        try:
+            vis_pole(
+                cam_num=self.config.cam_num,
+                image_path=os.path.join(self.config.image_path,'pole'),
+                pole_lists=self.pole,
+            )
+        except:
+            logger.info(f"early stop pole detection visualizer")
         # import pdb;pdb.set_trace()
     def init_pose(self):
         self.pose=get_init_pose(
@@ -77,7 +80,7 @@ class OptiTrack(object):
             )
             pass # test -> do not comment
         except:
-            logger.info("early stop!")
+            logger.info("early stop pose refiner")
         with open(save_path,'r') as f:
             self.output=json.load(f)
     def verify_accuracy(self):
@@ -86,6 +89,15 @@ class OptiTrack(object):
             pole_3ds=self.output['poles'],
             pole_lists=self.pole,
         )
+        try:
+            vis_reproj_error(
+                cam_num=self.config.cam_num,
+                pole_lists=self.pole,
+                camera_params=self.output['calibration'],
+                image_path=os.path.join(self.config.image_path,'pole')
+            )
+        except:
+            logger.info(f"early stop reprojection error visualizer")
     def world_pose(self):
         save_path=os.path.join(self.config.image_path,'world_pose.json')
         # import pdb;pdb.set_trace() # p self.output

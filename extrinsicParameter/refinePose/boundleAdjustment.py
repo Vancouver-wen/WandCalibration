@@ -240,7 +240,7 @@ class BoundleAdjustment(nn.Module):
             self,
             line_weight=1.0,
             length_weight=1.0,
-            reproj_weight=1.0e-2
+            reproj_weight=1.0
         ):
         self.line_weight=line_weight
         self.length_weight=length_weight
@@ -253,7 +253,7 @@ class BoundleAdjustment(nn.Module):
         #     )
         #     losses=handle.get()
 
-        losses=Parallel(n_jobs=1,backend="threading")(
+        losses=Parallel(n_jobs=-1,backend="threading")(
             delayed(self.forward_iter)(pole_2d_list,pole_3d)
             for pole_2d_list,pole_3d in list(zip(self.pole_2d_lists,self.pole3d_posotions))
         )

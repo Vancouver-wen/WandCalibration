@@ -35,8 +35,8 @@ def get_undistort_points(
         assert cam_num==len(pole_list),"cam_num != len(pole_list)"
         assert cam_num==len(intrinsics),"cam_num != len(intrinsics)"
         for pole,intrinsic in list(zip(pole_list,intrinsics)):
-            K=np.array(intrinsic.K)
-            dist=np.squeeze(np.array(intrinsic.dist))
+            K=np.array(intrinsic['K'])
+            dist=np.squeeze(np.array(intrinsic['dist']))
             if pole is None:
                 undistorted_pole_list.append(None)
                 continue
