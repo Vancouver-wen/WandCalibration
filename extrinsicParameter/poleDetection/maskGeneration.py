@@ -6,6 +6,7 @@ import numpy as np
 from natsort import natsorted
 from tqdm import tqdm
 from joblib import Parallel,delayed
+from loguru import logger
 
 from .blobDetection import get_cam_list,get_image_list,SimpleBlobDetection
 
@@ -18,6 +19,17 @@ def get_mask(
         color
     )->list:
     assert cam_num==len(resolutions),"camera num quantity is ambiguous"
+    exist_masks=[]
+    for step in range(cam_num):
+        exist_mask_path=os.path.join(mask_path,f"cam{step+1}.jpg")
+        if os.path.exists(exist_mask_path):
+            exist_mask=cv2.imread(exist_mask_path)
+            exist_masks.append(exist_mask)
+    if len(exist_masks)==cam_num:
+        logger.info("find exist mask and load ..")
+        return exist_masks
+    else:
+        logger.info("generating mask ..")
     masks=[]
     expand_size=maskBlobParam.expandSize
     detectors=[]
