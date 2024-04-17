@@ -23,7 +23,7 @@ def get_mask(
     for step in range(cam_num):
         exist_mask_path=os.path.join(mask_path,f"cam{step+1}.jpg")
         if os.path.exists(exist_mask_path):
-            exist_mask=cv2.imread(exist_mask_path)
+            exist_mask=cv2.imread(exist_mask_path,cv2.IMREAD_GRAYSCALE)
             exist_masks.append(exist_mask)
     if len(exist_masks)==cam_num:
         logger.info("find exist mask and load ..")
