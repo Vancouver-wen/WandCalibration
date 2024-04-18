@@ -14,6 +14,7 @@ from extrinsicParameter.poleDetection.maskGeneration import get_mask
 from extrinsicParameter.poleDetection.poleDetection import get_pole
 from visualize.vis_pole_detection import vis_pole
 from extrinsicParameter.initPose.initPose import get_init_pose
+from visualize.get_init_camera_params import get_init_camera_params
 from extrinsicParameter.refinePose.refinePose import get_refine_pose
 from utils.verifyAccuracy import verify_accuracy
 from extrinsicParameter.worldCoord.get_cam0_extrinsic import get_cam0_extrinsic
@@ -66,6 +67,21 @@ class OptiTrack(object):
             pole_param=self.config.pole,
             save_path=os.path.join(self.config.image_path,'init_pose.json')
         )
+        init_camera_params=get_init_camera_params(
+            cam_num=self.config.cam_num,
+            intrinsics=self.intrinsic,
+            extrinsics=self.pose
+        )
+        try:
+            vis_reproj_error(
+                cam_num=self.config.cam_num,
+                pole_lists=self.pole,
+                camera_params=init_camera_params,
+                image_path=os.path.join(self.config.image_path,'pole'),
+                vis_folder="vis_init_reproj"
+            )
+        except:
+            logger.info(f"early stop reprojection error visualizer")
     def refine_pose(self):
         save_path=os.path.join(self.config.image_path,'refine_pose.json')
         # support early support
@@ -94,7 +110,8 @@ class OptiTrack(object):
                 cam_num=self.config.cam_num,
                 pole_lists=self.pole,
                 camera_params=self.output['calibration'],
-                image_path=os.path.join(self.config.image_path,'pole')
+                image_path=os.path.join(self.config.image_path,'pole'),
+                vis_folder="vis_reproj"
             )
         except:
             logger.info(f"early stop reprojection error visualizer")

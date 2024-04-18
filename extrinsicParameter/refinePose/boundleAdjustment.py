@@ -2,6 +2,7 @@ import os
 import sys
 import json
 from functools import cache
+import copy
 
 import cv2
 import numpy as np
@@ -255,7 +256,7 @@ class BoundleAdjustment(nn.Module):
 
         losses=Parallel(n_jobs=-1,backend="threading")(
             delayed(self.forward_iter)(pole_2d_list,pole_3d)
-            for pole_2d_list,pole_3d in list(zip(self.pole_2d_lists,self.pole3d_posotions))
+            for pole_2d_list,pole_3d in list(zip(copy.deepcopy(self.pole_2d_lists),copy.deepcopy(self.pole3d_posotions)))
         )
         loss=torch.mean(torch.concat(losses))
         return loss
