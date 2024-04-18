@@ -4,6 +4,7 @@ calibratie multi cameras with 3 marker wand
 #### 注意事项：
 1. 本仓库用于校准有共视区域的多相机系统
 2. 需保证采集的图像是帧同步的
+3. bundle adjustment 对内参初值非常敏感,内参的精度直接关系到捆绑调整的 upper bound
 
 ###### 使用方法:
 1. 根据配置文件制作T型杆与L型杆
