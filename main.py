@@ -55,6 +55,7 @@ class OptiTrack(object):
                 cam_num=self.config.cam_num,
                 image_path=os.path.join(self.config.image_path,'pole'),
                 pole_lists=self.pole,
+                vis_num=self.config.vis_num
             )
         except:
             logger.info(f"early stop pole detection visualizer")
@@ -78,6 +79,7 @@ class OptiTrack(object):
                 pole_lists=self.pole,
                 camera_params=init_camera_params,
                 image_path=os.path.join(self.config.image_path,'pole'),
+                vis_num=self.config.vis_num,
                 vis_folder="vis_init_reproj"
             )
         except:
@@ -111,6 +113,7 @@ class OptiTrack(object):
                 pole_lists=self.pole,
                 camera_params=self.output['calibration'],
                 image_path=os.path.join(self.config.image_path,'pole'),
+                vis_num=self.config.vis_num,
                 vis_folder="vis_reproj"
             )
         except:

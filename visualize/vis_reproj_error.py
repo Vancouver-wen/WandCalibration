@@ -88,12 +88,13 @@ def vis_reproj_error(
         pole_lists,
         camera_params,
         image_path,
+        vis_num=300,
         vis_folder="vis_reproj"
     ):
     # 遍历 挥杆 图片
     frame_lists=get_cam_list(image_path,cam_num)
     undistort_pole_lists=get_undistort_points(cam_num=cam_num,pole_lists=pole_lists,intrinsics=camera_params)
-    iteration=random.sample(list(zip(frame_lists,undistort_pole_lists)),300)
+    iteration=random.sample(list(zip(frame_lists,undistort_pole_lists)),vis_num)
     reproj_folder=os.path.join(image_path,vis_folder)
     if not os.path.exists(reproj_folder):
         os.mkdir(reproj_folder)

@@ -16,6 +16,8 @@ pole: !include "/home/wenzihao/Desktop/WandCalibration/config/pole/pole760.yaml"
 
 image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollect/imageCollectWTT"
 
+vis_num: 300
+
 maskBlobParam:
   minThreshold: 220
   minAreaRatio: 1.0e-7
