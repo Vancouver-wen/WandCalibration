@@ -64,8 +64,8 @@ def get_refine_pose(
     start=time.time()
     for step in tqdm(range(iteration)):
         loss=myBoundAdjustment(
-            line_weight=0,
-            length_weight=0,
+            line_weight=1.0,
+            length_weight=1.0,
             reproj_weight=1.0
         )
         if step%10==0:

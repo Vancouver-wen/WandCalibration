@@ -205,6 +205,7 @@ class BoundleAdjustment(nn.Module):
         masks=[pole_2d is not None for pole_2d in pole_2d_list]
         pole_2ds,Ks,Rs,ts,Kds=[],[],[],[],[]
         for mask,pole_2d,cam_param in filter(lambda x:x[0],list(zip(masks,pole_2d_list,self.camera_params))):
+            assert not pole_2d.requires_grad,"2d pole detection should be constant and not require grad"
             pole_2ds.append(pole_2d)
             Ks.append(cam_param['K'])
             Rs.append(cam_param['R'])
@@ -254,9 +255,9 @@ class BoundleAdjustment(nn.Module):
         #     )
         #     losses=handle.get()
 
-        losses=Parallel(n_jobs=-1,backend="threading")(
+        losses=Parallel(n_jobs=1,backend="threading")(
             delayed(self.forward_iter)(pole_2d_list,pole_3d)
-            for pole_2d_list,pole_3d in list(zip(copy.deepcopy(self.pole_2d_lists),copy.deepcopy(self.pole3d_posotions)))
+            for pole_2d_list,pole_3d in list(zip(self.pole_2d_lists,self.pole3d_posotions))
         )
         loss=torch.mean(torch.concat(losses))
         return loss
