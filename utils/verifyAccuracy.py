@@ -47,6 +47,7 @@ def verify_accuracy(
     else:
         mean_diff = [float('{:.2f}'.format(i)) for i in mean_diff]
         logger.info(f"mean_pixel_error: {mean_error:.2f}    mean_coord_error: {mean_diff}   second_consume: {time_consume:.2f}")
+    return mean_error
 
 def vis_accuracy(
         

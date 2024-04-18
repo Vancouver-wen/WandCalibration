@@ -54,7 +54,17 @@ def get_refine_pose(
         detected_pole_2ds=masked_pole_lists,
         save_path=save_path
     )
-    lr=5e-3 # lr=5e-3
+    # 计算初始化精度
+    logger.info(f"calculate boundle adjustment init pixel error to set init learning rate")
+    output=myBoundAdjustment.get_dict() # 保存结果
+    init_error=verify_accuracy(
+        camera_params=output['calibration'],
+        pole_3ds=output['poles'],
+        pole_lists=pole_lists
+    )
+    if init_error>=20:
+        logger.warning(f"init pixel error too large, please check intrinsic calibration!")
+    lr=5e-4*init_error # lr=5e-3 是比较合适的数值
     optimizer = torch.optim.Adam(
         params=myBoundAdjustment.parameters(),
         lr=lr
