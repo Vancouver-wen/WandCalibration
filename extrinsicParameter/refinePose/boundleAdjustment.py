@@ -3,6 +3,8 @@ import sys
 import json
 from functools import cache
 import copy
+import random
+from itertools import compress
 
 import cv2
 import numpy as np
@@ -25,6 +27,7 @@ class BoundleAdjustment(nn.Module):
             save_path,
         ):
         super().__init__()
+        self.cpu_count=os.cpu_count()
         # 常量: pole
         if pole_definition.length_unit=="mm":
             pole_data=torch.tensor(
@@ -85,16 +88,21 @@ class BoundleAdjustment(nn.Module):
             
             self.camera_params.append(camera_param)
         # 优化量: 3d points
-        self.pole3d_posotions=nn.ParameterList()
-        for i in range(image_num):
-            position=nn.Parameter(
-                data=torch.tensor(
-                    data=init_pole_3ds[i], # 一行是一个3D point
-                    dtype=torch.float32
-                ),
-                requires_grad=True
-            )
-            self.pole3d_posotions.append(position)
+        self.pole3d_posotions=nn.Parameter(data=torch.tensor(init_pole_3ds,dtype=torch.float32),requires_grad=True)
+        # self.pole3d_posotions=nn.ParameterList()
+        # for i in range(image_num):
+        #     position=nn.Parameter(
+        #         data=torch.tensor(
+        #             data=init_pole_3ds[i], # 一行是一个3D point
+        #             dtype=torch.float32
+        #         ),
+        #         requires_grad=True
+        #     )
+        #     self.pole3d_posotions.append(position)
+        
+        assert len(self.pole_2d_lists)==len(self.pole3d_posotions)
+        self.list_len=len(self.pole_2d_lists)
+
         self.save_path=save_path
         self.resolutions=[intrinsic['image_size'] for intrinsic in init_intrinsic]
         self.vmap_projectPoint=torch.vmap(self.projectPoint,in_dims=(1,None,None,None,None,None,None,None,None))
@@ -164,23 +172,6 @@ class BoundleAdjustment(nn.Module):
         """
         k1,k2,p1,p2,k3=Kd[0],Kd[1],Kd[2],Kd[3],Kd[4]
         result=self.vmap_projectPoint(X,R,t,K,k1,k2,k3,p1,p2)
-        # pixels=[]
-        # N=X.shape[1]
-        # for i in range(N):
-        #     x = R@X[:,i] + t
-        #     x=torch.divide(x,x[-1])
-        #     r=torch.norm(x[:2])
-        #     r_2,r_4,r_6=pow(r,2),pow(r,4),pow(r,6)
-        #     x_undistorted=x[0]*(1+k1*r_2+k2*r_4+k3*r_6)+2*p1*x[0]*x[1]+p2*(r_2+2*pow(x[0],2))
-        #     y_undistorted=x[1]*(1+k1*r_2+k2*r_4+k3*r_6)+p1*(r_2+2*pow(x[1],2))+2*p2*x[0]*x[1]
-        #     f_x,f_y,u_0,v_0=K[0][0],K[1][1],K[0,2],K[1,2]
-        #     u=f_x*x_undistorted + u_0
-        #     v=f_y*y_undistorted + v_0
-        #     pixel=torch.cat((torch.unsqueeze(u,dim=0),torch.unsqueeze(v,dim=0)))
-        #     pixels.append(pixel)
-        # output=torch.stack(pixels,dim=0)
-        # import pdb;pdb.set_trace()
-        # return output.T
         return result.T
     
     def projectIter(self,pole_2d,X,K,R,t,Kd):
@@ -213,23 +204,6 @@ class BoundleAdjustment(nn.Module):
             Kds.append(cam_param['dist'])
         pole_2ds,Ks,Rs,ts,Kds=torch.stack(pole_2ds),torch.stack(Ks),torch.stack(Rs),torch.stack(ts),torch.stack(Kds)
         loss_reproj=self.vmap_projectIter(pole_2ds,pole_3d.T,Ks,Rs,ts,Kds).mean()
-        # loss_reproj=[]
-        # for mask,pole_2d,cam_param in filter(lambda x:x[0],list(zip(masks,pole_2d_list,self.camera_params))):
-        #     # if mask is False: # 此时 pole_2d 是 None
-        #     #     print("skip None")
-        #     #     continue
-        #     origin_pole_2d=pole_2d
-        #     expect_pole_2d=self.projectPoints(
-        #         X=pole_3d.T, # 转换成每一列是一点3d点
-        #         K=cam_param['K'],
-        #         R=cam_param['R'],
-        #         t=cam_param['t'],
-        #         Kd=cam_param['dist']
-        #     )
-        #     diff=origin_pole_2d-expect_pole_2d.T
-        #     loss_reproj.append(self.reproj_weight*torch.norm(diff,dim=1).mean())
-        # loss_reproj=torch.stack(loss_reproj,dim=0).mean()
-        # import pdb;pdb.set_trace()
         loss=loss_wand+loss_reproj
         # print({
         #     'loss': loss.item(),
@@ -240,6 +214,7 @@ class BoundleAdjustment(nn.Module):
 
     def forward(
             self,
+            mask,
             line_weight=1.0,
             length_weight=1.0,
             reproj_weight=1.0
@@ -247,17 +222,12 @@ class BoundleAdjustment(nn.Module):
         self.line_weight=line_weight
         self.length_weight=length_weight
         self.reproj_weight=reproj_weight
-        # autograd does not support crossing process boundaries
-        # with mp.Pool(processes=6) as pool:
-        #     handle=pool.starmap_async(
-        #         func=self.forward_iter,
-        #         iterable=list(zip(self.pole_2d_lists,self.pole3d_posotions))
-        #     )
-        #     losses=handle.get()
-
-        losses=Parallel(n_jobs=1,backend="threading")(
+        losses=Parallel(n_jobs=-1,backend="threading")(
             delayed(self.forward_iter)(pole_2d_list,pole_3d)
-            for pole_2d_list,pole_3d in list(zip(self.pole_2d_lists,self.pole3d_posotions))
+            for pole_2d_list,pole_3d in list(zip(
+                compress(self.pole_2d_lists,mask),
+                compress(self.pole3d_posotions,mask)
+            ))
         )
         loss=torch.mean(torch.concat(losses))
         return loss
