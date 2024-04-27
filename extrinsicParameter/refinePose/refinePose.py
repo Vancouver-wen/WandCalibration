@@ -71,7 +71,7 @@ def sub_process_train(
         params=model.parameters(),
         lr=lr
     )
-    lrSchedular = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.7) # ExponentialLR(optimizer, gamma=0.5)
+    lrSchedular = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.5) # ExponentialLR(optimizer, gamma=0.5)
     step_frequence=100 # int(iteration/math.sqrt(cpu_count))
     start=time.time()
     if rank==0:
@@ -79,31 +79,35 @@ def sub_process_train(
     else:
         loop=range(iteration)
     for step in loop:
-        torch.manual_seed(step)
-        mask_index=torch.multinomial(input=torch.ones(cpu_count),num_samples=list_len,replacement=True)
-        loss=model.forward(
-            mask=(mask_index==rank),
-            line_weight=1.0,
-            length_weight=1.0,
-            reproj_weight=1.0,
-        )
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        barrier.wait() # 同步
-        if rank==0 and step%10==0:
-            logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t loss:{loss:.5f}")
-            output=model.get_dict() # 保存结果
-            # import pdb;pdb.set_trace() # p intrinsics -> 有 image_size 
-            verify_accuracy(
-                camera_params=output['calibration'],
-                pole_3ds=output['poles'],
-                pole_lists=pole_lists,
-                time_consume=time.time()-start
+        try:
+            torch.manual_seed(step)
+            mask_index=torch.multinomial(input=torch.ones(cpu_count),num_samples=list_len,replacement=True)
+            loss=model.forward(
+                mask=(mask_index==rank),
+                line_weight=1.0,
+                length_weight=1.0,
+                reproj_weight=1.0,
             )
-            start=time.time()
-        if step%step_frequence==0 and step!=0:
-            lrSchedular.step()
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            barrier.wait() # 同步
+            if rank==0 and step%10==0:
+                logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t loss:{loss:.5f}")
+                output=model.get_dict() # 保存结果
+                # import pdb;pdb.set_trace() # p intrinsics -> 有 image_size 
+                verify_accuracy(
+                    camera_params=output['calibration'],
+                    pole_3ds=output['poles'],
+                    pole_lists=pole_lists,
+                    time_consume=time.time()-start
+                )
+                start=time.time()
+            if step%step_frequence==0 and step!=0:
+                lrSchedular.step()
+        except KeyboardInterrupt as e:
+            logger.info(f"rank {rank} daemon early stop")
+            break
 
 def multi_process_train(
         init_error:float,
@@ -111,9 +115,10 @@ def multi_process_train(
         pole_lists,
     ):
     mp_start_method=mp.get_start_method()
+    # mp.get_all_start_methods() ['fork', 'spawn', 'forkserver']
     if mp_start_method!='fork':
-        logger.warning(f"multiprocessing start method must be fork")
-        mp.set_start_method('fork')
+        logger.warning(f"change multi process to {mp_start_method}")
+        mp.set_start_method('fork', force=True)
     cpu_count=model.cpu_count
     barrier = mp.Barrier(cpu_count)
     model.share_memory() # this is required for the 'fork' method to work
@@ -128,6 +133,7 @@ def multi_process_train(
             name=f"train{rank}",
             daemon=True
         )
+        p.daemon=True
         p.start()
         processes.append(p)
     for p in processes:
@@ -141,7 +147,7 @@ def get_refine_pose(
         pole_param,
         init_poses,
         save_path,
-        multiprocessing
+        refine_mode
     ):
     # 先用cv2.undistort 把像素坐标系转换成归一化图像坐标系
     undistorted_pole_lists=get_undistort_points(cam_num,pole_lists,intrinsics)
@@ -186,18 +192,23 @@ def get_refine_pose(
         logger.warning(f"init pixel error too large, please check intrinsic calibration!")
 
     # 训练
-    if multiprocessing==False:
+    if refine_mode=='thread':
         multi_thread_train(
             init_error=init_error,
             model=myBoundAdjustment,
             pole_lists=pole_lists
         )
-    else:
+    elif refine_mode=='process':
         multi_process_train(
             init_error=init_error,
             model=myBoundAdjustment,
             pole_lists=pole_lists
         )
+    elif refine_mode=='distributed':
+        pass
+    else:
+        support_list=['thread','process','distributed']
+        raise NotImplementedError(f"refine mode only support {support_list}")
 
         
     

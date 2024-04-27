@@ -86,6 +86,7 @@ class OptiTrack(object):
             logger.info(f"early stop reprojection error visualizer")
     def refine_pose(self,early_stop=True):
         save_path=os.path.join(self.config.image_path,'refine_pose.json')
+        refine_mode="process" # 'thread' 'process' 'distributed'
         if early_stop:
             try:
                 get_refine_pose(
@@ -95,7 +96,7 @@ class OptiTrack(object):
                     pole_param=self.config.pole,
                     init_poses=self.pose,
                     save_path=save_path,
-                    multiprocessing=True
+                    refine_mode=refine_mode
                 )
             except:
                 logger.info("early stop pose refiner")
@@ -107,7 +108,7 @@ class OptiTrack(object):
                 pole_param=self.config.pole,
                 init_poses=self.pose,
                 save_path=save_path,
-                multiprocessing=True
+                refine_mode=refine_mode
             )
         with open(save_path,'r') as f:
             self.output=json.load(f)
