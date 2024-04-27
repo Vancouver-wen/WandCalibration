@@ -12,6 +12,8 @@ import torch
 from tqdm import tqdm
 from loguru import logger
 import torch.multiprocessing as mp
+import torch.distributed as dist
+from torch.nn.parallel import DistributedDataParallel as DDP
 
 from .normalizedImagePlane import get_undistort_points
 from .multiViewTriangulate import normalized_pole_triangulate
@@ -58,7 +60,18 @@ def multi_thread_train(
         if step%100==0 and step!=0:
             lrSchedular.step()
 
+def setup(rank, world_size):
+    os.environ['MASTER_ADDR'] = 'localhost'
+    os.environ['MASTER_PORT'] = '14514'
+
+    # initialize the process group
+    dist.init_process_group("gloo", rank=rank, world_size=world_size)
+
+def cleanup():
+    dist.destroy_process_group()
+
 def sub_process_train(
+        refine_mode:str,
         rank:int,
         barrier,
         lr:float,
@@ -67,7 +80,8 @@ def sub_process_train(
         pole_lists,
         iteration:int
     ):
-    logger.info(f"sub process rank:{rank} has been started")
+    assert refine_mode in ['process','distributed']
+    logger.info(f"{'ddp' if refine_mode=='distributed' else 'sub'} process rank:{rank} has been started")
     cpu_count=model.cpu_count
     list_len=model.list_len
     optimizer = torch.optim.Adam(
@@ -81,6 +95,9 @@ def sub_process_train(
         loop=tqdm(range(iteration))
     else:
         loop=range(iteration)
+    if refine_mode=="distributed":
+        setup(rank, cpu_count)
+        model = DDP(model, device_ids=None)
     for step in loop:
         try:
             torch.manual_seed(step)
@@ -96,7 +113,10 @@ def sub_process_train(
             optimizer.step()
             if step%10==0:
                 losses.put((rank,loss.item()))
-            barrier.wait() # 同步
+            if refine_mode=="process":
+                barrier.wait() # 同步
+            else: # 'distributed'
+                dist.barrier()
             if rank==0 and step%10==0:
                 avg_loss=dict()
                 while not losses.empty():
@@ -109,7 +129,10 @@ def sub_process_train(
                 avg_loss=np.array(avg_loss)
                 logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t avg_loss:{avg_loss.mean():.5f}")
                 logger.info(f"each_losses:{np.round(avg_loss,1).tolist()}")
-                output=model.get_dict() # 保存结果
+                if refine_mode=="distributed":
+                    output=model.module.get_dict()
+                else:
+                    output=model.get_dict() # 保存结果
                 # import pdb;pdb.set_trace() # p intrinsics -> 有 image_size 
                 verify_accuracy(
                     camera_params=output['calibration'],
@@ -121,10 +144,11 @@ def sub_process_train(
             if step%step_frequence==0 and step!=0:
                 lrSchedular.step()
         except KeyboardInterrupt as e:
-            logger.info(f"rank {rank} daemon early stop")
+            logger.info(f"{'ddp' if refine_mode=='distributed' else 'sub'} process rank {rank} daemon early stop")
             break
 
 def multi_process_train(
+        refine_mode:str,
         init_error:float,
         model:BoundleAdjustment,
         pole_lists,
@@ -143,19 +167,27 @@ def multi_process_train(
     if mp_start_method!=mp_use_method:
         logger.warning(f"multiprocessing start method change to {mp_use_method}")
         mp.set_start_method(mp_use_method,force=True)
-    mp.set_sharing_strategy('file_system') 
+    # 获取模型以外的训练超参
     cpu_count=model.cpu_count
-    barrier = mp.Barrier(cpu_count)
-    model.share_memory() # 在不同的进程间同步梯度
-    model.train()
     lr=5e-4*init_error/cpu_count # lr=5e-3 是比较合适的数值
     iteration = max(int(1000/math.sqrt(cpu_count)),500) # iteration = 1000
     losses=mp.Queue() # put get empty
+    if refine_mode=="process":
+        mp.set_sharing_strategy('file_system') 
+        barrier = mp.Barrier(cpu_count)
+        model.share_memory() # 在不同的进程间同步梯度
+        model.train()
+    elif refine_mode=="distributed":
+        barrier=None
+    else:
+        support_list=['process','distributed']
+        raise NotImplementedError(f"multi process train only support {support_list}")
+
     processes=[]
     for rank in range(cpu_count):
         p=mp.Process(
             target=sub_process_train,
-            args=(rank,barrier,lr,model,losses,pole_lists,iteration),
+            args=(refine_mode,rank,barrier,lr,model,losses,pole_lists,iteration),
             name=f"train{rank}",
             daemon=True
         )
@@ -164,13 +196,6 @@ def multi_process_train(
         processes.append(p)
     for p in processes:
         p.join()
-
-def ddp_train(
-        init_error,
-        model,
-        pole_lists
-    ):
-    raise NotImplementedError(f"multiprocess can work very well, ddp train will be developed later")
 
 def get_refine_pose(
         cam_num,
@@ -230,14 +255,9 @@ def get_refine_pose(
             model=myBoundAdjustment,
             pole_lists=pole_lists
         )
-    elif refine_mode=='process':
+    elif refine_mode=='process' or refine_mode=='distributed':
         multi_process_train(
-            init_error=init_error,
-            model=myBoundAdjustment,
-            pole_lists=pole_lists
-        )
-    elif refine_mode=='distributed':
-        ddp_train(
+            refine_mode=refine_mode,
             init_error=init_error,
             model=myBoundAdjustment,
             pole_lists=pole_lists
