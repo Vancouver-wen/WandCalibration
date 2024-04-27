@@ -61,11 +61,17 @@ def multi_thread_train(
             lrSchedular.step()
 
 def setup(rank, world_size):
-    os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '14514'
-
+    master_addr='127.0.0.1'
+    master_port='14514'
+    os.environ['MASTER_ADDR'] = master_addr
+    os.environ['MASTER_PORT'] = master_port
     # initialize the process group
-    dist.init_process_group("gloo", rank=rank, world_size=world_size)
+    dist.init_process_group(
+        "gloo", 
+        init_method=f'tcp://{master_addr}:{master_port}',
+        rank=rank, 
+        world_size=world_size
+    )
 
 def cleanup():
     dist.destroy_process_group()
@@ -172,8 +178,8 @@ def multi_process_train(
     lr=5e-4*init_error/cpu_count # lr=5e-3 是比较合适的数值
     iteration = max(int(1000/math.sqrt(cpu_count)),500) # iteration = 1000
     losses=mp.Queue() # put get empty
+    mp.set_sharing_strategy('file_system')
     if refine_mode=="process":
-        mp.set_sharing_strategy('file_system') 
         barrier = mp.Barrier(cpu_count)
         model.share_memory() # 在不同的进程间同步梯度
         model.train()
