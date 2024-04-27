@@ -27,7 +27,6 @@ class BoundleAdjustment(nn.Module):
             save_path,
         ):
         super().__init__()
-        self.cpu_count=os.cpu_count()
         # 常量: pole
         if pole_definition.length_unit=="mm":
             pole_data=torch.tensor(
@@ -102,6 +101,7 @@ class BoundleAdjustment(nn.Module):
         
         assert len(self.pole_2d_lists)==len(self.pole3d_posotions)
         self.list_len=len(self.pole_2d_lists)
+        self.cpu_count=min(os.cpu_count(),int(self.list_len/100)) # 每个进程至少100组图片
 
         self.save_path=save_path
         self.resolutions=[intrinsic['image_size'] for intrinsic in init_intrinsic]

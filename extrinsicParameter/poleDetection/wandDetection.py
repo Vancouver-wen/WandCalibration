@@ -86,8 +86,9 @@ def get_each_wand(frame_list,detectors,masks):
     return results
 
 def merge_output(cam_num,output):
+    logger.info(f"merge all wand detection to one")
     results=[None for _ in range(cam_num)]
-    for frame_index,wands in enumerate(output):
+    for frame_index,wands in enumerate(tqdm(output)):
         for cam_index,wand in enumerate(wands):
             if results[cam_index] is None:
                 results[cam_index]=copy.deepcopy(wand)
@@ -122,42 +123,50 @@ def get_wand(
         wand_blob_param
     ):
     assert cam_num==len(resolutions),"camera num quantity is ambiguous"
-    logger.info("detecting wands ...")
-    detectors=[]
-    for resolution in resolutions:
-        # 生成 detector
-        minAreaRatio=wand_blob_param.minAreaRatio
-        maxAreaRatio=wand_blob_param.maxAreaRatio
+    pickle_path=os.path.join(image_path,'wand.pkl')
+    if os.path.exists(pickle_path):
+        with open(pickle_path,'rb') as f:
+            output=pickle.load(f)
+            logger.info(f"find exist {pickle_path} and load successfully")
+    else:
+        logger.info(f"not find exist {pickle_path}, detecting wands ...")
+        detectors=[]
+        for resolution in resolutions:
+            # 生成 detector
+            minAreaRatio=wand_blob_param.minAreaRatio
+            maxAreaRatio=wand_blob_param.maxAreaRatio
 
-        minArea=resolution[0]*resolution[1]*minAreaRatio
-        maxArea=resolution[0]*resolution[1]*maxAreaRatio
-        detector=WandDetection(
-            minThreshold  =   wand_blob_param.minThreshold,
-            maxThreshold  =   255,
-            thresholdStep = 1,
-            filterByColor=True,
-            blobColor=255,
-            minRepeatability=2,
-            minDistBetweenBlobs=10,
-            filterByArea  =   True,
-            minArea  =  minArea,
-            maxArea = maxArea,
-            filterByCircularity  =   True,
-            minCircularity  = wand_blob_param.minCircularity,
-            filterByConvexity  =   True,
-            minConvexity  = wand_blob_param.minConvexity,
-            filterByInertia  =   True,
-            minInertiaRatio  =  wand_blob_param.minInertiaRatio,
-            color=color
-        )
-        detectors.append(detector)
-    # 遍历 L型直角杆 图片
-    frame_lists=get_cam_list(image_path,cam_num)
-    output=Parallel(n_jobs=-1,backend="threading")(
-            delayed(get_each_wand)(frame_list,detectors,masks)
-            for frame_list in tqdm(frame_lists)
-        )
-    # import pdb;pdb.set_trace()
+            minArea=resolution[0]*resolution[1]*minAreaRatio
+            maxArea=resolution[0]*resolution[1]*maxAreaRatio
+            detector=WandDetection(
+                minThreshold  =   wand_blob_param.minThreshold,
+                maxThreshold  =   255,
+                thresholdStep = 1,
+                filterByColor=True,
+                blobColor=255,
+                minRepeatability=2,
+                minDistBetweenBlobs=10,
+                filterByArea  =   True,
+                minArea  =  minArea,
+                maxArea = maxArea,
+                filterByCircularity  =   True,
+                minCircularity  = wand_blob_param.minCircularity,
+                filterByConvexity  =   True,
+                minConvexity  = wand_blob_param.minConvexity,
+                filterByInertia  =   True,
+                minInertiaRatio  =  wand_blob_param.minInertiaRatio,
+                color=color
+            )
+            detectors.append(detector)
+        # 遍历 L型直角杆 图片
+        frame_lists=get_cam_list(image_path,cam_num)
+        output=Parallel(n_jobs=-1,backend="threading")(
+                delayed(get_each_wand)(frame_list,detectors,masks)
+                for frame_list in tqdm(frame_lists)
+            )
+        with open(pickle_path,'wb') as f:
+            pickle.dump(output,f)
+        logger.info(f"dump wand detection result in {pickle_path}")
     output=merge_output(cam_num,output)
     output_num=0
     for item in output:
