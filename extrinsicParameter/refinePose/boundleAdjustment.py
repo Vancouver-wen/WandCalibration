@@ -105,6 +105,9 @@ class BoundleAdjustment(nn.Module):
 
         self.save_path=save_path
         self.resolutions=[intrinsic['image_size'] for intrinsic in init_intrinsic]
+        self.has_vmap=False
+    
+    def get_vmap_func(self):
         self.vmap_projectPoint=torch.vmap(self.projectPoint,in_dims=(1,None,None,None,None,None,None,None,None))
         self.vmap_projectIter=torch.vmap(self.projectIter,in_dims=(0,None,0,0,0,0))
     
@@ -219,6 +222,8 @@ class BoundleAdjustment(nn.Module):
             length_weight=1.0,
             reproj_weight=1.0
         ):
+        if not self.has_vmap:
+            self.get_vmap_func()
         self.line_weight=line_weight
         self.length_weight=length_weight
         self.reproj_weight=reproj_weight

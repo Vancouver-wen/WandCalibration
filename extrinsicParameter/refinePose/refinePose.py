@@ -4,6 +4,7 @@ import time
 import warnings
 warnings.filterwarnings('ignore')
 import math
+import resource
 
 import cv2
 import numpy as np
@@ -62,9 +63,11 @@ def sub_process_train(
         barrier,
         lr:float,
         model:BoundleAdjustment,
+        losses:mp.Queue,
         pole_lists,
         iteration:int
     ):
+    logger.info(f"sub process rank:{rank} has been started")
     cpu_count=model.cpu_count
     list_len=model.list_len
     optimizer = torch.optim.Adam(
@@ -91,9 +94,17 @@ def sub_process_train(
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            if step%10==0:
+                losses.put(loss.item())
             barrier.wait() # 同步
             if rank==0 and step%10==0:
-                logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t loss:{loss:.5f}")
+                avg_loss=[]
+                while not losses.empty():
+                    avg_loss.append(losses.get())
+                if len(avg_loss)!=cpu_count:
+                    logger.warning(f"expect {cpu_count} num losses but get {len(avg_loss)} num losses")
+                avg_loss=np.array(avg_loss)
+                logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t avg_loss:{avg_loss.mean():.5f}\t each_losses:{avg_loss.astype(np.int32).tolist()}")
                 output=model.get_dict() # 保存结果
                 # import pdb;pdb.set_trace() # p intrinsics -> 有 image_size 
                 verify_accuracy(
@@ -114,22 +125,33 @@ def multi_process_train(
         model:BoundleAdjustment,
         pole_lists,
     ):
-    mp_start_method=mp.get_start_method()
-    # mp.get_all_start_methods() ['fork', 'spawn', 'forkserver']
-    if mp_start_method!='fork':
-        logger.warning(f"change multi process to {mp_start_method}")
-        mp.set_start_method('fork', force=True)
+    mp.get_all_start_methods() ['fork', 'spawn', 'forkserver']
+    """
+    使用fork启动多进程, 会导致无法创建大tensor,优化器会fail
+    使用spawn启动多进程,虽然启动慢,但能够创建爱你较大的tensor
+    """
+    # 设置子进程的内存限制（单位：字节）
+    # memory_limit_bytes = 64 * 1024 * 1024 * 1024  # 4GB
+    # resource.setrlimit(resource.RLIMIT_AS, (memory_limit_bytes, memory_limit_bytes))
+    # resource.setrlimit(resource.RLIMIT_NOFILE, (131072, 131072))
+    mp_start_method=mp.get_start_method() 
+    mp_use_method='spawn'
+    if mp_start_method!=mp_use_method:
+        logger.warning(f"multiprocessing start method change to {mp_use_method}")
+        mp.set_start_method(mp_use_method,force=True)
+    mp.set_sharing_strategy('file_system') 
     cpu_count=model.cpu_count
     barrier = mp.Barrier(cpu_count)
-    model.share_memory() # this is required for the 'fork' method to work
+    model.share_memory() # 在不同的进程间同步梯度
     model.train()
     lr=5e-4*init_error/cpu_count # lr=5e-3 是比较合适的数值
     iteration = max(int(1000/math.sqrt(cpu_count)),500) # iteration = 1000
+    losses=mp.Queue() # put get empty
     processes=[]
     for rank in range(cpu_count):
         p=mp.Process(
             target=sub_process_train,
-            args=(rank,barrier,lr,model,pole_lists,iteration),
+            args=(rank,barrier,lr,model,losses,pole_lists,iteration),
             name=f"train{rank}",
             daemon=True
         )
@@ -138,7 +160,13 @@ def multi_process_train(
         processes.append(p)
     for p in processes:
         p.join()
-    
+
+def ddp_train(
+        init_error,
+        model,
+        pole_lists
+    ):
+    raise NotImplementedError(f"multiprocess can work very well, ddp train will be developed later")
 
 def get_refine_pose(
         cam_num,
@@ -205,7 +233,11 @@ def get_refine_pose(
             pole_lists=pole_lists
         )
     elif refine_mode=='distributed':
-        pass
+        ddp_train(
+            init_error=init_error,
+            model=myBoundAdjustment,
+            pole_lists=pole_lists
+        )
     else:
         support_list=['thread','process','distributed']
         raise NotImplementedError(f"refine mode only support {support_list}")
