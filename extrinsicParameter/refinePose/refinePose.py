@@ -104,7 +104,7 @@ def sub_process_train(
                 if len(avg_loss)!=cpu_count:
                     logger.warning(f"expect {cpu_count} num losses but get {len(avg_loss)} num losses")
                 avg_loss=np.array(avg_loss)
-                logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t avg_loss:{avg_loss.mean():.5f}\t each_losses:{avg_loss.astype(np.int32).tolist()}")
+                logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t avg_loss:{avg_loss.mean():.5f}\t each_losses:{np.round(avg_loss,1).tolist()}")
                 output=model.get_dict() # 保存结果
                 # import pdb;pdb.set_trace() # p intrinsics -> 有 image_size 
                 verify_accuracy(
