@@ -95,12 +95,15 @@ def sub_process_train(
             loss.backward()
             optimizer.step()
             if step%10==0:
-                losses.put(loss.item())
+                losses.put((rank,loss.item()))
             barrier.wait() # 同步
             if rank==0 and step%10==0:
-                avg_loss=[]
+                avg_loss=dict()
                 while not losses.empty():
-                    avg_loss.append(losses.get())
+                    key,value=losses.get()
+                    avg_loss[key]=value
+                avg_loss={k:v for k,v in sorted(avg_loss.items(),key=lambda x:x[0])}
+                avg_loss=list(avg_loss.values())
                 if len(avg_loss)!=cpu_count:
                     logger.warning(f"expect {cpu_count} num losses but get {len(avg_loss)} num losses")
                 avg_loss=np.array(avg_loss)
