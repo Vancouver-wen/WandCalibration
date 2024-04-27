@@ -125,7 +125,7 @@ def multi_process_train(
         model:BoundleAdjustment,
         pole_lists,
     ):
-    mp.get_all_start_methods() ['fork', 'spawn', 'forkserver']
+    # mp.get_all_start_methods() ['fork', 'spawn', 'forkserver']
     """
     使用fork启动多进程, 会导致无法创建大tensor,优化器会fail
     使用spawn启动多进程,虽然启动慢,但能够创建爱你较大的tensor
