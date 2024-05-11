@@ -14,7 +14,7 @@ cam_num: 4
 board: !include "/home/wenzihao/Desktop/WandCalibration/config/board/charucoboard_4_5.yaml"
 pole: !include "/home/wenzihao/Desktop/WandCalibration/config/pole/pole760_red.yaml"
 
-image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollectRedWtt"
+image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollect/imageCollectRedWtt"
 
 maskBlobParam:
   minThreshold: 100
@@ -40,4 +40,4 @@ wandBlobParam:
   minInertiaRatio: 0.1
 
 # worldCoordParam: !include "/home/wenzihao/Desktop/WandCalibration/config/point/point_wtt.yaml"
-worldCoordParam: !include "/home/wenzihao/Desktop/imageCollect/WandCalibration/config/wand/wand_wtt_red.yaml"
+worldCoordParam: !include "/home/wenzihao/Desktop/WandCalibration/config/wand/wand_wtt_red.yaml"
