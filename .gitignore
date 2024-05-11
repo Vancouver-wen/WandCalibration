@@ -3,4 +3,4 @@ imageCollect*/
 logs/
 pyinstaller/
 testData/
-**/__pycache__
+__pycache__/
