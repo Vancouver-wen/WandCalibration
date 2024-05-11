@@ -1,0 +1,67 @@
+# 文件结构
+# image_path
+#  - board
+#     - [intrinsic.json] # 可选:提供的内参初始值
+#     - cam*
+#  - empty
+#     - cam*
+#  - pole
+#     - [extrinsic.json] # 可选:提供的外参初始值
+#     - cam*
+
+cam_num: 4
+
+vis_num: 300
+
+board:
+  type: charucoboard
+  height: 4
+  width: 5
+  square_length: 0.2
+  marker_length: 0.15
+pole: 
+  color: "red"
+  length_unit: "mm"
+  d1: 250
+  d2: 510
+
+image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollect/imageCollectRedWtt"
+
+maskBlobParam:
+  minThreshold: 100
+  minAreaRatio: 1.0e-7
+  maxAreaRatio: 1.0e-2
+  expandSize: 3
+
+poleBlobParam:
+  minThreshold: 100
+  minAreaRatio: 1.0e-6
+  maxAreaRatio: 1.0e-3
+  minCircularity: 0.2
+  minConvexity: 0.2
+  minInertiaRatio: 0.1
+  lineAngle: 2
+
+wandBlobParam:
+  minThreshold: 100
+  minAreaRatio: 1.0e-6
+  maxAreaRatio: 1.0e-3
+  minCircularity: 0.2
+  minConvexity: 0.2
+  minInertiaRatio: 0.1
+
+worldCoordParam: 
+  type: wand
+  color: "red"
+  # 角B 是直角
+  # AB 为短边
+  # BC 为长边
+  # AC 为斜边
+  WandDefinition:
+    - 0.45 
+    - 0.6
+    - 0.75
+  WandPointCoord:
+    - [ 0.45,    0,  0.92]
+    - [ 0 ,   0,    0.92]
+    - [0,    -0.6,  0.92]

@@ -168,7 +168,7 @@ class OptiTrack(object):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config_path',default="./config/cfg_wtt_red.yaml",type=str)
+    parser.add_argument('--config_path',default="./config/cfg_uni.yaml",type=str)
     args = parser.parse_args()
     myOptitrack=OptiTrack(config_path=args.config_path)
     myOptitrack.run()
