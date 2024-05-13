@@ -11,8 +11,19 @@
 
 cam_num: 4
 
-board: !include "/home/wenzihao/Desktop/WandCalibration/config/board/charucoboard_4_5.yaml"
-pole: !include "/home/wenzihao/Desktop/WandCalibration/config/pole/pole760_red.yaml"
+vis_num: 300
+
+board:
+  type: charucoboard
+  height: 4
+  width: 5
+  square_length: 0.2
+  marker_length: 0.15
+pole: 
+  color: "red"
+  length_unit: "mm"
+  d1: 250
+  d2: 510
 
 image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollect/imageCollectRedWtt"
 
@@ -39,5 +50,18 @@ wandBlobParam:
   minConvexity: 0.2
   minInertiaRatio: 0.1
 
-# worldCoordParam: !include "/home/wenzihao/Desktop/WandCalibration/config/point/point_wtt.yaml"
-worldCoordParam: !include "/home/wenzihao/Desktop/WandCalibration/config/wand/wand_wtt_red.yaml"
+worldCoordParam: 
+  type: wand
+  color: "red"
+  # 角B 是直角
+  # AB 为短边
+  # BC 为长边
+  # AC 为斜边
+  WandDefinition:
+    - 0.45 
+    - 0.6
+    - 0.75
+  WandPointCoord:
+    - [ 0.45,    0,  0.92]
+    - [ 0 ,   0,    0.92]
+    - [0,    -0.6,  0.92]
