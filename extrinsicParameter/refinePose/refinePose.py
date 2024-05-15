@@ -4,7 +4,7 @@ import time
 import warnings
 warnings.filterwarnings('ignore')
 import math
-import resource
+# import resource
 
 import cv2
 import numpy as np
