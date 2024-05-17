@@ -11,10 +11,10 @@
 
 cam_num: 4
 
-board: !include "/home/wenzihao/Desktop/WandCalibration/config/board/checkerboard_11_8.yaml"
-pole: !include "/home/wenzihao/Desktop/WandCalibration/config/pole/pole760.yaml"
+board: !include "config/board/checkerboard_11_8.yaml"
+pole: !include "config/pole/pole760.yaml"
 
-image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollect/imageCollectArchery"
+image_path: "imageCollect/imageCollectArchery"
 
 maskBlobParam:
   minThreshold: 220
@@ -39,8 +39,8 @@ wandBlobParam:
   minConvexity: 0.2
   minInertiaRatio: 0.1
 
-# worldCoordParam: !include "/home/wenzihao/Desktop/WandCalibration/config/point/point_archery.yaml"
-worldCoordParam: !include "/home/wenzihao/Desktop/WandCalibration/config/wand/wand_archery.yaml"
+# worldCoordParam: !include "config/point/point_archery.yaml"
+worldCoordParam: !include "config/wand/wand_archery.yaml"
 
 
 

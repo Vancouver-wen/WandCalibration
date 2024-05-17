@@ -25,7 +25,7 @@ pole:
   d1: 250
   d2: 510
 
-image_path: "/home/wenzihao/Desktop/WandCalibration/imageCollect/imageCollectRedWtt"
+image_path: "imageCollect/imageCollectRedWtt"
 
 maskBlobParam:
   minThreshold: 100
