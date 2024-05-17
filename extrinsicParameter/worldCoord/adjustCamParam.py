@@ -18,6 +18,7 @@ def adjust_camera_params(
     world_camera_params=[]
     for camera_param in camera_params:
         world_camera_param=dict()
+        world_camera_param['image_size']=camera_param['image_size']
         world_camera_param['K']=camera_param['K']
         world_camera_param['dist']=camera_param['dist']
         R=np.array(camera_param['R'])@cam_0_R
