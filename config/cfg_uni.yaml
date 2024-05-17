@@ -20,12 +20,12 @@ board:
   square_length: 0.2
   marker_length: 0.15
 pole: 
-  color: "red"
+  color: "white"
   length_unit: "mm"
   d1: 250
   d2: 510
 
-image_path: "imageCollect/imageCollectRedWtt"
+image_path: "imageCollect/imageCollectKaige"
 
 maskBlobParam:
   minThreshold: 100
@@ -52,7 +52,7 @@ wandBlobParam:
 
 worldCoordParam: 
   type: wand
-  color: "red"
+  color: "white"
   # 角B 是直角
   # AB 为短边
   # BC 为长边
@@ -62,6 +62,6 @@ worldCoordParam:
     - 0.6
     - 0.75
   WandPointCoord:
-    - [ 0.45,    0,  0.92]
+    - [ -0.45,    0,  0.92]
     - [ 0 ,   0,    0.92]
     - [0,    -0.6,  0.92]
