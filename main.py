@@ -13,6 +13,7 @@ from intrinsicParameter.intrinsicCalibration.get_intrinsic import get_intrinsic
 from extrinsicParameter.poleDetection.maskGeneration import get_mask
 from extrinsicParameter.poleDetection.poleDetection import get_pole
 from visualize.vis_pole_detection import vis_pole
+from visualize.vis_pole_spread import vis_spread
 from extrinsicParameter.initPose.initPose import get_init_pose
 from visualize.get_init_camera_params import get_init_camera_params
 from extrinsicParameter.refinePose.refinePose import get_refine_pose
@@ -59,6 +60,15 @@ class OptiTrack(object):
             )
         except:
             logger.info(f"early stop pole detection visualizer")
+        try:
+            vis_spread(
+                cam_num=self.config.cam_num,
+                image_path=os.path.join(self.config.image_path,'empty'), # 从 empty中取图片可视化spread
+                pole_lists=self.pole,
+                save_path=os.path.join(self.config.image_path,'pole','vis_spread.jpg')
+            )
+        except:
+            logger.info(f"early stop pole spread visualizer")
         # import pdb;pdb.set_trace()
     def init_pose(self):
         self.pose=get_init_pose(
