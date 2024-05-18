@@ -74,7 +74,15 @@ def vis_each_reproj_error(
                 color=(0,0,255),
                 thickness=-1
             )
-            frame=cv2.putText(frame,str(id),point_2d.astype(np.int32),cv2.FONT_HERSHEY_COMPLEX,3,(0,0,255),2)
+            frame=cv2.putText(
+                img=frame,
+                text=str(id),
+                org=point_2d.astype(np.int32),
+                fontFace=cv2.FONT_HERSHEY_COMPLEX,
+                fontScale=3,
+                color=(0,0,255),
+                thickness=2
+            )
     image=show_multi_imgs(
         scale=1,
         imglist=frames,

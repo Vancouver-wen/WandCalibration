@@ -144,7 +144,9 @@ class OptiTrack(object):
             cam_0_R=cam0_R,
             cam_0_t=cam0_t,
             camera_params=self.output['calibration'],
-            save_path=save_path
+            save_path=save_path,
+            image_path=self.config.image_path,
+            world_coord_param=self.config.worldCoordParam,
         )
     def visualize(self):
         save_path=os.path.join(self.config.image_path,'world_pose.json')

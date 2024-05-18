@@ -14,8 +14,23 @@ def conform_definition(
     calculate_d3=np.linalg.norm(A-C)
     expect=np.array([d1,d2,d3])
     calculate=np.array([calculate_d1,calculate_d2,calculate_d3])
-    conform=np.allclose(expect,calculate,atol=0.1) # 不能超过 10cm
+    conform=np.allclose(expect,calculate,atol=0.05) # 不能超过 50mm
     return conform
+
+def verify_distance(
+        A,B,C,
+        WandDefinition
+    ):
+    calculate_d1=np.linalg.norm(A-B)
+    calculate_d2=np.linalg.norm(B-C)
+    calculate_d3=np.linalg.norm(A-C)
+    calculate=np.array([calculate_d1,calculate_d2,calculate_d3])
+    d1=WandDefinition[0]
+    d2=WandDefinition[1]
+    d3=WandDefinition[2]
+    expect=np.array([d1,d2,d3])
+    diff=np.abs(calculate-expect)*1000
+    logger.info(f"check distance\t calculate:{calculate.tolist()}m\t expect:{expect.tolist()}m\t diff:{diff.tolist()}mm")
 
 def get_id_with_distance(
         point_3ds,
@@ -30,6 +45,8 @@ def get_id_with_distance(
     for a,point_3d_a in enumerate(point_3ds):
         for b,point_3d_b in enumerate(point_3ds):
             for c,point_3d_c in enumerate(point_3ds):
+                if any([a==b,b==c,a==c]): # a b c 必须各不相同
+                    continue
                 conform=conform_definition(
                     point_3d_a,point_3d_b,point_3d_c,
                     d1=WandDefinition[0],
@@ -42,6 +59,8 @@ def get_id_with_distance(
     if A is None:
         logger.error("can not find L-shape wand, length can not conform")
     else:
+        logger.info(f"get id with distance, sequence:{[A,B,C]}")
+        verify_distance(point_3ds[A],point_3ds[B],point_3ds[C],WandDefinition)
         return [point_3ds[A],point_3ds[B],point_3ds[C]]
 
 
