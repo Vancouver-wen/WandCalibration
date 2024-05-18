@@ -8,7 +8,8 @@ import glob
 from matplotlib import pyplot as plt
 
 def vis_camera_params(
-        camera_params
+        camera_params,
+        save_path
     ):
     fig = plt.figure()
     ax = plt.axes(projection='3d')
@@ -47,7 +48,7 @@ def vis_camera_params(
             color='gray'
         )
     # plt.show()
-    plt.savefig("./world.jpg",dpi=1000)
+    plt.savefig(save_path,dpi=1000)
 
 if __name__=="__main__":
     pass

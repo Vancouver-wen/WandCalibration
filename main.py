@@ -153,7 +153,8 @@ class OptiTrack(object):
         with open(save_path,'r') as f:
             self.world_camera_params=json.load(f)
         vis_camera_params(
-            camera_params=self.world_camera_params
+            camera_params=self.world_camera_params,
+            save_path=os.path.join(self.config.image_path,'world.jpg')
         )
     def run(self,vis=True):
         self.add_intrinsic()

@@ -59,6 +59,30 @@ def vis_point3ds(
     )
     return frame
         
+def vis_wand_detection(
+        image_path,
+        cam_num,
+        wands,
+    ):
+    frame_list=get_cam_list(image_path,cam_num)[0]
+    frames=[]
+    for frame_path,wand in list(zip(frame_list,wands)):
+        frame=cv2.imread(frame_path)
+        for point_2d in wand:
+            frame=cv2.circle(
+                img=frame,
+                center=np.array(point_2d).astype(np.int32),
+                radius=10,
+                color=(0,255,0),
+                thickness=-1
+            )
+        frames.append(frame)
+    frame=show_multi_imgs(
+        scale=1,
+        imglist=frames,
+        order=(int(cam_num/3+0.99),3)
+    )
+    return frame
 
 def get_cam0_extrinsic(
         cam_num,
@@ -101,6 +125,13 @@ def get_cam0_extrinsic(
             color=world_coord_param.color,
             wand_blob_param=wand_blob_param,
         )
+        # vis wands
+        frame=vis_wand_detection(
+            image_path=wand_folder,
+            cam_num=cam_num,
+            wands=wands
+        )
+        cv2.imwrite(os.path.join(wand_folder,'vis_wand_detection.jpg'),frame)
         point_3ds=no_id_reconstruct(
             cam_num=cam_num,
             cam_params=cam_params,
