@@ -5,6 +5,7 @@ import numpy as np
 import cv2
 import glob
 from natsort import natsorted
+from loguru import logger
 
 from .clickPoint import click_point
 from extrinsicParameter.poleDetection.blobDetection import get_cam_list
@@ -84,6 +85,20 @@ def vis_wand_detection(
     )
     return frame
 
+def transfer_point_3ds(
+        point_3ds,
+        R,t
+    ):
+    transfered_point_3ds=[]
+    message="\n"
+    for point_3d in point_3ds:
+        i=np.linalg.inv(R)@(point_3d-t)
+        transfered_point_3ds.append(i)
+        i=i.tolist()
+        message=message+str(i)+"\n"
+    logger.info(f"trans reconstruct points coord: {message}")
+    return np.array(transfered_point_3ds)
+
 def get_cam0_extrinsic(
         cam_num,
         cam_params,
@@ -152,6 +167,9 @@ def get_cam0_extrinsic(
         R,t=solve_icp(
             target=point_3ds,
             source=world_coord_param['WandPointCoord']
+        )
+        transfered_point_3ds=transfer_point_3ds(
+            point_3ds,R,t
         )
         cam0_R,cam0_t=R,t
     else:
