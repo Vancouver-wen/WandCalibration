@@ -91,11 +91,11 @@ def transfer_point_3ds(
     ):
     transfered_point_3ds=[]
     message="\n"
-    for point_3d in point_3ds:
+    for step,point_3d in enumerate(point_3ds):
         i=np.linalg.inv(R)@(point_3d-t)
         transfered_point_3ds.append(i)
-        i=i.tolist()
-        message=message+str(i)+"\n"
+        i=np.around(i,3).tolist()
+        message=message+f"{step}:\t"+str(i)+"\n"
     logger.info(f"trans reconstruct points coord: {message}")
     return np.array(transfered_point_3ds)
 
