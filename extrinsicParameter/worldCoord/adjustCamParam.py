@@ -36,8 +36,8 @@ def adjust_camera_params(
         point_3ds=np.array(world_coord_param['WandPointCoord'])
         frame=vis_point3ds(
             image_path=wand_folder,
-            cam_num=len(camera_params),
-            cam_params=camera_params,
+            cam_num=len(world_camera_params),
+            cam_params=world_camera_params,
             point_3ds=point_3ds
         )
         cv2.imwrite(os.path.join(wand_folder,'vis_wand_points.jpg'),frame)
