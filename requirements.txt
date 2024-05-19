@@ -9,3 +9,4 @@ PyYAML
 scikit-learn==1.4.1.post1
 torch==2.2.1
 tqdm
+labelme
