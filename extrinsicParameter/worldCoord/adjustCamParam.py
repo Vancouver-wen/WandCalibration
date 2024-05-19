@@ -5,6 +5,7 @@ import json
 import cv2
 import numpy as np
 from .get_cam0_extrinsic import vis_point3ds
+from .handle_labelme import vis_points
 
 def adjust_camera_params(
         cam_0_R,
@@ -39,6 +40,15 @@ def adjust_camera_params(
             cam_num=len(world_camera_params),
             cam_params=world_camera_params,
             point_3ds=point_3ds
+        )
+        cv2.imwrite(os.path.join(wand_folder,'vis_wand_points.jpg'),frame)
+    elif world_coord_param.type=="labelme":
+        point_3ds=np.array(world_coord_param['PointCoordinates'])
+        frame=vis_points(
+            point_3ds=point_3ds,
+            image_path=wand_folder,
+            cam_num=len(world_camera_params),
+            cam_params=world_camera_params
         )
         cv2.imwrite(os.path.join(wand_folder,'vis_wand_points.jpg'),frame)
     with open(save_path,'w') as f:

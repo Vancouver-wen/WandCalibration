@@ -133,6 +133,27 @@ def multi_view_triangulate(
         point_3d=vector[:3]/vector[3]
     return point_3d
 
+def easy_multi_view_triangulate(
+        point_2ds,
+        poses,
+        solve_method="SVD"
+    ):
+    normalized_point_2ds=[]
+    for point_2d,pose in list(zip(point_2ds,poses)):
+        temp=cv2.undistortPoints(
+            src=np.expand_dims(np.array(point_2d),axis=0),
+            cameraMatrix=np.array(pose['K']),
+            distCoeffs=np.squeeze(np.array(pose['dist'])),
+            # P=np.array(camera1['K'])
+        )
+        normalized_point_2ds.append(np.squeeze(temp))
+    point_3d=multi_view_triangulate(
+        point_2ds=normalized_point_2ds,
+        poses=poses,
+        solve_method=solve_method
+    )
+    return point_3d
+
 def normalized_pole_triangulate(
         cam_num,
         normalized_pole_lists,

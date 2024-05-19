@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 import numpy as np
 import cv2
@@ -14,6 +15,7 @@ from .noIdReconstruction import no_id_reconstruct
 from .get_id_with_distance import get_id_with_distance
 from .solve_icp import solve_icp
 from utils.imageConcat import show_multi_imgs
+from .handle_labelme import get_labelme_json,vis_objs,format_labelme_objs,triangulate_points,vis_points
 
 def vis_point3ds(
         image_path,
@@ -110,24 +112,50 @@ def get_cam0_extrinsic(
     """
     给出 cam0 在 world coordinate 下的 Rotation 和 tran
     """
-    if world_coord_param.type=="point":
+    wand_folder=os.path.join(image_path,"wand")
+    if world_coord_param['type']=="point":
         # 调用cam0的empty的第一张图片
-        # 交互式给出 4 个点
+        # 交互式给出 4 个点, 使用 pnp 进行求解
         # yaml文件给出四个点的三维坐标
         image_empty=natsorted(glob.glob(os.path.join(image_path,"wand","cam1","*")))[0]
         cam0_R,cam0_t=click_point(
             cam_0_param=cam_params[0],
             image_path=image_empty,
-            point_coordinates=world_coord_param.PointCoordinates
+            point_coordinates=world_coord_param['PointCoordinates']
         )
-    elif world_coord_param.type=="wand":
+    elif world_coord_param['type']=="labelme":
+        json_paths=natsorted(glob.glob(os.path.join(image_path,'wand','labelme','*.json')))
+        assert cam_num==len(json_paths),f"wand/labelme/*.json file number not equal to camera number"
+        objs=[get_labelme_json(json_path) for json_path in json_paths]
+        frame=vis_objs(objs,wand_folder,cam_num)
+        cv2.imwrite(os.path.join(wand_folder,"vis_wand_detection.jpg"),frame)
+        points=format_labelme_objs(objs,cam_params,world_coord_param['PointCoordinates'])
+        points=triangulate_points(points)
+        point_3ds=[points[key]['pred_point_3d'] for key in points.keys()]
+        frame=vis_points(
+            point_3ds=point_3ds,
+            image_path=wand_folder,
+            cam_num=cam_num,
+            cam_params=cam_params
+        )
+        cv2.imwrite(os.path.join(wand_folder,"vis_reconstruct_points.jpg"),frame)
+        R,t=solve_icp(
+            target=point_3ds,
+            source=world_coord_param['PointCoordinates']
+        )
+        transfered_point_3ds=transfer_point_3ds(
+            point_3ds,R,t
+        )
+        cam0_R,cam0_t=R,t
+    elif world_coord_param['type']=="board":
+        import pdb;pdb.set_trace()
+    elif world_coord_param['type']=="wand":
         # L型杆子
         # 检查是否有 wand 文件夹
         # blob detection
         # reconstruction without id info
         # get id info according to 3d distance
         # solve icp problem using open3d
-        wand_folder=os.path.join(image_path,"wand")
         if not os.path.exists(wand_folder):
             assert False,f"can not find {wand_folder}"
         # import pdb;pdb.set_trace() # cam_params 有 image_size
@@ -173,7 +201,7 @@ def get_cam0_extrinsic(
         )
         cam0_R,cam0_t=R,t
     else:
-        support_list=["point","wand"]
+        support_list=["point","labelme","board","wand"]
         raise NotImplementedError(f"we only support {support_list}")
     return cam0_R,cam0_t
 
