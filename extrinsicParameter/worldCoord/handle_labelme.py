@@ -138,3 +138,6 @@ def vis_points(
         order=(int(cam_num/3+0.99),3)
     )
     return frame
+
+if __name__=="__main__":
+    pass
