@@ -8,7 +8,7 @@
 type: checkerboard
 height: 8
 width: 11
-
+square_length: 0.2
 # type: charucoboard
 # height: 6
 # width: 5

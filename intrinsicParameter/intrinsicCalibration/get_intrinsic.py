@@ -23,7 +23,7 @@ def get_intrinsic(cam_num,board_config,image_path):
         else:
             logger.warning('the format of intrinsic.json is wrong')
     # 生成 intrinsic.json
-    board_type=board_config.pop("type").strip()
+    board_type=board_config["type"].strip()
     # import pdb;pdb.set_trace()
     if board_type=="checkerboard":
         from intrinsicParameter.checkerboardCalibration.get_cam_calibration import IntrinsicCalibration

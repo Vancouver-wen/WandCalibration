@@ -25,9 +25,24 @@ class IntrinsicCalibration(object):
         # debug path
         self.lock=Lock()
         self.debug_path=os.path.join(image_path,"vis_corners")
-        if not os.path.exists(self.debug_path):
-            os.mkdir(self.debug_path)
         self.debug_number=0
+    
+    def get_corners(self,image_path):
+        img = cv2.imread(image_path)
+        img_height, img_width = img.shape[:2]
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        size = gray.shape[::-1]
+        ret, corners = cv2.findChessboardCorners(gray, (self.height,self.width), None)
+        # print(ret,corners)
+        if ret:
+            # 专门用来获取棋盘图上内角点的精确位置的， 即在原角点的基础上寻找亚像素角点
+            corners2 = cv2.cornerSubPix(gray, corners, (5, 5), (-1, -1), self.criteria) 
+            if [corners2]:
+                return ret,self.objp,corners2
+            else:
+                return ret,self.objp,corners
+        else:
+            return None,None,None
 
     def __call__(self, image_path_list,cam_index=0):
         obj_points = []
@@ -84,5 +99,7 @@ class IntrinsicCalibration(object):
                 color=(0,0,255),
                 thickness=2
             )
+        if not os.path.exists(self.debug_path):
+            os.mkdir(self.debug_path)
         cv2.imwrite(os.path.join(self.debug_path,f"{self.debug_number}.jpg"),image)
         self.debug_number+=1

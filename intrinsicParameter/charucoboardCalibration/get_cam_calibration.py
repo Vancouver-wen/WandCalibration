@@ -22,9 +22,27 @@ class IntrinsicCalibration(object):
         # debug path
         self.lock=Lock()
         self.debug_path=os.path.join(image_path,"vis_corners")
-        if not os.path.exists(self.debug_path):
-            os.mkdir(self.debug_path)
         self.debug_number=0
+    
+    def get_corners(self,image_path):
+        image = cv2.imread(image_path)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        size = image.shape[::-1]
+        img_height, img_width = image.shape[:2]
+        marker_corners, marker_ids, _ = cv2.aruco.detectMarkers(
+            image, 
+            self.dictionary, 
+            parameters=self.params
+        )
+        if marker_ids is None:
+            return None,None,None
+        charuco_retval, charuco_corners, charuco_ids = cv2.aruco.interpolateCornersCharuco(
+            marker_corners, 
+            marker_ids, 
+            image, 
+            self.board
+        )
+        return charuco_retval,charuco_ids,charuco_corners
 
     def __call__(self, image_path_list,cam_index=0):
         all_charuco_corners = []
@@ -109,5 +127,7 @@ class IntrinsicCalibration(object):
                 color=(0,0,255),
                 thickness=2
             )
+        if not os.path.exists(self.debug_path):
+            os.mkdir(self.debug_path)
         cv2.imwrite(os.path.join(self.debug_path,f"{self.debug_number}.jpg"),image)
         self.debug_number+=1
