@@ -7,6 +7,10 @@ calibratie multi cameras with 3 marker wand
 3. bundle adjustment 对内参初值非常敏感,内参的精度直接关系到捆绑调整的 upper bound
 4. 优化的耗时与图片组的数量成正比,图片组的数量尽量不要超过2000
 
+##### 环境配置
+1. conda install pyqt==5.12.3
+2. pip install -r requirements.txt
+
 ###### 使用方法:
 1. 根据配置文件制作T型杆与L型杆
 2. 采集
