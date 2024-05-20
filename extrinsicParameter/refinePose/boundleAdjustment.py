@@ -128,10 +128,13 @@ class BoundleAdjustment(nn.Module):
         rvec,_=cv2.Rodrigues(rotation_matrix)
         return np.squeeze(rvec)
     
-    def vector_to_matrix(self,rotation_vector):
+    def vector_to_matrix(self,rotation_vector,batch=False):
         # 需要支持tensor反向传播
-        rotation_matrix=so3_exp_map(torch.unsqueeze(rotation_vector,dim=0))
-        return torch.squeeze(rotation_matrix)
+        if batch:
+            return so3_exp_map(rotation_vector)
+        else:
+            rotation_matrix=so3_exp_map(torch.unsqueeze(rotation_vector,dim=0))
+            return torch.squeeze(rotation_matrix)
     
     def get_vmap_func(self):
         self.vmap_projectPoint=torch.vmap(self.projectPoint,in_dims=(1,None,None,None,None,None,None,None,None))
@@ -162,7 +165,7 @@ class BoundleAdjustment(nn.Module):
             if self.rotation_representation=="matrix":
                 R=camera_param['R'].tolist()
             elif self.rotation_representation=="vector":
-                R=self.vector_to_matrix(camera_param['R']).tolist()
+                R=self.vector_to_matrix(camera_param['R'],batch=False).tolist()
             else:
                 raise NotImplementedError(f"do not support rotation_representation={self.rotation_representation}")
             t=camera_param['t'].tolist()
@@ -243,15 +246,16 @@ class BoundleAdjustment(nn.Module):
             assert not pole_2d.requires_grad,"2d pole detection should be constant and not require grad"
             pole_2ds.append(pole_2d)
             Ks.append(cam_param['K'])
-            if self.rotation_representation=="matrix":
-                Rs.append(cam_param['R'])
-            elif self.rotation_representation=="vector":
-                Rs.append(self.vector_to_matrix(cam_param['R']))
-            else:
-                raise NotImplementedError(f"do not support rotation_representation={self.rotation_representation}")
+            Rs.append(cam_param['R'])
             ts.append(cam_param['t'])
             Kds.append(cam_param['dist'])
         pole_2ds,Ks,Rs,ts,Kds=torch.stack(pole_2ds),torch.stack(Ks),torch.stack(Rs),torch.stack(ts),torch.stack(Kds)
+        if self.rotation_representation=="matrix":
+            pass
+        elif self.rotation_representation=="vector":
+            Rs=self.vector_to_matrix(Rs,batch=True)
+        else:
+            raise NotImplementedError(f"do not support rotation_representation={self.rotation_representation}")
         loss_reproj=self.vmap_projectIter(pole_2ds,pole_3d.T,Ks,Rs,ts,Kds).mean()
         loss=loss_wand+loss_reproj
         # print({

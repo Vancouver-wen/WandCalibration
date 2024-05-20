@@ -1,14 +1,14 @@
-Date : 2024-05-19 16:24:49
+Date : 2024-05-20 14:50:35
 Directory : /home/wenzihao/Desktop/WandCalibration
-Total : 64 files,  3760 codes, 443 comments, 410 blanks, all 4613 lines
+Total : 65 files,  3997 codes, 457 comments, 420 blanks, all 4874 lines
 
 Languages
 +------------------+------------+------------+------------+------------+------------+
 | language         | files      | code       | comment    | blank      | total      |
 +------------------+------------+------------+------------+------------+------------+
-| Python           |         40 |      3,453 |        282 |        322 |      4,057 |
-| YAML             |         21 |        252 |        161 |         83 |        496 |
-| Markdown         |          2 |         43 |          0 |          4 |         47 |
+| Python           |         41 |      3,687 |        292 |        333 |      4,312 |
+| YAML             |         21 |        253 |        165 |         82 |        500 |
+| Markdown         |          2 |         45 |          0 |          4 |         49 |
 | pip requirements |          1 |         12 |          0 |          1 |         13 |
 +------------------+------------+------------+------------+------------+------------+
 
@@ -16,26 +16,26 @@ Directories
 +-----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
 | path                                                                                                      | files      | code       | comment    | blank      | total      |
 +-----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
-| .                                                                                                         |         64 |      3,760 |        443 |        410 |      4,613 |
-| . (Files)                                                                                                 |          4 |        240 |          2 |         12 |        254 |
+| .                                                                                                         |         65 |      3,997 |        457 |        420 |      4,874 |
+| . (Files)                                                                                                 |          4 |        242 |          2 |         12 |        256 |
 | blender                                                                                                   |          1 |         12 |          1 |         10 |         23 |
-| config                                                                                                    |         21 |        252 |        161 |         83 |        496 |
-| config (Files)                                                                                            |          6 |        159 |         82 |         63 |        304 |
-| config/board                                                                                              |          3 |         11 |         36 |         10 |         57 |
+| config                                                                                                    |         21 |        253 |        165 |         82 |        500 |
+| config (Files)                                                                                            |          6 |        159 |         86 |         63 |        308 |
+| config/board                                                                                              |          3 |         12 |         36 |          9 |         57 |
 | config/labelme                                                                                            |          1 |          6 |          2 |          0 |          8 |
 | config/point                                                                                              |          2 |         12 |          3 |          0 |         15 |
 | config/pole                                                                                               |          4 |         15 |          7 |          2 |         24 |
 | config/wand                                                                                               |          5 |         49 |         31 |          8 |         88 |
-| extrinsicParameter                                                                                        |         23 |      2,475 |        218 |        209 |      2,902 |
+| extrinsicParameter                                                                                        |         24 |      2,676 |        226 |        218 |      3,120 |
 | extrinsicParameter (Files)                                                                                |          1 |          0 |          0 |          1 |          1 |
 | extrinsicParameter/initPose                                                                               |          4 |        248 |         12 |         27 |        287 |
 | extrinsicParameter/poleDetection                                                                          |          5 |        675 |         55 |         44 |        774 |
-| extrinsicParameter/refinePose                                                                             |          4 |        695 |         63 |         48 |        806 |
-| extrinsicParameter/worldCoord                                                                             |          9 |        857 |         88 |         89 |      1,034 |
-| intrinsicParameter                                                                                        |          6 |        332 |         44 |         42 |        418 |
+| extrinsicParameter/refinePose                                                                             |          4 |        753 |         65 |         51 |        869 |
+| extrinsicParameter/worldCoord                                                                             |         10 |      1,000 |         94 |         95 |      1,189 |
+| intrinsicParameter                                                                                        |          6 |        365 |         46 |         44 |        455 |
 | intrinsicParameter (Files)                                                                                |          1 |          0 |          0 |          1 |          1 |
-| intrinsicParameter/charucoboardCalibration                                                                |          2 |        140 |         13 |         13 |        166 |
-| intrinsicParameter/checkerboardCalibration                                                                |          2 |        126 |         21 |         22 |        169 |
+| intrinsicParameter/charucoboardCalibration                                                                |          2 |        159 |         13 |         14 |        186 |
+| intrinsicParameter/checkerboardCalibration                                                                |          2 |        140 |         23 |         23 |        186 |
 | intrinsicParameter/intrinsicCalibration                                                                   |          1 |         66 |         10 |          6 |         82 |
 | utils                                                                                                     |          4 |        146 |         11 |         23 |        180 |
 | visualize                                                                                                 |          5 |        303 |          6 |         31 |        340 |
@@ -45,14 +45,14 @@ Files
 +-----------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
 | filename                                                                                                  | language         | code       | comment    | blank      | total      |
 +-----------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
-| /home/wenzihao/Desktop/WandCalibration/README.md                                                          | Markdown         |         37 |          0 |          3 |         40 |
+| /home/wenzihao/Desktop/WandCalibration/README.md                                                          | Markdown         |         39 |          0 |          3 |         42 |
 | /home/wenzihao/Desktop/WandCalibration/blender/test.py                                                    | Python           |         12 |          1 |         10 |         23 |
 | /home/wenzihao/Desktop/WandCalibration/config/board/board_sample.yaml                                     | YAML             |          3 |         14 |          4 |         21 |
 | /home/wenzihao/Desktop/WandCalibration/config/board/charucoboard_4_5.yaml                                 | YAML             |          5 |         10 |          3 |         18 |
-| /home/wenzihao/Desktop/WandCalibration/config/board/checkerboard_11_8.yaml                                | YAML             |          3 |         12 |          3 |         18 |
+| /home/wenzihao/Desktop/WandCalibration/config/board/checkerboard_11_8.yaml                                | YAML             |          4 |         12 |          2 |         18 |
 | /home/wenzihao/Desktop/WandCalibration/config/cfg_archery.yaml                                            | YAML             |         25 |         11 |         13 |         49 |
 | /home/wenzihao/Desktop/WandCalibration/config/cfg_archery_outdoor.yaml                                    | YAML             |         25 |         11 |         13 |         49 |
-| /home/wenzihao/Desktop/WandCalibration/config/cfg_uni.yaml                                                | YAML             |         41 |         28 |          9 |         78 |
+| /home/wenzihao/Desktop/WandCalibration/config/cfg_uni.yaml                                                | YAML             |         41 |         32 |          9 |         82 |
 | /home/wenzihao/Desktop/WandCalibration/config/cfg_wtt.yaml                                                | YAML             |         26 |         11 |          8 |         45 |
 | /home/wenzihao/Desktop/WandCalibration/config/cfg_wtt_red.yaml                                            | YAML             |         25 |         11 |          7 |         43 |
 | /home/wenzihao/Desktop/WandCalibration/config/config.yaml                                                 | YAML             |         17 |         10 |         13 |         40 |
@@ -78,23 +78,24 @@ Files
 | /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/poleDetection/maskGeneration.py                 | Python           |        122 |         15 |         10 |        147 |
 | /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/poleDetection/poleDetection.py                  | Python           |        193 |         10 |         11 |        214 |
 | /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/poleDetection/wandDetection.py                  | Python           |        194 |          9 |         11 |        214 |
-| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/refinePose/boundleAdjustment.py                 | Python           |        203 |         24 |         16 |        243 |
+| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/refinePose/boundleAdjustment.py                 | Python           |        258 |         26 |         19 |        303 |
 | /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/refinePose/multiViewTriangulate.py              | Python           |        194 |         16 |         11 |        221 |
 | /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/refinePose/normalizedImagePlane.py              | Python           |         50 |          6 |          6 |         62 |
-| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/refinePose/refinePose.py                        | Python           |        248 |         17 |         15 |        280 |
-| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/adjustCamParam.py                    | Python           |         56 |          0 |          3 |         59 |
+| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/refinePose/refinePose.py                        | Python           |        251 |         17 |         15 |        283 |
+| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/adjustCamParam.py                    | Python           |         65 |          0 |          3 |         68 |
 | /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/clickPoint.py                        | Python           |         98 |         27 |         10 |        135 |
 | /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/cluster.py                           | Python           |         40 |          4 |          5 |         49 |
-| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/get_cam0_extrinsic.py                | Python           |        189 |         13 |          9 |        211 |
+| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/get_cam0_extrinsic.py                | Python           |        215 |         16 |          9 |        240 |
 | /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/get_id_with_distance.py              | Python           |         62 |          0 |          8 |         70 |
-| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/handle_labelme.py                    | Python           |        131 |          1 |          8 |        140 |
+| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/handle_board.py                      | Python           |        106 |          3 |          5 |        114 |
+| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/handle_labelme.py                    | Python           |        133 |          1 |          9 |        143 |
 | /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/icp.py                               | Python           |         78 |         16 |         28 |        122 |
 | /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/noIdReconstruction.py                | Python           |        182 |         25 |         15 |        222 |
 | /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/solve_icp.py                         | Python           |         21 |          2 |          3 |         26 |
 | /home/wenzihao/Desktop/WandCalibration/intrinsicParameter/__init__.py                                     | Python           |          0 |          0 |          1 |          1 |
-| /home/wenzihao/Desktop/WandCalibration/intrinsicParameter/charucoboardCalibration/get_cam_calibration.py  | Python           |         96 |         12 |          5 |        113 |
+| /home/wenzihao/Desktop/WandCalibration/intrinsicParameter/charucoboardCalibration/get_cam_calibration.py  | Python           |        115 |         12 |          6 |        133 |
 | /home/wenzihao/Desktop/WandCalibration/intrinsicParameter/charucoboardCalibration/test_cam_calibration.py | Python           |         44 |          1 |          8 |         53 |
-| /home/wenzihao/Desktop/WandCalibration/intrinsicParameter/checkerboardCalibration/get_cam_calibration.py  | Python           |         77 |          7 |          4 |         88 |
+| /home/wenzihao/Desktop/WandCalibration/intrinsicParameter/checkerboardCalibration/get_cam_calibration.py  | Python           |         91 |          9 |          5 |        105 |
 | /home/wenzihao/Desktop/WandCalibration/intrinsicParameter/checkerboardCalibration/test_cam_calibration.py | Python           |         49 |         14 |         18 |         81 |
 | /home/wenzihao/Desktop/WandCalibration/intrinsicParameter/intrinsicCalibration/get_intrinsic.py           | Python           |         66 |         10 |          6 |         82 |
 | /home/wenzihao/Desktop/WandCalibration/main.py                                                            | Python           |        185 |          2 |          7 |        194 |
@@ -109,5 +110,5 @@ Files
 | /home/wenzihao/Desktop/WandCalibration/visualize/vis_pole_detection.py                                    | Python           |         67 |          1 |          8 |         76 |
 | /home/wenzihao/Desktop/WandCalibration/visualize/vis_pole_spread.py                                       | Python           |         64 |          0 |          6 |         70 |
 | /home/wenzihao/Desktop/WandCalibration/visualize/vis_reproj_error.py                                      | Python           |        107 |          2 |         11 |        120 |
-| Total                                                                                                     |                  |      3,760 |        443 |        410 |      4,613 |
+| Total                                                                                                     |                  |      3,997 |        457 |        420 |      4,874 |
 +-----------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+

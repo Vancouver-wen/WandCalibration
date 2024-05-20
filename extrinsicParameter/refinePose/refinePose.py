@@ -178,7 +178,7 @@ def multi_process_train(
     # 获取模型以外的训练超参
     cpu_count=model.cpu_count
     lr=5e-4*init_error/cpu_count # lr=5e-3 是比较合适的数值
-    iteration = max(int(1000/math.sqrt(cpu_count)),500) # iteration = 1000
+    iteration = max(int(1000/math.sqrt(cpu_count)),800) # iteration = 1000
     losses=mp.Queue() # put get empty
     mp.set_sharing_strategy('file_system')
     if refine_mode=="process":
