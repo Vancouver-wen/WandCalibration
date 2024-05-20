@@ -119,7 +119,7 @@ def vis_points(
             frame=cv2.circle(
                 img=frame,
                 center=pred_point_2d.astype(np.int32),
-                radius=5,
+                radius=3,
                 color=(0,0,255),
                 thickness=-1
             )
@@ -128,9 +128,9 @@ def vis_points(
                 text=f"{step}",
                 org=pred_point_2d.astype(np.int32),
                 fontFace=cv2.FONT_HERSHEY_COMPLEX,
-                fontScale=3,
+                fontScale=1,
                 color=(0,0,255),
-                thickness=3
+                thickness=2
             )
     frame=show_multi_imgs(
         scale=1,
