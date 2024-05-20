@@ -25,8 +25,11 @@ class BoundleAdjustment(nn.Module):
             init_pole_3ds,
             detected_pole_2ds,
             save_path,
+            rotation_representation="matrix" # "matrix" "vector"
         ):
         super().__init__()
+        self.rotation_representation=rotation_representation
+        assert self.rotation_representation in ["matrix","vector"],f"do not support rotation_representation={self.rotation_representation}"
         # 常量: pole
         if pole_definition.length_unit=="mm":
             pole_data=torch.tensor(
@@ -64,13 +67,18 @@ class BoundleAdjustment(nn.Module):
                 ),
                 requires_grad=True
             )
-            R=nn.Parameter(
-                data=torch.tensor(
-                    data=init_extrinsic[f'cam_{i}_0']['R'],
-                    dtype=torch.float32
-                ),
-                requires_grad=True
-            )
+            if self.rotation_representation=="matrix":
+                R=nn.Parameter(
+                    data=torch.tensor(
+                        data=init_extrinsic[f'cam_{i}_0']['R'],
+                        dtype=torch.float32
+                    ),
+                    requires_grad=True
+                )
+            elif self.rotation_representation=="vector":
+                pass # TODO
+            else:
+                raise NotImplementedError(f"do not support rotation_representation={self.rotation_representation}")
             t=nn.Parameter(
                 data=torch.tensor(
                     data=init_extrinsic[f'cam_{i}_0']['t'],
@@ -106,6 +114,13 @@ class BoundleAdjustment(nn.Module):
         self.save_path=save_path
         self.resolutions=[intrinsic['image_size'] for intrinsic in init_intrinsic]
         self.has_vmap=False
+
+    def matrix_to_vector(rotation_matrix):
+        # 只需要支持numpy就可以了
+        import pdb;pdb.set_trace()
+        rotation_matrix=np.array(rotation_matrix,dtype=np.float32)
+        rvec,_=cv2.Rodrigues(rotation_matrix)
+        pass
     
     def get_vmap_func(self):
         self.vmap_projectPoint=torch.vmap(self.projectPoint,in_dims=(1,None,None,None,None,None,None,None,None))
@@ -133,7 +148,12 @@ class BoundleAdjustment(nn.Module):
         for camera_param,resolution in list(zip(self.camera_params,self.resolutions)):
             K=camera_param['K'].tolist()
             dist=camera_param['dist'].tolist()
-            R=camera_param['R'].tolist()
+            if self.rotation_representation=="matrix":
+                R=camera_param['R'].tolist()
+            elif self.rotation_representation=="vector":
+                pass # TODO
+            else:
+                raise NotImplementedError(f"do not support rotation_representation={self.rotation_representation}")
             t=camera_param['t'].tolist()
             camera_params.append({
                 'image_size': resolution,
@@ -183,6 +203,16 @@ class BoundleAdjustment(nn.Module):
         loss_reproj=self.reproj_weight*torch.norm(diff,dim=1).mean()
         return loss_reproj
     
+    def orthogonal(self,camera_params):
+        losses=[]
+        for camera_param in camera_params:
+            rotation_matrix=camera_param['R']
+            diff=rotation_matrix@rotation_matrix.T-torch.eye(rotation_matrix.shape[0])
+            loss=torch.norm(diff)
+            losses.append(loss)
+        orthogonal_loss=torch.stack(losses).sum()
+        return self.orthogonal_weight*orthogonal_loss
+
     def forward_iter(
             self,
             pole_2d_list,
@@ -202,7 +232,12 @@ class BoundleAdjustment(nn.Module):
             assert not pole_2d.requires_grad,"2d pole detection should be constant and not require grad"
             pole_2ds.append(pole_2d)
             Ks.append(cam_param['K'])
-            Rs.append(cam_param['R'])
+            if self.rotation_representation=="matrix":
+                Rs.append(cam_param['R'])
+            elif self.rotation_representation=="vector":
+                pass # TODO
+            else:
+                raise NotImplementedError(f"do not support rotation_representation={self.rotation_representation}")
             ts.append(cam_param['t'])
             Kds.append(cam_param['dist'])
         pole_2ds,Ks,Rs,ts,Kds=torch.stack(pole_2ds),torch.stack(Ks),torch.stack(Rs),torch.stack(ts),torch.stack(Kds)
@@ -220,21 +255,31 @@ class BoundleAdjustment(nn.Module):
             mask,
             line_weight=1.0,
             length_weight=1.0,
-            reproj_weight=1.0
+            reproj_weight=1.0,
+            orthogonal_weight=10.0
         ):
         if not self.has_vmap:
             self.get_vmap_func()
         self.line_weight=line_weight
         self.length_weight=length_weight
         self.reproj_weight=reproj_weight
-        losses=Parallel(n_jobs=-1,backend="threading")(
+        self.orthogonal_weight=orthogonal_weight
+        sequential_losses=Parallel(n_jobs=-1,backend="threading")(
             delayed(self.forward_iter)(pole_2d_list,pole_3d)
             for pole_2d_list,pole_3d in list(zip(
                 compress(self.pole_2d_lists,mask),
                 compress(self.pole3d_posotions,mask)
             ))
         )
-        loss=torch.mean(torch.concat(losses))
+        sequential_loss=torch.mean(torch.concat(sequential_losses))
+        if self.rotation_representation=="matrix":
+            orthogonal_loss=self.orthogonal(self.camera_params)
+            print(f"sequential_loss:{sequential_loss.item()}\torthogonal_loss:{orthogonal_loss.item()}")
+            loss = sequential_loss + orthogonal_loss
+        elif self.rotation_representation=="vector":
+            loss = sequential_loss
+        else:
+            raise NotImplementedError(f"do not support rotation_representation={self.rotation_representation}")
         return loss
 
 

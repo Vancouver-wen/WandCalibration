@@ -42,6 +42,7 @@ def multi_thread_train(
             line_weight=1.0,
             length_weight=1.0,
             reproj_weight=1.0,
+            orthogonal_weight=10.0
         )
         optimizer.zero_grad()
         loss.backward()
@@ -113,6 +114,7 @@ def sub_process_train(
                 line_weight=1.0,
                 length_weight=1.0,
                 reproj_weight=1.0,
+                orthogonal_weight=10.0
             )
             optimizer.zero_grad()
             loss.backward()
@@ -241,7 +243,8 @@ def get_refine_pose(
         image_num=np.array(mask).sum(),
         init_pole_3ds=masked_pole_3ds,
         detected_pole_2ds=masked_pole_lists,
-        save_path=save_path
+        save_path=save_path,
+        rotation_representation="vector"
     )
     # 计算初始化精度
     logger.info(f"calculate boundle adjustment init pixel error to set init learning rate")
