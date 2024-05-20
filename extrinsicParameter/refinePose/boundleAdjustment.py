@@ -26,7 +26,7 @@ class BoundleAdjustment(nn.Module):
             init_pole_3ds,
             detected_pole_2ds,
             save_path,
-            rotation_representation="matrix" # "matrix" "vector"
+            rotation_representation="vector" # "matrix" "vector"
         ):
         super().__init__()
         self.rotation_representation=rotation_representation
