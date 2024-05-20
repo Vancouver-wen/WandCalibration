@@ -12,7 +12,8 @@ import torch
 from torch import nn
 from torch.utils.data import Dataset
 from joblib import Parallel,delayed
-import  torch.multiprocessing as mp
+import torch.multiprocessing as mp
+from pytorch3d.transforms import so3_exp_map
 
 class BoundleAdjustment(nn.Module):
     def __init__(
@@ -76,7 +77,13 @@ class BoundleAdjustment(nn.Module):
                     requires_grad=True
                 )
             elif self.rotation_representation=="vector":
-                pass # TODO
+                R=nn.Parameter(
+                    data=torch.tensor(
+                        data=self.matrix_to_vector(init_extrinsic[f'cam_{i}_0']['R']),
+                        dtype=torch.float32
+                    ),
+                    requires_grad=True
+                )
             else:
                 raise NotImplementedError(f"do not support rotation_representation={self.rotation_representation}")
             t=nn.Parameter(
@@ -115,12 +122,16 @@ class BoundleAdjustment(nn.Module):
         self.resolutions=[intrinsic['image_size'] for intrinsic in init_intrinsic]
         self.has_vmap=False
 
-    def matrix_to_vector(rotation_matrix):
-        # 只需要支持numpy就可以了
-        import pdb;pdb.set_trace()
+    def matrix_to_vector(self,rotation_matrix):
+        # 只需要支持numpy就可以了, 不需要反向传播!
         rotation_matrix=np.array(rotation_matrix,dtype=np.float32)
         rvec,_=cv2.Rodrigues(rotation_matrix)
-        pass
+        return np.squeeze(rvec)
+    
+    def vector_to_matrix(self,rotation_vector):
+        # 需要支持tensor反向传播
+        rotation_matrix=so3_exp_map(torch.unsqueeze(rotation_vector,dim=0))
+        return torch.squeeze(rotation_matrix)
     
     def get_vmap_func(self):
         self.vmap_projectPoint=torch.vmap(self.projectPoint,in_dims=(1,None,None,None,None,None,None,None,None))
@@ -151,7 +162,7 @@ class BoundleAdjustment(nn.Module):
             if self.rotation_representation=="matrix":
                 R=camera_param['R'].tolist()
             elif self.rotation_representation=="vector":
-                pass # TODO
+                R=self.vector_to_matrix(camera_param['R']).tolist()
             else:
                 raise NotImplementedError(f"do not support rotation_representation={self.rotation_representation}")
             t=camera_param['t'].tolist()
@@ -235,7 +246,7 @@ class BoundleAdjustment(nn.Module):
             if self.rotation_representation=="matrix":
                 Rs.append(cam_param['R'])
             elif self.rotation_representation=="vector":
-                pass # TODO
+                Rs.append(self.vector_to_matrix(cam_param['R']))
             else:
                 raise NotImplementedError(f"do not support rotation_representation={self.rotation_representation}")
             ts.append(cam_param['t'])
