@@ -13,7 +13,7 @@ from torch import nn
 from torch.utils.data import Dataset
 from joblib import Parallel,delayed
 import torch.multiprocessing as mp
-from pytorch3d.transforms import so3_exp_map
+from extrinsicParameter.refinePose.so3_exp_map import so3_exp_map
 
 class BoundleAdjustment(nn.Module):
     def __init__(

@@ -9,9 +9,8 @@ calibratie multi cameras with 3 marker wand
 
 ##### 环境配置 python=3.9
 conda update -n base -c defaults conda
-1. conda install pytorch3d==0.7.6 --verbose
-2. conda install pyqt==5.12.3 --verbose
-3. pip install -r requirements.txt --verbose
+1. conda install pyqt==5.12.3 --verbose
+2. pip install -r requirements.txt --verbose
 
 ###### 使用方法:
 1. 根据配置文件制作T型杆与L型杆
