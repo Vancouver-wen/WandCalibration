@@ -75,7 +75,7 @@ class BoundleAdjustment(nn.Module):
                         data=init_extrinsic[f'cam_{i}_0']['R'],
                         dtype=torch.float32
                     ),
-                    requires_grad=True
+                    requires_grad=True # if i==0 else False # 第一个相机不需要反传,反传的效果会更好
                 )
             elif self.rotation_representation=="vector":
                 R=nn.Parameter(
@@ -83,7 +83,7 @@ class BoundleAdjustment(nn.Module):
                         data=self.matrix_to_vector(init_extrinsic[f'cam_{i}_0']['R']),
                         dtype=torch.float32
                     ),
-                    requires_grad=True
+                    requires_grad=True # if i==0 else False # 第一个相机不需要反传,反传的效果会更好
                 )
             else:
                 raise NotImplementedError(f"do not support rotation_representation={self.rotation_representation}")
@@ -258,7 +258,6 @@ class BoundleAdjustment(nn.Module):
         else:
             raise NotImplementedError(f"do not support rotation_representation={self.rotation_representation}")
         loss_reproj=self.vmap_projectIter(pole_2ds,pole_3d.T,Ks,Rs,ts,Kds)
-        # import pdb;pdb.set_trace()
         # loss_reproj=loss_reproj/loss_reproj.detach() # * 的效果不明显; /的效果很差
         loss_reproj=loss_reproj.mean()
         loss=loss_wand+loss_reproj
