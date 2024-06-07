@@ -11,7 +11,7 @@
 
 max_process: 8
 
-cam_num: 8
+cam_num: 40
 fast_blob: True
 vis_num: 1
 
@@ -28,7 +28,7 @@ pole:
   d1: 250
   d2: 510
 
-image_path: "imageCollect/88basketball"
+image_path: "imageCollect/wtt_st"
 
 maskBlobParam:
   minThreshold: 50
@@ -78,6 +78,10 @@ worldCoordParam:
     - [-0.7625,1.37,0.76]
     - [-0.7625,-1.37,0.76]
     - [0.7625,-1.37,0.76]
+    # - [-1.6,5.55,0]
+    # - [-1.6,0,0]
+    # - [1.6,0,0]
+    # - [1.6,5.55,0]
   # type: board
   # ZeroPointCoord: [0,0,0.76] # 默认使用右手系,Z轴向上
   # BoardDefinition: *board
