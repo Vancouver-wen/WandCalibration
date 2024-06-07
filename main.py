@@ -10,6 +10,7 @@ from loguru import logger
 
 from utils.yamlLoader import get_yaml_data
 from intrinsicParameter.intrinsicCalibration.get_intrinsic import get_intrinsic
+from visualize.vis_intrinsic import vis_intrinsic
 from extrinsicParameter.poleDetection.maskGeneration import get_mask
 from extrinsicParameter.poleDetection.poleDetection import get_pole
 from visualize.vis_pole_detection import vis_pole
@@ -33,6 +34,12 @@ class OptiTrack(object):
             board_config=self.config.board,
             image_path=os.path.join(self.config.image_path,"board")
         )
+        try:
+            vis_intrinsic()
+        except KeyboardInterrupt:
+            logger.info("early stop intrinsic visualizer")
+        except Exception as e:
+            logger.warning(f"enter wrong {e}")
     def add_mask(self):
         self.mask=get_mask(
             cam_num=self.config.cam_num,
@@ -59,8 +66,10 @@ class OptiTrack(object):
                 pole_lists=self.pole,
                 vis_num=self.config.vis_num
             )
-        except:
+        except KeyboardInterrupt:
             logger.info(f"early stop pole detection visualizer")
+        except Exception as e:
+            logger.warning(f"enter wrong {e}")
         try:
             vis_spread(
                 cam_num=self.config.cam_num,
@@ -68,8 +77,10 @@ class OptiTrack(object):
                 pole_lists=self.pole,
                 save_path=os.path.join(self.config.image_path,'pole','vis_spread.jpg')
             )
-        except:
+        except KeyboardInterrupt:
             logger.info(f"early stop pole spread visualizer")
+        except Exception as e:
+            logger.warning(f"enter wrong {e}")
         # import pdb;pdb.set_trace()
     def init_pose(self):
         self.pose=get_init_pose(
@@ -93,8 +104,10 @@ class OptiTrack(object):
                 vis_num=self.config.vis_num,
                 vis_folder="vis_init_reproj"
             )
-        except:
+        except KeyboardInterrupt:
             logger.info(f"early stop reprojection error visualizer")
+        except Exception as e:
+            logger.warning(f"enter wrong {e}")
     def refine_pose(self,early_stop=True):
         save_path=os.path.join(self.config.image_path,'refine_pose.json')
         refine_mode="process" # 'thread' 'process' 'distributed'
@@ -110,8 +123,10 @@ class OptiTrack(object):
                     save_path=save_path,
                     refine_mode=refine_mode
                 )
-            except:
+            except KeyboardInterrupt:
                 logger.info("early stop pose refiner")
+            except Exception as e:
+                logger.warning(f"enter wrong {e}")
         else:
             get_refine_pose( 
                 cam_num=self.config.cam_num,
@@ -139,8 +154,10 @@ class OptiTrack(object):
                 vis_num=self.config.vis_num,
                 vis_folder="vis_reproj"
             )
-        except:
+        except KeyboardInterrupt:
             logger.info(f"early stop reprojection error visualizer")
+        except Exception as e:
+            logger.warning(f"enter wrong {e}")
     def world_pose(self):
         save_path=os.path.join(self.config.image_path,'world_pose.json')
         # import pdb;pdb.set_trace() # p self.output
