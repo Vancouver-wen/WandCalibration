@@ -64,7 +64,7 @@ def get_mask(
         detectors.append(detector)
     # 遍历 空场 图片
     frame_lists=get_cam_list(image_path,cam_num)
-    for frame_list in frame_lists:
+    for frame_list in tqdm(frame_lists):
         temps=Parallel(n_jobs=-1,backend="threading")(
             delayed(get_image_list)(frame_path,detector)
             for frame_path,detector in list(zip(frame_list,detectors))
