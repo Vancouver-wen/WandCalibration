@@ -9,9 +9,9 @@
 #     - [extrinsic.json] # 可选:提供的外参初始值
 #     - cam*
 
-max_process: 8
+max_process: 20
 
-cam_num: 40
+cam_num: 8
 fast_blob: True
 vis_num: 100
 
@@ -28,7 +28,7 @@ pole:
   d1: 250
   d2: 510
 
-image_path: "imageCollect/wtt_st"
+image_path: "imageCollect/88basketball"
 
 maskBlobParam:
   minThreshold: 50
