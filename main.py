@@ -49,6 +49,7 @@ class OptiTrack(object):
             poleBlobParam=self.config.poleBlobParam,
             image_path=os.path.join(self.config.image_path,'pole'),
             masks=self.mask,
+            fastBlob=self.config.fast_blob,
             color=self.config.pole.color
         )
         try:

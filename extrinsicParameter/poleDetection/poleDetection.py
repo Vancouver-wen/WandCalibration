@@ -34,6 +34,7 @@ class PoleDetection(SimpleBlobDetection):
             minConvexity=0.4, 
             filterByInertia=True, 
             minInertiaRatio=0.1,
+            fastBlob=False,
             color="white"
         ):
         super().__init__(
@@ -53,6 +54,7 @@ class PoleDetection(SimpleBlobDetection):
             minConvexity, 
             filterByInertia, 
             minInertiaRatio,
+            fastBlob,
             color
         )
         self.lineAngle=lineAngle
@@ -120,6 +122,7 @@ def get_pole(
         poleBlobParam,
         image_path,
         masks,
+        fastBlob=False,
         color="white"
     ):
     assert cam_num==len(resolutions),"camera num quantity is ambiguous"
@@ -150,6 +153,7 @@ def get_pole(
                 minConvexity  = poleBlobParam.minConvexity,
                 filterByInertia  =   True,
                 minInertiaRatio  =  poleBlobParam.minInertiaRatio,
+                fastBlob = fastBlob,
                 color=color
             )
             detectors.append(detector)

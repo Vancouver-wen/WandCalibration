@@ -39,6 +39,7 @@ class SimpleBlobDetection():
             minConvexity  =   0.4,
             filterByInertia  =   True,
             minInertiaRatio  =   0.1,
+            fastBlob = False,
             color="white"
         ) -> None:
         """
@@ -61,7 +62,11 @@ class SimpleBlobDetection():
         # Setup SimpleBlobDetector parameters.
         self.params  =  cv2.SimpleBlobDetector_Params()
         # Change thresholds
-        self.params.minThreshold  =   minThreshold
+        self.minThreshold = minThreshold
+        if fastBlob:
+            self.params.minThreshold  =   253
+        else:
+            self.params.minThreshold = self.minThreshold
         self.params.maxThreshold  =   maxThreshold
         self.params.thresholdStep = thresholdStep
         # Color
@@ -85,6 +90,7 @@ class SimpleBlobDetection():
         self.params.minInertiaRatio  =  minInertiaRatio  
         # 创建检测器
         self.detector = cv2.SimpleBlobDetector_create(self.params)
+        self.fastBlob=fastBlob
         self.color=color
     def frame_pre_process(self,frame):
         if self.color=="white":
@@ -102,6 +108,8 @@ class SimpleBlobDetection():
         else:
             support_list=["white","red"]
             raise NotImplementedError(f"we only support {support_list}")
+        if self.fastBlob:
+            ret,frame=cv2.threshold(frame,self.minThreshold,255,cv2.THRESH_BINARY)
         return frame
     def __call__(self, frame, drawKeypoints=True):
         frame=self.frame_pre_process(frame)
