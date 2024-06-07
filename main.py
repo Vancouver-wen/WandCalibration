@@ -75,17 +75,17 @@ class OptiTrack(object):
             logger.info(f"early stop pole detection visualizer")
         except Exception as e:
             logger.warning(f"enter wrong {e}")
-        # try:
-        #     vis_spread(
-        #         cam_num=self.config.cam_num,
-        #         image_path=os.path.join(self.config.image_path,'empty'), # 从 empty中取图片可视化spread
-        #         pole_lists=self.pole,
-        #         save_path=os.path.join(self.config.image_path,'pole','vis_spread.jpg')
-        #     )
-        # except KeyboardInterrupt:
-        #     logger.info(f"early stop pole spread visualizer")
-        # except Exception as e:
-        #     logger.warning(f"enter wrong {e}")
+        try:
+            vis_spread(
+                cam_num=self.config.cam_num,
+                image_path=os.path.join(self.config.image_path,'empty'), # 从 empty中取图片可视化spread
+                pole_lists=self.pole,
+                save_path=os.path.join(self.config.image_path,'pole','vis_spread.jpg')
+            )
+        except KeyboardInterrupt:
+            logger.info(f"early stop pole spread visualizer")
+        except Exception as e:
+            logger.warning(f"enter wrong {e}")
         # import pdb;pdb.set_trace()
     def init_pose(self):
         self.pose=get_init_pose(
