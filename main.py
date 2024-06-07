@@ -101,6 +101,7 @@ class OptiTrack(object):
         if early_stop:
             try:
                 get_refine_pose(
+                    max_process=self.config.max_process,
                     cam_num=self.config.cam_num,
                     pole_lists=self.pole,
                     intrinsics=self.intrinsic,

@@ -49,7 +49,7 @@ def get_intrinsic(cam_num,board_config,image_path):
     ]
     intrinsics=dict()
     # n_jobs = len(image_path_lists)
-    Parallel(n_jobs=len(image_path_lists),backend="threading")(
+    Parallel(n_jobs=-1,backend="threading")(
         delayed(get_each_intrinsic)(
             intrinsicCalibrator,
             image_path_list,

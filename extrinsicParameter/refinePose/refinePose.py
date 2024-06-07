@@ -206,6 +206,7 @@ def multi_process_train(
         p.join()
 
 def get_refine_pose(
+        max_process,
         cam_num,
         pole_lists,
         intrinsics,
@@ -236,6 +237,7 @@ def get_refine_pose(
     ]
     # boundle adjustment
     myBoundAdjustment=BoundleAdjustment(
+        max_process=max_process,
         pole_definition=pole_param,
         cam_num=cam_num,
         init_intrinsic=intrinsics,

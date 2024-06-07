@@ -18,6 +18,7 @@ from extrinsicParameter.refinePose.so3_exp_map import so3_exp_map
 class BoundleAdjustment(nn.Module):
     def __init__(
             self,
+            max_process,
             pole_definition,
             cam_num,
             init_intrinsic,
@@ -116,7 +117,7 @@ class BoundleAdjustment(nn.Module):
         
         assert len(self.pole_2d_lists)==len(self.pole3d_posotions)
         self.list_len=len(self.pole_2d_lists)
-        self.cpu_count=min(os.cpu_count(),int(self.list_len/100)) # 每个进程至少100组图片
+        self.cpu_count=min(os.cpu_count(),int(self.list_len/100),max_process) # 每个进程至少100组图片
 
         self.save_path=save_path
         self.resolutions=[intrinsic['image_size'] for intrinsic in init_intrinsic]
