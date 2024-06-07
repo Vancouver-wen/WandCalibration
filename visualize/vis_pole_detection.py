@@ -27,7 +27,7 @@ def vis_one_frame(
             # import pdb;pdb.set_trace()
             frame=cv2.circle(img=frame,center=point,radius=10,color=(0,255,0),thickness=-1)
             frame=cv2.putText(frame,str(id.item()),point,cv2.FONT_HERSHEY_COMPLEX,3,(0,255,0),2)
-    cv2.imwrite(os.path.join(save_folder,f'{step:06d}.jpg'),frame)
+    cv2.imwrite(os.path.join(save_folder,f'cam{step+1}.jpg'),frame)
 
 def vis_each_pole(
         save_folder,
@@ -46,7 +46,7 @@ def save_each_pole(
         debug_path,
         step
     ):
-    save_folder=os.path.join(debug_path,f"{step}")
+    save_folder=os.path.join(debug_path,f"{step:06d}")
     if not os.path.exists(save_folder):
         os.mkdir(save_folder)
     vis_each_pole(

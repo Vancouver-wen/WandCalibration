@@ -13,7 +13,7 @@ max_process: 8
 
 cam_num: 40
 fast_blob: True
-vis_num: 1
+vis_num: 100
 
 board: &board
   type: charucoboard

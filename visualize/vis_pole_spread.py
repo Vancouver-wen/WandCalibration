@@ -52,6 +52,8 @@ def vis_spread(
         pole_lists,
         save_path
     ):
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
     frame_list=get_cam_list(image_path,cam_num)[0]
     frames=[cv2.imread(frame_path) for frame_path in frame_list]
     logger.info(f"visualize pole spread result")
@@ -59,12 +61,8 @@ def vis_spread(
         delayed(draw_pole_list)(frames,pole_list)
         for pole_list in tqdm(pole_lists)
     )
-    frame=show_multi_imgs(
-        scale=1,
-        imglist=frames,
-        order=(int(cam_num/3+0.99),3)
-    )
-    cv2.imwrite(save_path,frame)
+    for step,frame in enumerate(frames):
+        cv2.imwrite(os.path.join(save_path,f'cam{step+1}.jpg'),frame)
 
 if __name__=="__main__":
     pass

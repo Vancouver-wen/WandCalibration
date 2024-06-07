@@ -80,7 +80,7 @@ class OptiTrack(object):
                 cam_num=self.config.cam_num,
                 image_path=os.path.join(self.config.image_path,'empty'), # 从 empty中取图片可视化spread
                 pole_lists=self.pole,
-                save_path=os.path.join(self.config.image_path,'pole','vis_spread.jpg')
+                save_path=os.path.join(self.config.image_path,'pole','vis_spread')
             )
         except KeyboardInterrupt:
             logger.info(f"early stop pole spread visualizer")
@@ -100,19 +100,19 @@ class OptiTrack(object):
             intrinsics=self.intrinsic,
             extrinsics=self.pose
         )
-        try:
-            vis_reproj_error(
-                cam_num=self.config.cam_num,
-                pole_lists=self.pole,
-                camera_params=init_camera_params,
-                image_path=os.path.join(self.config.image_path,'pole'),
-                vis_num=self.config.vis_num,
-                vis_folder="vis_init_reproj"
-            )
-        except KeyboardInterrupt:
-            logger.info(f"early stop reprojection error visualizer")
-        except Exception as e:
-            logger.warning(f"enter wrong {e}")
+        # try:
+        vis_reproj_error(
+            cam_num=self.config.cam_num,
+            pole_lists=self.pole,
+            camera_params=init_camera_params,
+            image_path=os.path.join(self.config.image_path,'pole'),
+            vis_num=self.config.vis_num,
+            vis_folder="vis_init_reproj"
+        )
+        # except KeyboardInterrupt:
+        #     logger.info(f"early stop reprojection error visualizer")
+        # except Exception as e:
+        #     logger.warning(f"enter wrong {e}")
     def refine_pose(self,early_stop=True):
         save_path=os.path.join(self.config.image_path,'refine_pose.json')
         refine_mode="process" # 'thread' 'process' 'distributed'

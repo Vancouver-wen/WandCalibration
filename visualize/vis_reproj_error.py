@@ -31,16 +31,14 @@ def vis_each_reproj_error(
         reproj_folder,
         camera_params
     ):
+    save_folder=os.path.join(reproj_folder,f"{step:06d}")
+    if not os.path.exists(save_folder):
+        os.mkdir(save_folder)
     mask=[undistort_pole is not None for undistort_pole in undistort_pole_list]
     if np.array(mask).sum()<2:
-        frames=[cv2.imread(frame_path) for frame_path in frame_list]
-        image=show_multi_imgs(
-            scale=1,
-            imglist=frames,
-            order=(int(len(frames)/3+0.99),3),
-            border=2
-        )
-        cv2.imwrite(os.path.join(reproj_folder,f"{step:06d}.jpg"),image)
+        for cam_index,frame_path in enumerate(frame_list):
+            frame=cv2.imread(frame_path) 
+            cv2.imwrite(os.path.join(save_folder,f"cam{cam_index+1}.jpg"),frame)
         return
     masked_pole_list=list(compress(undistort_pole_list,mask))
     point_2ds_list=np.squeeze(np.array(masked_pole_list),axis=2)
@@ -53,12 +51,11 @@ def vis_each_reproj_error(
             poses=masked_camera_params
         )
         point_3ds.append(point_3d)
-    # point_3ds 可能含有None
-    frames=[cv2.imread(frame_path) for frame_path in frame_list]
-    for id,point_3d in enumerate(point_3ds):
-        if point_3d is None:
-            continue
-        for camera_param,frame in list(zip(camera_params,frames)):
+    for camera_index,(camera_param,frame_path) in enumerate(list(zip(camera_params,frame_list))):
+        frame=cv2.imread(frame_path)
+        for id,point_3d in enumerate(point_3ds): # point_3ds 可能含有None
+            if point_3d is None:
+                continue
             point_2d,_=cv2.projectPoints(
                 objectPoints=np.expand_dims(np.array(point_3d),axis=0),
                 rvec=np.array(camera_param['R']),
@@ -83,13 +80,7 @@ def vis_each_reproj_error(
                 color=(0,0,255),
                 thickness=2
             )
-    image=show_multi_imgs(
-        scale=1,
-        imglist=frames,
-        order=(int(len(frames)/3+0.99),3),
-        border=2
-    )
-    cv2.imwrite(os.path.join(reproj_folder,f"{step:06d}.jpg"),image)
+        cv2.imwrite(os.path.join(save_folder,f"cam{camera_index+1}.jpg"),frame)
 
 def vis_reproj_error(
         cam_num,
