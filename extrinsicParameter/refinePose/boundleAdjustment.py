@@ -257,7 +257,10 @@ class BoundleAdjustment(nn.Module):
             Rs=self.vector_to_matrix(Rs,batch=True)
         else:
             raise NotImplementedError(f"do not support rotation_representation={self.rotation_representation}")
-        loss_reproj=self.vmap_projectIter(pole_2ds,pole_3d.T,Ks,Rs,ts,Kds).mean()
+        loss_reproj=self.vmap_projectIter(pole_2ds,pole_3d.T,Ks,Rs,ts,Kds)
+        # import pdb;pdb.set_trace()
+        # loss_reproj=loss_reproj/loss_reproj.detach() # * 的效果不明显; /的效果很差
+        loss_reproj=loss_reproj.mean()
         loss=loss_wand+loss_reproj
         # print({
         #     'loss': loss.item(),

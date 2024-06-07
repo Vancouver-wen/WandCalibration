@@ -22,8 +22,9 @@ def verify_accuracy(
     available_pole_lists=get_available_pole_lists(pole_lists)
     errors=[]
     diffs=[]
+    each_errors=[[] for _ in camera_params]
     for pole_3d,available_pole_list in list(zip(pole_3ds,available_pole_lists)):
-        for available_pole,camera_param in list(zip(available_pole_list,camera_params)):
+        for step,(available_pole,camera_param) in enumerate(list(zip(available_pole_list,camera_params))):
             if available_pole is None:
                 continue
             available_pole=available_pole[0]
@@ -40,13 +41,17 @@ def verify_accuracy(
                 diffs.append(np.abs(diff))
                 error=np.linalg.norm(diff)
                 errors.append(error)
+                each_errors[step].append(error)
     mean_error=np.mean(errors)
     mean_diff=np.mean(np.array(diffs),axis=0).tolist()
+    for i in range(len(each_errors)):
+        each_errors[i]=np.around(np.mean(np.array(each_errors[i])),2)
     if time_consume is None:
         logger.info(f"mean_pixel_error: {mean_error:.2f}    mean_coord_error: {mean_diff}")
     else:
         mean_diff = [float('{:.2f}'.format(i)) for i in mean_diff]
         logger.info(f"mean_pixel_error: {mean_error:.2f}    mean_coord_error: {mean_diff}   second_consume: {time_consume:.2f}")
+    logger.info(f"each_camera_pixel_error:{each_errors}")
     return mean_error
 
 def vis_accuracy(
