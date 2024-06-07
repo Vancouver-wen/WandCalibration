@@ -48,10 +48,12 @@ def get_mst(cam_num,pole_lists):
     selected_edge=[]
     selected_node=set()
     for edge in sorted_edges:
-        if edge[1] not in selected_node or edge[2] not in selected_node:
-            selected_edge.append(edge)
-            selected_node.add(edge[1])
-            selected_node.add(edge[2])
+        if len(selected_node)>0:
+            if not((edge[1] in selected_node)^(edge[2] not in selected_node)): # 同或操作
+                continue
+        selected_edge.append(edge)
+        selected_node.add(edge[1])
+        selected_node.add(edge[2])
     selected_edge=np.array(selected_edge)
     return selected_edge
 
