@@ -12,36 +12,33 @@ from extrinsicParameter.poleDetection.blobDetection import get_cam_list
 from utils.imageConcat import show_multi_imgs
 
 def vis_one_frame(
+        step,
         pole,
-        frame_path
+        frame_path,
+        save_folder
     ):
     frame=cv2.imread(frame_path)
     if pole is None:
-        return frame
+        pass
     else:
         corners,ids=pole
         for corner,id in list(zip(corners,ids)):
             point=corner.astype(np.int32)
             # import pdb;pdb.set_trace()
             frame=cv2.circle(img=frame,center=point,radius=10,color=(0,255,0),thickness=-1)
-            cv2.putText(frame,str(id.item()),point,cv2.FONT_HERSHEY_COMPLEX,3,(0,255,0),2)
-        return frame
+            frame=cv2.putText(frame,str(id.item()),point,cv2.FONT_HERSHEY_COMPLEX,3,(0,255,0),2)
+    cv2.imwrite(os.path.join(save_folder,f'{step:06d}.jpg'),frame)
+
 def vis_each_pole(
+        save_folder,
         pole_list,
         frame_list
     ):
     assert len(pole_list)==len(frame_list),"len(pole_list) != len(frame_list)"
-    frames_with_keypoints=Parallel(n_jobs=len(pole_list),backend="threading")(
-        delayed(vis_one_frame)(pole,frame_path)
-        for pole,frame_path in list(zip(pole_list,frame_list))
+    Parallel(n_jobs=-1,backend="threading")(
+        delayed(vis_one_frame)(step,pole,frame_path,save_folder)
+        for step,(pole,frame_path) in enumerate(list(zip(pole_list,frame_list)))
     )
-    image=show_multi_imgs(
-        scale=1,
-        imglist=frames_with_keypoints,
-        order=(int(len(frames_with_keypoints)/3+0.99),3),
-        border=2
-    )
-    return image
 
 def save_each_pole(
         pole_list,
@@ -49,8 +46,14 @@ def save_each_pole(
         debug_path,
         step
     ):
-    image=vis_each_pole(pole_list,frame_list)
-    cv2.imwrite(os.path.join(debug_path,f"{step}.jpg"),image)
+    save_folder=os.path.join(debug_path,f"{step}")
+    if not os.path.exists(save_folder):
+        os.mkdir(save_folder)
+    vis_each_pole(
+        save_folder,
+        pole_list,
+        frame_list
+    )
 
 def vis_pole(
         cam_num,
@@ -61,7 +64,6 @@ def vis_pole(
     debug_path=os.path.join(image_path,"vis_poles")
     if not os.path.exists(debug_path):
         os.mkdir(debug_path)
-    
     frame_lists=get_cam_list(image_path,cam_num)
     assert len(pole_lists)==len(frame_lists),"len(pole_lists) != len(frame_lists)"
     iteration=random.sample(list(zip(pole_lists,frame_lists)),vis_num)
