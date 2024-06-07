@@ -35,7 +35,12 @@ class OptiTrack(object):
             image_path=os.path.join(self.config.image_path,"board")
         )
         try:
-            vis_intrinsic()
+            vis_intrinsic(
+                cam_num=self.config.cam_num,
+                intrinsics=self.intrinsic,
+                image_path=os.path.join(self.config.image_path,'wand'),
+                save_path=os.path.join(self.config.image_path,'board','undistort')
+            )
         except KeyboardInterrupt:
             logger.info("early stop intrinsic visualizer")
         except Exception as e:
