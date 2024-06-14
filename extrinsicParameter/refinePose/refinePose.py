@@ -18,6 +18,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 from .normalizedImagePlane import get_undistort_points
 from .multiViewTriangulate import normalized_pole_triangulate
 from .boundleAdjustment import BoundleAdjustment
+from .linear_warmup_cosine_annealing_warm_restarts_weight_decay import ChainedScheduler
 from utils.verifyAccuracy import verify_accuracy
 
 def multi_thread_train(
@@ -28,7 +29,7 @@ def multi_thread_train(
     list_len=model.list_len
     mask=torch.ones(list_len,dtype=torch.bool)
     model.train()
-    lr=min(5e-4*init_error,5e-3) # lr=5e-3 是比较合适的数值
+    lr=min(5e-4*init_error,1e-1) # lr=5e-3 是比较合适的数值
     optimizer = torch.optim.Adam(
         params=model.parameters(),
         lr=lr
