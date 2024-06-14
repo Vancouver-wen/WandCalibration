@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import copy
 
 import numpy as np
 import cv2
@@ -22,12 +23,15 @@ def vis_point3ds(
         image_path,
         cam_num,
         cam_params,
-        point_3ds
+        point_3ds,
+        save_folder
     ):
+    if not os.path.exists(save_folder):
+        os.mkdir(save_folder)
     frame_list=get_cam_list(image_path,cam_num)[0]
-    frames=[]
-    for frame_path,camera_param in list(zip(frame_list,cam_params)):
+    for step,(frame_path,camera_param) in enumerate(list(zip(frame_list,cam_params))):
         frame=cv2.imread(frame_path)
+        origin=copy.deepcopy(frame)
         point_names=['A','B','C']
         assert len(point_names)==len(point_3ds),f"len(point_names)!=len(point_3ds)\t check point_3ds definition"
         for point_name,point_3d in list(zip(point_names,point_3ds)):
@@ -55,23 +59,21 @@ def vis_point3ds(
                 color=(0,0,255),
                 thickness=3
             )
-        frames.append(frame)
-    frame=show_multi_imgs(
-        scale=1,
-        imglist=frames,
-        order=(int(cam_num/3+0.99),3)
-    )
-    return frame
+        frame=cv2.addWeighted(frame,0.5,origin,0.5,0)
+        cv2.imwrite(os.path.join(save_folder,f"cam{step+1}.jpg"),frame)
         
 def vis_wand_detection(
         image_path,
         cam_num,
         wands,
+        save_folder
     ):
+    if not os.path.exists(save_folder):
+        os.mkdir(save_folder)
     frame_list=get_cam_list(image_path,cam_num)[0]
-    frames=[]
-    for frame_path,wand in list(zip(frame_list,wands)):
+    for step,(frame_path,wand) in enumerate(list(zip(frame_list,wands))):
         frame=cv2.imread(frame_path)
+        origin=copy.deepcopy(frame)
         for point_2d in wand:
             frame=cv2.circle(
                 img=frame,
@@ -80,13 +82,8 @@ def vis_wand_detection(
                 color=(0,255,0),
                 thickness=-1
             )
-        frames.append(frame)
-    frame=show_multi_imgs(
-        scale=1,
-        imglist=frames,
-        order=(int(cam_num/3+0.99),3)
-    )
-    return frame
+        frame=cv2.addWeighted(frame,0.5,origin,0.5,0)
+        cv2.imwrite(os.path.join(save_folder,f"cam{step+1}.jpg"),frame)
 
 def transfer_point_3ds(
         point_3ds,
@@ -128,18 +125,22 @@ def get_cam0_extrinsic(
         json_paths=natsorted(glob.glob(os.path.join(image_path,'wand','labelme','*.json')))
         assert cam_num==len(json_paths),f"wand/labelme/*.json file number not equal to camera number"
         objs=[get_labelme_json(json_path) for json_path in json_paths]
-        frame=vis_objs(objs,wand_folder,cam_num)
-        cv2.imwrite(os.path.join(wand_folder,"vis_wand_detection.jpg"),frame)
+        vis_objs(
+            objs=objs,
+            image_path=wand_folder,
+            cam_num=cam_num,
+            save_folder=os.path.join(wand_folder,"vis_wand_detection")
+        )
         points=format_labelme_objs(objs,cam_params,world_coord_param['PointCoordinates'])
         points=triangulate_points(points)
         point_3ds=[points[key]['pred_point_3d'] for key in points.keys()]
-        frame=vis_points(
+        vis_points(
             point_3ds=point_3ds,
             image_path=wand_folder,
             cam_num=cam_num,
-            cam_params=cam_params
+            cam_params=cam_params,
+            save_folder=os.path.join(wand_folder,"vis_reconstruct_points")
         )
-        cv2.imwrite(os.path.join(wand_folder,"vis_reconstruct_points.jpg"),frame)
         R,t=solve_icp(
             target=point_3ds,
             source=world_coord_param['PointCoordinates']
@@ -168,12 +169,12 @@ def get_cam0_extrinsic(
             wand_blob_param=wand_blob_param,
         )
         # vis wands
-        frame=vis_wand_detection(
+        vis_wand_detection(
             image_path=wand_folder,
             cam_num=cam_num,
-            wands=wands
+            wands=wands,
+            save_folder=os.path.join(wand_folder,'vis_wand_detection')
         )
-        cv2.imwrite(os.path.join(wand_folder,'vis_wand_detection.jpg'),frame)
         point_3ds=no_id_reconstruct(
             cam_num=cam_num,
             cam_params=cam_params,
@@ -184,13 +185,13 @@ def get_cam0_extrinsic(
             WandDefinition=world_coord_param['WandDefinition'],
         )
         # 可视化 point_3ds 的 reproj
-        frame=vis_point3ds(
+        vis_point3ds(
             image_path=wand_folder,
             cam_num=cam_num,
             cam_params=cam_params,
             point_3ds=point_3ds,
+            save_folder=os.path.join(wand_folder,'vis_reconstruct_points')
         )
-        cv2.imwrite(os.path.join(wand_folder,'vis_reconstruct_points.jpg'),frame) 
         R,t=solve_icp(
             target=point_3ds,
             source=world_coord_param['WandPointCoord']

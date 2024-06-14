@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import copy
 
 import numpy as np
 import cv2
@@ -23,9 +24,12 @@ def get_labelme_json(json_path):
         result[label]=point
     return result
 
-def vis_objs(objs,image_path,cam_num):
+def vis_objs(objs,image_path,cam_num,save_folder):
+    if not os.path.exists(save_folder):
+        os.mkdir(save_folder)
     frame_list=get_cam_list(image_path,cam_num)[0]
     frames=[cv2.imread(frame_path) for frame_path in frame_list]
+    origins=[copy.deepcopy(frame) for frame in frames]
     for obj,frame in list(zip(objs,frames)):
         keys=obj.keys()
         for key in keys:
@@ -46,12 +50,15 @@ def vis_objs(objs,image_path,cam_num):
                 color=(0,255,0),
                 thickness=3
             )
-    frame=show_multi_imgs(
-        scale=1,
-        imglist=frames,
-        order=(int(cam_num/3+0.99),3)
-    )
-    return frame
+    frames=[
+        cv2.addWeighted(origin,0.5,frame,0.5,0)
+        for origin,frame in list(zip(origins,frames))
+    ]
+    for step,frame in enumerate(frames):
+        cv2.imwrite(
+            os.path.join(save_folder,f"cam{step+1}.jpg"),
+            frame
+        )
 
 def format_labelme_objs(objs,cam_params,point_coordinates):
     points=dict()
@@ -95,6 +102,7 @@ def triangulate_point(key,point):
 def triangulate_points(points):
     keys=natsorted(points.keys())
     for key in keys:
+
         point_3d=triangulate_point(key,points[key])
     return points
 
@@ -102,10 +110,14 @@ def vis_points(
         point_3ds,
         image_path,
         cam_num,
-        cam_params
+        cam_params,
+        save_folder
     ):
+    if not os.path.exists(save_folder):
+        os.mkdir(save_folder)
     frame_list=get_cam_list(image_path,cam_num)[0]
     frames=[cv2.imread(frame_path) for frame_path in frame_list]
+    origins=[copy.deepcopy(frame) for frame in frames]
     for step,point_3d in enumerate(point_3ds):
         for frame,camera_param in list(zip(frames,cam_params)):
             pred_point_2d,_=cv2.projectPoints(
@@ -132,12 +144,15 @@ def vis_points(
                 color=(0,0,255),
                 thickness=2
             )
-    frame=show_multi_imgs(
-        scale=1,
-        imglist=frames,
-        order=(int(cam_num/3+0.99),3)
-    )
-    return frame
+    frames=[
+        cv2.addWeighted(frame,0.5,origin,0.5,0)
+        for frame,origin in list(zip(frames,origins))
+    ]
+    for step,frame in enumerate(frames):
+        cv2.imwrite(
+            os.path.join(save_folder,f"cam{step+1}.jpg"),
+            frame
+        )
 
 if __name__=="__main__":
     pass
