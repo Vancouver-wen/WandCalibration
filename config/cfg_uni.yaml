@@ -9,11 +9,11 @@
 #     - [extrinsic.json] # 可选:提供的外参初始值
 #     - cam*
 
-max_process: 8
+max_process: 100
 
-cam_num: 4
+cam_num: 8
 fast_blob: True
-vis_num: 100
+vis_num: 30
 
 board:
   type: charucoboard
@@ -28,7 +28,7 @@ pole:
   d1: 250
   d2: 510
 
-image_path: "imageCollect/mhub_0611"
+image_path: "imageCollect/88basketball"
 
 maskBlobParam:
   minThreshold: 50
