@@ -1,6 +1,7 @@
 import os
 import sys
 import random
+import copy
 
 import numpy as np
 import cv2
@@ -18,6 +19,7 @@ def vis_one_frame(
         save_folder
     ):
     frame=cv2.imread(frame_path)
+    origin=copy.deepcopy(frame)
     if pole is None:
         pass
     else:
@@ -27,6 +29,7 @@ def vis_one_frame(
             # import pdb;pdb.set_trace()
             frame=cv2.circle(img=frame,center=point,radius=10,color=(0,255,0),thickness=-1)
             frame=cv2.putText(frame,str(id.item()),point,cv2.FONT_HERSHEY_COMPLEX,3,(0,255,0),2)
+    frame=cv2.addWeighted(origin,0.5,frame,0.5,0)
     cv2.imwrite(os.path.join(save_folder,f'cam{step+1}.jpg'),frame)
 
 def vis_each_pole(

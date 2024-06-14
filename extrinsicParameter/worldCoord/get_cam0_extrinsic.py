@@ -148,36 +148,6 @@ def get_cam0_extrinsic(
             point_3ds,R,t
         )
         cam0_R,cam0_t=R,t
-    elif world_coord_param['type']=="board":
-        corner_map,frame=get_corner_map(
-            image_path=wand_folder,
-            cam_num=cam_num,
-            board_config=world_coord_param['BoardDefinition'],
-            origin_point=world_coord_param['ZeroPointCoord'],
-            cam_params=cam_params
-        )
-        cv2.imwrite(os.path.join(wand_folder,'vis_wand_detection.jpg'),frame)
-        corner_map=triangulate_corner_map(corner_map)
-        frame=vis_points(
-            point_3ds=[corner_map[key]['pred_point_3d'] for key in natsorted(corner_map.keys())],
-            image_path=wand_folder,
-            cam_num=cam_num,
-            cam_params=cam_params
-        )
-        cv2.imwrite(os.path.join(wand_folder,'vis_reconstruct_points.jpg'),frame)
-        R,t=solve_icp(
-            target=[corner_map[key]['pred_point_3d'] for key in natsorted(corner_map.keys())],
-            source=[corner_map[key]['expect_point_3d'] for key in natsorted(corner_map.keys())]
-        )
-        if world_coord_param['BoardPointCoord'] is None:
-            world_coord_param['BoardPointCoord']=np.array([
-                corner_map[key]['expect_point_3d'] 
-                for key in natsorted(corner_map.keys())
-            ]).tolist()
-        # transfered_point_3ds=transfer_point_3ds(
-        #     point_3ds,R,t
-        # )
-        cam0_R,cam0_t=R,t
     elif world_coord_param['type']=="wand":
         # L型杆子
         # 检查是否有 wand 文件夹
@@ -229,6 +199,36 @@ def get_cam0_extrinsic(
             point_3ds,R,t
         )
         cam0_R,cam0_t=R,t
+    # elif world_coord_param['type']=="board":
+    #     corner_map,frame=get_corner_map(
+    #         image_path=wand_folder,
+    #         cam_num=cam_num,
+    #         board_config=world_coord_param['BoardDefinition'],
+    #         origin_point=world_coord_param['ZeroPointCoord'],
+    #         cam_params=cam_params
+    #     )
+    #     cv2.imwrite(os.path.join(wand_folder,'vis_wand_detection.jpg'),frame)
+    #     corner_map=triangulate_corner_map(corner_map)
+    #     frame=vis_points(
+    #         point_3ds=[corner_map[key]['pred_point_3d'] for key in natsorted(corner_map.keys())],
+    #         image_path=wand_folder,
+    #         cam_num=cam_num,
+    #         cam_params=cam_params
+    #     )
+    #     cv2.imwrite(os.path.join(wand_folder,'vis_reconstruct_points.jpg'),frame)
+    #     R,t=solve_icp(
+    #         target=[corner_map[key]['pred_point_3d'] for key in natsorted(corner_map.keys())],
+    #         source=[corner_map[key]['expect_point_3d'] for key in natsorted(corner_map.keys())]
+    #     )
+    #     if world_coord_param['BoardPointCoord'] is None:
+    #         world_coord_param['BoardPointCoord']=np.array([
+    #             corner_map[key]['expect_point_3d'] 
+    #             for key in natsorted(corner_map.keys())
+    #         ]).tolist()
+    #     # transfered_point_3ds=transfer_point_3ds(
+    #     #     point_3ds,R,t
+    #     # )
+    #     cam0_R,cam0_t=R,t
     else:
         support_list=["point","labelme","board","wand"]
         raise NotImplementedError(f"we only support {support_list}")

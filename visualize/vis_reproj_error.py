@@ -2,6 +2,7 @@ import os
 import sys
 import random
 from itertools import compress
+import copy
 
 import cv2
 from tqdm import tqdm
@@ -53,6 +54,7 @@ def vis_each_reproj_error(
         point_3ds.append(point_3d)
     for camera_index,(camera_param,frame_path) in enumerate(list(zip(camera_params,frame_list))):
         frame=cv2.imread(frame_path)
+        origin=copy.deepcopy(frame)
         for id,point_3d in enumerate(point_3ds): # point_3ds 可能含有None
             if point_3d is None:
                 continue
@@ -80,6 +82,7 @@ def vis_each_reproj_error(
                 color=(0,0,255),
                 thickness=2
             )
+        frame=cv2.addWeighted(origin,0.5,frame,0.5,0)
         cv2.imwrite(os.path.join(save_folder,f"cam{camera_index+1}.jpg"),frame)
 
 def vis_reproj_error(

@@ -15,7 +15,7 @@ cam_num: 8
 fast_blob: True
 vis_num: 100
 
-board: &board
+board:
   type: charucoboard
   height: 4
   width: 5
@@ -82,7 +82,3 @@ worldCoordParam:
     # - [-1.6,0,0]
     # - [1.6,0,0]
     # - [1.6,5.55,0]
-  # type: board
-  # ZeroPointCoord: [0,0,0.76] # 默认使用右手系,Z轴向上
-  # BoardDefinition: *board
-  # BoardPointCoord: null
