@@ -245,8 +245,7 @@ def get_refine_pose(
         image_num=np.array(mask).sum(),
         init_pole_3ds=masked_pole_3ds,
         detected_pole_2ds=masked_pole_lists,
-        save_path=save_path,
-        rotation_representation="vector"
+        save_path=save_path
     )
     # 计算初始化精度
     logger.info(f"calculate boundle adjustment init pixel error to set init learning rate")

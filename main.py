@@ -114,9 +114,9 @@ class OptiTrack(object):
             logger.info(f"early stop reprojection error visualizer")
         except Exception as e:
             logger.warning(f"enter wrong {e}")
-    def refine_pose(self,early_stop=True):
+    def refine_pose(self,early_stop=False):
         save_path=os.path.join(self.config.image_path,'refine_pose.json')
-        refine_mode="process" # 'thread' 'process' 'distributed'
+        refine_mode="thread" # 'thread' 'process' 'distributed'
         if early_stop:
             try:
                 get_refine_pose(
@@ -135,6 +135,7 @@ class OptiTrack(object):
                 logger.warning(f"enter wrong {e}")
         else:
             get_refine_pose( 
+                max_process=self.config.max_process,
                 cam_num=self.config.cam_num,
                 pole_lists=self.pole,
                 intrinsics=self.intrinsic,
