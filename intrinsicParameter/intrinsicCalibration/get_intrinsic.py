@@ -10,18 +10,27 @@ from tqdm import tqdm
 from joblib import Parallel,delayed
 
 def get_intrinsic(cam_num,board_config,image_path):
+    intrinsic=dict()
     # 检查是否有 intrinsic.json
     if os.path.exists(os.path.join(image_path,"intrinsic.json")):
-        intrinsic=[]
         with open(os.path.join(image_path,"intrinsic.json"),'r',encoding="utf-8") as f:
             temp=json.load(f)
             for key in natsorted(temp.keys()):
-                intrinsic.append(EasyDict(temp[key]))
+                intrinsic[key]=EasyDict(temp[key])
         if cam_num==len(intrinsic):
             logger.info('find existed intrinsic.json file and load it successfully')
-            return intrinsic
+            return [intrinsic[key] for key in natsorted(intrinsic.keys())]
         else:
-            logger.warning('the format of intrinsic.json is wrong')
+            not_indexs=[]
+            for i in range(cam_num):
+                if f'cam{i+1}' not in intrinsic.keys():
+                    not_indexs.append(i)
+            message=[f'cam{not_index+1}' for not_index in not_indexs]
+            logger.warning(f'the format of intrinsic.json is wrong, lacking {message}')
+    else:
+        not_indexs=[i for i in range(cam_num)]
+        message=[f'cam{not_index+1}' for not_index in not_indexs]
+        logger.warning(f'can not find intrinsic.json, lacking {message}')
     # 生成 intrinsic.json
     board_type=board_config["type"].strip()
     # import pdb;pdb.set_trace()
@@ -45,7 +54,7 @@ def get_intrinsic(cam_num,board_config,image_path):
         assert False,f"we only support {support_list}"
     image_path_lists=[
         glob.glob(os.path.join(image_path,f"cam{i+1}",'*'))
-        for i in range(cam_num)
+        for i in not_indexs
     ]
     intrinsics=dict()
     # n_jobs = len(image_path_lists)
@@ -56,21 +65,15 @@ def get_intrinsic(cam_num,board_config,image_path):
             intrinsics,
             step
         )
-        for step,image_path_list in enumerate(tqdm(image_path_lists))
+        for step,image_path_list in tqdm(list(zip(not_indexs,image_path_lists)))
     )
-    # for step,image_path_list in enumerate(tqdm(image_path_lists)):
-    #     intrinsic=intrinsicCalibrator(image_path_list=image_path_list)
-    #     intrinsics[f"cam{step+1}"]=intrinsic
-    # import pdb;pdb.set_trace()
-    intrinsics={k:v for k,v in sorted(intrinsics.items())} # 对字典进行排序
+    intrinsic.update(intrinsics)
+    intrinsic={k:v for k,v in sorted(intrinsic.items())} # 对字典进行排序
     # save
     with open(os.path.join(image_path,"intrinsic.json"),'w') as f:
-        json.dump(intrinsics,f)
+        json.dump(intrinsic,f)
     # format intrinsic result
-    result=[]
-    for key in natsorted(intrinsics.keys()):
-        result.append(EasyDict(intrinsics[key]))
-    return result
+    return [EasyDict(intrinsic[key]) for key in natsorted(intrinsic.keys())]
 
 def get_each_intrinsic(intrinsicCalibrator,image_path_list,intrinsics,step):
     intrinsic=intrinsicCalibrator(image_path_list=image_path_list,cam_index=step)
