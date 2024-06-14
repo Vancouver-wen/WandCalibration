@@ -95,6 +95,9 @@ class SimpleBlobDetection():
     def frame_pre_process(self,frame):
         if self.color=="white":
             frame=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+            # 形态学
+            # kernel = np.ones((10,10),np.uint8)
+            # frame=cv2.morphologyEx(frame,cv2.MORPH_OPEN, kernel,iterations=2) # 使用过多的形态学操作,增加了背景干扰的不稳定性,减少了mask的作用,效果会更差
             # print(f"frame.shape: {frame.shape}")
         elif self.color=="red":
             red_channel=frame[:,:,2].astype(np.int64)-np.maximum(frame[:,:,0].astype(np.int64),frame[:,:,1].astype(np.int64))
@@ -102,6 +105,7 @@ class SimpleBlobDetection():
             # 形态学
             kernel = np.ones((10,10),np.uint8)
             red_channel=cv2.morphologyEx(red_channel, cv2.MORPH_CLOSE, kernel,iterations=2)
+            # red_channel=cv2.morphologyEx(red_channel,cv2.MORPH_OPEN, kernel,iterations=2)
             frame=red_channel
             # print(f"frame.shape: {frame.shape}")
             # exit(0)

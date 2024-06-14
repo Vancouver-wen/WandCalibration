@@ -11,9 +11,9 @@
 
 max_process: 100
 
-cam_num: 4
+cam_num: 8
 fast_blob: True
-vis_num: 30
+vis_num: 100
 
 board:
   type: charucoboard
@@ -28,7 +28,7 @@ pole:
   d1: 250
   d2: 510
 
-image_path: "imageCollect/wtt_kaige"
+image_path: "imageCollect/88basketball"
 
 maskBlobParam:
   minThreshold: 50
@@ -40,8 +40,8 @@ poleBlobParam:
   minThreshold: 50
   minAreaRatio: 1.0e-6
   maxAreaRatio: 1.0e-3
-  minCircularity: 0.2
-  minConvexity: 0.2
+  minCircularity: 0.1
+  minConvexity: 0.1
   minInertiaRatio: 0.1
   lineAngle: 2
 
@@ -49,8 +49,8 @@ wandBlobParam:
   minThreshold: 100
   minAreaRatio: 1.0e-6
   maxAreaRatio: 1.0e-3
-  minCircularity: 0.2
-  minConvexity: 0.2
+  minCircularity: 0.1
+  minConvexity: 0.1
   minInertiaRatio: 0.1
 
 worldCoordParam: 

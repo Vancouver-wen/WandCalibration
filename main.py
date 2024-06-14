@@ -65,17 +65,19 @@ class OptiTrack(object):
             fastBlob=self.config.fast_blob,
             color=self.config.pole.color
         )
-        try:
-            vis_pole(
-                cam_num=self.config.cam_num,
-                image_path=os.path.join(self.config.image_path,'pole'),
-                pole_lists=self.pole,
-                vis_num=self.config.vis_num
-            )
-        except KeyboardInterrupt:
-            logger.info(f"early stop pole detection visualizer")
-        except Exception as e:
-            logger.warning(f"enter wrong {e}")
+        # try:
+        vis_pole(
+            cam_num=self.config.cam_num,
+            image_path=os.path.join(self.config.image_path,'pole'),
+            pole_lists=self.pole,
+            vis_num=self.config.vis_num,
+            color=self.config.pole.color,
+            threshold=self.config.poleBlobParam.minThreshold
+        )
+        # except KeyboardInterrupt:
+        #     logger.info(f"early stop pole detection visualizer")
+        # except Exception as e:
+        #     logger.warning(f"enter wrong {e}")
         try:
             vis_spread(
                 cam_num=self.config.cam_num,
