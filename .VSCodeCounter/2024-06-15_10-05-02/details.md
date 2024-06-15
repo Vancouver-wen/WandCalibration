@@ -1,17 +1,17 @@
 # Details
 
-Date : 2024-06-14 17:47:19
+Date : 2024-06-15 10:05:02
 
 Directory /home/wenzihao/Desktop/WandCalibration
 
-Total : 70 files,  4802 codes, 517 comments, 590 blanks, all 5909 lines
+Total : 70 files,  4887 codes, 523 comments, 593 blanks, all 6003 lines
 
 [Summary](results.md) / Details / [Diff Summary](diff.md) / [Diff Details](diff-details.md)
 
 ## Files
 | filename | language | code | comment | blank | total |
 | :--- | :--- | ---: | ---: | ---: | ---: |
-| [README.md](/README.md) | Markdown | 38 | 0 | 3 | 41 |
+| [README.md](/README.md) | Markdown | 40 | 0 | 4 | 44 |
 | [blender/test.py](/blender/test.py) | Python | 12 | 1 | 10 | 23 |
 | [config/board/board_sample.yaml](/config/board/board_sample.yaml) | YAML | 3 | 14 | 4 | 21 |
 | [config/board/charucoboard_4_5.yaml](/config/board/charucoboard_4_5.yaml) | YAML | 5 | 10 | 3 | 18 |
@@ -40,7 +40,7 @@ Total : 70 files,  4802 codes, 517 comments, 590 blanks, all 5909 lines
 | [extrinsicParameter/initPose/mst.py](/extrinsicParameter/initPose/mst.py) | Python | 57 | 1 | 8 | 66 |
 | [extrinsicParameter/initPose/recoverPose.py](/extrinsicParameter/initPose/recoverPose.py) | Python | 78 | 5 | 8 | 91 |
 | [extrinsicParameter/poleDetection/__init__.py](/extrinsicParameter/poleDetection/__init__.py) | Python | 0 | 0 | 1 | 1 |
-| [extrinsicParameter/poleDetection/blobDetection.py](/extrinsicParameter/poleDetection/blobDetection.py) | Python | 174 | 21 | 11 | 206 |
+| [extrinsicParameter/poleDetection/blobDetection.py](/extrinsicParameter/poleDetection/blobDetection.py) | Python | 174 | 25 | 11 | 210 |
 | [extrinsicParameter/poleDetection/maskGeneration.py](/extrinsicParameter/poleDetection/maskGeneration.py) | Python | 124 | 15 | 10 | 149 |
 | [extrinsicParameter/poleDetection/poleDetection.py](/extrinsicParameter/poleDetection/poleDetection.py) | Python | 197 | 10 | 11 | 218 |
 | [extrinsicParameter/poleDetection/wandDetection.py](/extrinsicParameter/poleDetection/wandDetection.py) | Python | 194 | 9 | 11 | 214 |
@@ -49,7 +49,7 @@ Total : 70 files,  4802 codes, 517 comments, 590 blanks, all 5909 lines
 | [extrinsicParameter/refinePose/linear_warmup_cosine_annealing_warm_restarts_weight_decay/lr_scheduler.py](/extrinsicParameter/refinePose/linear_warmup_cosine_annealing_warm_restarts_weight_decay/lr_scheduler.py) | Python | 239 | 4 | 42 | 285 |
 | [extrinsicParameter/refinePose/multiViewTriangulate.py](/extrinsicParameter/refinePose/multiViewTriangulate.py) | Python | 194 | 16 | 11 | 221 |
 | [extrinsicParameter/refinePose/normalizedImagePlane.py](/extrinsicParameter/refinePose/normalizedImagePlane.py) | Python | 50 | 6 | 6 | 62 |
-| [extrinsicParameter/refinePose/refinePose.py](/extrinsicParameter/refinePose/refinePose.py) | Python | 253 | 17 | 15 | 285 |
+| [extrinsicParameter/refinePose/refinePose.py](/extrinsicParameter/refinePose/refinePose.py) | Python | 262 | 21 | 15 | 298 |
 | [extrinsicParameter/refinePose/rotation_conversions.py](/extrinsicParameter/refinePose/rotation_conversions.py) | Python | 412 | 24 | 98 | 534 |
 | [extrinsicParameter/refinePose/so3_exp_map.py](/extrinsicParameter/refinePose/so3_exp_map.py) | Python | 68 | 1 | 22 | 91 |
 | [extrinsicParameter/worldCoord/adjustCamParam.py](/extrinsicParameter/worldCoord/adjustCamParam.py) | Python | 65 | 0 | 3 | 68 |
@@ -67,8 +67,8 @@ Total : 70 files,  4802 codes, 517 comments, 590 blanks, all 5909 lines
 | [intrinsicParameter/charucoboardCalibration/test_cam_calibration.py](/intrinsicParameter/charucoboardCalibration/test_cam_calibration.py) | Python | 44 | 1 | 8 | 53 |
 | [intrinsicParameter/checkerboardCalibration/get_cam_calibration.py](/intrinsicParameter/checkerboardCalibration/get_cam_calibration.py) | Python | 91 | 9 | 5 | 105 |
 | [intrinsicParameter/checkerboardCalibration/test_cam_calibration.py](/intrinsicParameter/checkerboardCalibration/test_cam_calibration.py) | Python | 49 | 14 | 18 | 81 |
-| [intrinsicParameter/intrinsicCalibration/get_intrinsic.py](/intrinsicParameter/intrinsicCalibration/get_intrinsic.py) | Python | 66 | 10 | 6 | 82 |
-| [main.py](/main.py) | Python | 211 | 2 | 7 | 220 |
+| [intrinsicParameter/intrinsicCalibration/get_intrinsic.py](/intrinsicParameter/intrinsicCalibration/get_intrinsic.py) | Python | 73 | 6 | 6 | 85 |
+| [main.py](/main.py) | Python | 219 | 2 | 7 | 228 |
 | [pyinstaller.md](/pyinstaller.md) | Markdown | 6 | 0 | 1 | 7 |
 | [requirements.txt](/requirements.txt) | pip requirements | 12 | 0 | 1 | 13 |
 | [utils/__init__.py](/utils/__init__.py) | Python | 0 | 0 | 1 | 1 |
@@ -78,8 +78,8 @@ Total : 70 files,  4802 codes, 517 comments, 590 blanks, all 5909 lines
 | [visualize/get_init_camera_params.py](/visualize/get_init_camera_params.py) | Python | 17 | 0 | 3 | 20 |
 | [visualize/visCameraParams.py](/visualize/visCameraParams.py) | Python | 48 | 3 | 3 | 54 |
 | [visualize/vis_intrinsic.py](/visualize/vis_intrinsic.py) | Python | 57 | 0 | 4 | 61 |
-| [visualize/vis_pole_detection.py](/visualize/vis_pole_detection.py) | Python | 72 | 1 | 8 | 81 |
-| [visualize/vis_pole_spread.py](/visualize/vis_pole_spread.py) | Python | 62 | 0 | 6 | 68 |
+| [visualize/vis_pole_detection.py](/visualize/vis_pole_detection.py) | Python | 94 | 3 | 8 | 105 |
+| [visualize/vis_pole_spread.py](/visualize/vis_pole_spread.py) | Python | 99 | 0 | 8 | 107 |
 | [visualize/vis_reproj_error.py](/visualize/vis_reproj_error.py) | Python | 102 | 1 | 11 | 114 |
 
 [Summary](results.md) / Details / [Diff Summary](diff.md) / [Diff Details](diff-details.md)
