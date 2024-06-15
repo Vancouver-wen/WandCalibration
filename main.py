@@ -14,7 +14,7 @@ from visualize.vis_intrinsic import vis_intrinsic
 from extrinsicParameter.poleDetection.maskGeneration import get_mask
 from extrinsicParameter.poleDetection.poleDetection import get_pole
 from visualize.vis_pole_detection import vis_pole
-from visualize.vis_pole_spread import vis_spread
+from visualize.vis_pole_spread import get_spread,vis_spread
 from extrinsicParameter.initPose.initPose import get_init_pose
 from visualize.get_init_camera_params import get_init_camera_params
 from extrinsicParameter.refinePose.refinePose import get_refine_pose
@@ -78,6 +78,12 @@ class OptiTrack(object):
             logger.info(f"early stop pole detection visualizer")
         except Exception as e:
             logger.warning(f"enter wrong {e}")
+        spreads=get_spread(
+            cam_num=self.config.cam_num,
+            image_path=os.path.join(self.config.image_path,'pole'),
+            pole_lists=self.pole,
+        )
+        logger.info(f"spread:{spreads}")
         try:
             vis_spread(
                 cam_num=self.config.cam_num,

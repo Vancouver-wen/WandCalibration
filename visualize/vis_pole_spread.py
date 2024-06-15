@@ -64,5 +64,44 @@ def vis_spread(
     for step,frame in enumerate(frames):
         cv2.imwrite(os.path.join(save_path,f'cam{step+1}.jpg'),frame)
 
+def get_each_spread(
+        step,
+        frame_path,
+        pole_lists
+    ):
+    frame=cv2.imread(frame_path)
+    height,width,channel=frame.shape
+    patch_num_h,patch_num_w=3,4
+    spread_threshold=0.5
+    point_num_threashold=300
+    patch_h=height/patch_num_h
+    patch_w=width/patch_num_w
+    spread_map=np.zeros((patch_num_h,patch_num_w),dtype=np.int32)
+    for pole_list in pole_lists:
+        pole=pole_list[step]
+        if pole is None:
+            continue
+        points=pole[0]
+        for point in points:
+            width,height=point
+            spread_map[int(height/patch_h)][int(width/patch_w)]+=1
+    spread_bool_map=spread_map>point_num_threashold
+    spread=np.mean(spread_bool_map)
+    if spread<spread_threshold:
+        logger.warning(f"cam{step+1} spread too slow!")
+    return spread
+
+def get_spread(
+        cam_num,
+        image_path,
+        pole_lists,
+    ):
+    frame_list=get_cam_list(image_path,cam_num)[0]
+    spreads=Parallel(n_jobs=-1,backend="threading")(
+        delayed(get_each_spread)(step,frame_path,pole_lists)
+        for step,frame_path in enumerate(frame_list)
+    )
+    return spreads
+
 if __name__=="__main__":
     pass
