@@ -131,14 +131,14 @@ def sub_process_train(
             loss.backward()
             time4=time.time()
             optimizer.step()
-            logger.info(f"backward time consume:{time.time()-time1} forward:{time2-time1} zero_grad:{time3-time2} backward:{time4-time3} step:{time.time()-time4}")
+            # logger.info(f"backward time consume:{time.time()-time1} forward:{time2-time1} zero_grad:{time3-time2} backward:{time4-time3} step:{time.time()-time4}")
+            if step%10==0:
+                losses.put((rank,loss.item()))
             # if step%10==0: # 不是同步导致的性能障碍
             if refine_mode=="process":
                 barrier.wait() # 同步
             else: # 'distributed'
                 dist.barrier()
-            if step%10==0:
-                losses.put((rank,loss.item()))
             if rank==0 and step%10==0:
                 avg_loss=dict()
                 while not losses.empty():
