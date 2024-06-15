@@ -1,18 +1,17 @@
 # WandCalibration
 calibratie multi cameras with 3 marker wand 
 
-#### 注意事项：
+##### 注意事项：
 1. 本仓库用于校准有共视区域的多相机系统
 2. 需保证采集的图像是帧同步的
 3. bundle adjustment 对内参初值非常敏感,内参的精度直接关系到捆绑调整的 upper bound
-4. 优化的耗时与图片组的数量成正比,图片组的数量尽量不要超过2000
 
 ##### 环境配置 python=3.9
 conda update -n base -c defaults conda
 1. conda install pyqt==5.12.3 --verbose
 2. pip install -r requirements.txt --verbose
 
-###### 使用方法:
+##### 使用方法:
 1. 根据配置文件制作T型杆与L型杆
 2. 采集
     1. 内参图像
@@ -39,3 +38,8 @@ conda update -n base -c defaults conda
     ```
     python main.py --config "config file path"
     ```
+
+##### TODO List:
+1. 使用dataloader控制单次反向传播的数量,进行batch size的实验,稳定不同机器上的实验结果
+2. 增强labelme功能的鲁棒性(无标注文件,空标注,标注数量不够),使用torch进行优化,结合pnp与icp的优势
+3. 给出spread的数值评价,将图像划分为若干区域，每个区域至少要有n个点，统计满足的区域（横着切5块,竖着切4块,每块>5个点,统计满足的比例）
