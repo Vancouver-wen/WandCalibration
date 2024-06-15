@@ -38,6 +38,7 @@ def multi_thread_train(
     iteration = 1000 # iteration = 1000
     start=time.time()
     for step in tqdm(range(iteration)):
+        time1=time.time()
         loss=model.forward(
             mask,
             line_weight=1.0,
@@ -45,9 +46,13 @@ def multi_thread_train(
             reproj_weight=1.0,
             orthogonal_weight=10.0
         )
+        time2=time.time()
         optimizer.zero_grad()
+        time3=time.time()
         loss.backward()
+        time4=time.time()
         optimizer.step()
+        # logger.info(f"backward time consume:{time.time()-time1} forward:{time2-time1} zero_grad:{time3-time2} backward:{time4-time3} step:{time.time()-time4}")
         if step%10==0:
             logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t loss:{loss:.5f}")
             output=model.get_dict() # 保存结果
@@ -108,8 +113,11 @@ def sub_process_train(
         model = DDP(model, device_ids=None)
     for step in loop:
         try:
+            start=time.time()
             torch.manual_seed(step)
             mask_index=torch.multinomial(input=torch.ones(cpu_count),num_samples=list_len,replacement=True)
+            logger.info(f"shuffle time consume:{time.time()-start}")
+            time1=time.time()
             loss=model.forward(
                 mask=(mask_index==rank),
                 line_weight=1.0,
@@ -117,15 +125,20 @@ def sub_process_train(
                 reproj_weight=1.0,
                 orthogonal_weight=10.0
             )
+            time2=time.time()
             optimizer.zero_grad()
+            time3=time.time()
             loss.backward()
+            time4=time.time()
             optimizer.step()
-            if step%10==0:
-                losses.put((rank,loss.item()))
+            logger.info(f"backward time consume:{time.time()-time1} forward:{time2-time1} zero_grad:{time3-time2} backward:{time4-time3} step:{time.time()-time4}")
+            # if step%10==0: # 不是同步导致的性能障碍
             if refine_mode=="process":
                 barrier.wait() # 同步
             else: # 'distributed'
                 dist.barrier()
+            if step%10==0:
+                losses.put((rank,loss.item()))
             if rank==0 and step%10==0:
                 avg_loss=dict()
                 while not losses.empty():
