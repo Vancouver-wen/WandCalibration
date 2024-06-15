@@ -9,7 +9,7 @@
 #     - [extrinsic.json] # 可选:提供的外参初始值
 #     - cam*
 
-max_process: 2
+max_process: 100
 
 cam_num: 8
 fast_blob: True

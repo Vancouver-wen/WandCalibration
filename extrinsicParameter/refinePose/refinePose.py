@@ -113,10 +113,10 @@ def sub_process_train(
         model = DDP(model, device_ids=None)
     for step in loop:
         try:
-            start=time.time()
+            time0=time.time()
             torch.manual_seed(step)
             mask_index=torch.multinomial(input=torch.ones(cpu_count),num_samples=list_len,replacement=True)
-            logger.info(f"shuffle time consume:{time.time()-start}")
+            # logger.info(f"shuffle time consume:{time.time()-time0}")
             time1=time.time()
             loss=model.forward(
                 mask=(mask_index==rank),
