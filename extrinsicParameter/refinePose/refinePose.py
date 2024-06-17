@@ -37,7 +37,6 @@ def multi_thread_train(
         num_workers=1,
         drop_last=True
     )
-    mask=torch.ones(list_len,dtype=torch.bool)
     model.train()
     lr=min(5e-4*init_error,1e-1) # lr=5e-3 是比较合适的数值
     optimizer = torch.optim.Adam(
@@ -51,7 +50,6 @@ def multi_thread_train(
         for batch in myDataLoader:
             time1=time.time()
             loss=model.forward(
-                # mask=torch.tensor(mask,dtype=torch.bool,requires_grad=False),
                 mask=batch,
                 line_weight=1.0,
                 length_weight=1.0,
