@@ -42,4 +42,3 @@ conda update -n base -c defaults conda
 ##### TODO List:
 1. 使用dataloader控制单次反向传播的数量,进行batch size的实验,稳定不同机器上的实验结果。迭代次数就设置为800次dataloader
 2. 增强labelme功能的鲁棒性(无标注文件,空标注,标注数量不够),使用torch进行优化,结合pnp与icp的优势
-3. SGD优化器 + cos预热退火

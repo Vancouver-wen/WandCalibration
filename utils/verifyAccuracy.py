@@ -4,6 +4,7 @@ import sys
 import cv2
 import numpy as np
 from loguru import logger
+from joblib import Parallel,delayed
 
 def get_available_pole_lists(pole_lists):
     available_pole_lists=[]
@@ -12,6 +13,33 @@ def get_available_pole_lists(pole_lists):
         if np.array(mask).sum()>=2:
             available_pole_lists.append(pole_list)
     return available_pole_lists
+
+def verify_each_accuracy(
+        pole_3d,
+        available_pole_list,
+        camera_params,
+        errors,
+        diffs,
+        each_errors
+    ):
+    for step,(available_pole,camera_param) in enumerate(list(zip(available_pole_list,camera_params))):
+        if available_pole is None:
+            continue
+        available_pole=available_pole[0]
+        for blob_2d,blob_3d in list(zip(available_pole,pole_3d)):
+            expect_blob_2d,_=cv2.projectPoints(
+                objectPoints=np.expand_dims(np.array(blob_3d),axis=0),
+                rvec=np.array(camera_param['R']),
+                tvec=np.array(camera_param['t']),
+                cameraMatrix=np.array(camera_param['K']),
+                distCoeffs=np.array(camera_param['dist']),
+            )
+            expect_blob_2d=np.squeeze(expect_blob_2d)
+            diff=blob_2d-expect_blob_2d
+            diffs.append(np.abs(diff))
+            error=np.linalg.norm(diff)
+            errors.append(error)
+            each_errors[step].append(error)
 
 def verify_accuracy(
         camera_params,
@@ -23,25 +51,10 @@ def verify_accuracy(
     errors=[]
     diffs=[]
     each_errors=[[] for _ in camera_params]
-    for pole_3d,available_pole_list in list(zip(pole_3ds,available_pole_lists)):
-        for step,(available_pole,camera_param) in enumerate(list(zip(available_pole_list,camera_params))):
-            if available_pole is None:
-                continue
-            available_pole=available_pole[0]
-            for blob_2d,blob_3d in list(zip(available_pole,pole_3d)):
-                expect_blob_2d,_=cv2.projectPoints(
-                    objectPoints=np.expand_dims(np.array(blob_3d),axis=0),
-                    rvec=np.array(camera_param['R']),
-                    tvec=np.array(camera_param['t']),
-                    cameraMatrix=np.array(camera_param['K']),
-                    distCoeffs=np.array(camera_param['dist']),
-                )
-                expect_blob_2d=np.squeeze(expect_blob_2d)
-                diff=blob_2d-expect_blob_2d
-                diffs.append(np.abs(diff))
-                error=np.linalg.norm(diff)
-                errors.append(error)
-                each_errors[step].append(error)
+    Parallel(n_jobs=-1,backend="threading")(
+        delayed(verify_each_accuracy)(pole_3d,available_pole_list,camera_params,errors,diffs,each_errors)
+        for pole_3d,available_pole_list in list(zip(pole_3ds,available_pole_lists))
+    )
     mean_error=np.mean(errors)
     mean_diff=np.mean(np.array(diffs),axis=0).tolist()
     for i in range(len(each_errors)):

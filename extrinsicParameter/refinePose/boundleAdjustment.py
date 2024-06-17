@@ -270,7 +270,6 @@ class BoundleAdjustment(nn.Module):
         ):
         if not self.has_vmap:
             self.get_vmap_func()
-        mask=torch.tensor(mask,dtype=torch.bool,requires_grad=False)
         self.line_weight=line_weight
         self.length_weight=length_weight
         self.reproj_weight=reproj_weight

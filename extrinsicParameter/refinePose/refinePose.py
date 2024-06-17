@@ -14,10 +14,12 @@ from loguru import logger
 import torch.multiprocessing as mp
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.utils.data import Dataset,DataLoader
 
 from .normalizedImagePlane import get_undistort_points
 from .multiViewTriangulate import normalized_pole_triangulate
 from .boundleAdjustment import BoundleAdjustment
+from .dataLoader import BoundAdjustmentDataset
 from .linear_warmup_cosine_annealing_warm_restarts_weight_decay import ChainedScheduler
 from utils.verifyAccuracy import verify_accuracy
 
@@ -27,6 +29,14 @@ def multi_thread_train(
         pole_lists,
     ):
     list_len=model.list_len
+    myDataset=BoundAdjustmentDataset(list_len)
+    myDataLoader=DataLoader(
+        dataset=myDataset,
+        batch_size=100,
+        shuffle=True,
+        num_workers=1,
+        drop_last=True
+    )
     mask=torch.ones(list_len,dtype=torch.bool)
     model.train()
     lr=min(5e-4*init_error,1e-1) # lr=5e-3 是比较合适的数值
@@ -38,21 +48,23 @@ def multi_thread_train(
     iteration = 1000 # iteration = 1000
     start=time.time()
     for step in tqdm(range(iteration)):
-        time1=time.time()
-        loss=model.forward(
-            mask,
-            line_weight=1.0,
-            length_weight=1.0,
-            reproj_weight=1.0,
-            orthogonal_weight=10.0
-        )
-        time2=time.time()
-        optimizer.zero_grad()
-        time3=time.time()
-        loss.backward()
-        time4=time.time()
-        optimizer.step()
-        # logger.info(f"backward time consume:{time.time()-time1} forward:{time2-time1} zero_grad:{time3-time2} backward:{time4-time3} step:{time.time()-time4}")
+        for batch in myDataLoader:
+            time1=time.time()
+            loss=model.forward(
+                # mask=torch.tensor(mask,dtype=torch.bool,requires_grad=False),
+                mask=batch,
+                line_weight=1.0,
+                length_weight=1.0,
+                reproj_weight=1.0,
+                orthogonal_weight=10.0
+            )
+            time2=time.time()
+            optimizer.zero_grad()
+            time3=time.time()
+            loss.backward()
+            time4=time.time()
+            optimizer.step()
+            # logger.info(f"backward time consume:{time.time()-time1} forward:{time2-time1} zero_grad:{time3-time2} backward:{time4-time3} step:{time.time()-time4}")
         if step%10==0:
             logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t loss:{loss:.5f}")
             output=model.get_dict() # 保存结果
@@ -119,7 +131,7 @@ def sub_process_train(
             # logger.info(f"shuffle time consume:{time.time()-time0}")
             time1=time.time()
             loss=model.forward(
-                mask=(mask_index==rank),
+                mask=torch.tensor((mask_index==rank),dtype=torch.bool,requires_grad=False),
                 line_weight=1.0,
                 length_weight=1.0,
                 reproj_weight=1.0,
