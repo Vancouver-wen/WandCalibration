@@ -14,7 +14,7 @@ from loguru import logger
 import torch.multiprocessing as mp
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
-from torch.utils.data import Dataset,DataLoader
+from torch.utils.data import Dataset,DataLoader,DistributedSampler
 
 from .normalizedImagePlane import get_undistort_points
 from .multiViewTriangulate import normalized_pole_triangulate
@@ -99,6 +99,7 @@ def sub_process_train(
         barrier,
         lr:float,
         model:BoundleAdjustment,
+        dataset:Dataset,
         losses:mp.Queue,
         pole_lists,
         iteration:int
@@ -118,18 +119,43 @@ def sub_process_train(
         loop=tqdm(range(iteration))
     else:
         loop=range(iteration)
-    if refine_mode=="distributed":
+    if refine_mode=="process":
+        myDataLoader=DataLoader(
+            dataset=dataset,
+            batch_size=100,
+            shuffle=True,
+            num_workers=0,
+            drop_last=True
+        )
+    elif refine_mode=="distributed":
         setup(rank, cpu_count)
         model = DDP(model, device_ids=None)
+        mySampler=DistributedSampler(
+            dataset=dataset,
+            shuffle=True,
+            drop_last=True
+        )
+        myDataLoader=DataLoader(
+            dataset=dataset,
+            batch_size=100,
+            num_workers=0,
+            shuffle=True,
+            sampler=mySampler,
+            drop_last=True
+        )
+    else:
+        pass
     for step in loop:
         try:
             time0=time.time()
             torch.manual_seed(step)
             mask_index=torch.multinomial(input=torch.ones(cpu_count),num_samples=list_len,replacement=True)
             # logger.info(f"shuffle time consume:{time.time()-time0}")
+            # for batch in myDataLoader:
             time1=time.time()
             loss=model.forward(
                 mask=torch.tensor((mask_index==rank),dtype=torch.bool,requires_grad=False),
+                # mask=batch,
                 line_weight=1.0,
                 length_weight=1.0,
                 reproj_weight=1.0,
@@ -188,7 +214,7 @@ def multi_process_train(
     # mp.get_all_start_methods() ['fork', 'spawn', 'forkserver']
     """
     使用fork启动多进程, 会导致无法创建大tensor,优化器会fail
-    使用spawn启动多进程,虽然启动慢,但能够创建爱你较大的tensor
+    使用spawn启动多进程,虽然启动慢,但能够创建较大的tensor
     """
     # 设置子进程的内存限制（单位：字节）
     # memory_limit_bytes = 64 * 1024 * 1024 * 1024  # 4GB
@@ -201,6 +227,8 @@ def multi_process_train(
         mp.set_start_method(mp_use_method,force=True)
     # 获取模型以外的训练超参
     cpu_count=model.cpu_count
+    list_len=model.list_len
+    myDataset=BoundAdjustmentDataset(list_len)
     lr=min(2e-3*init_error/cpu_count,5e-3) # lr=5e-3 是比较合适的数值
     iteration = max(int(1000/math.sqrt(cpu_count)),800) # iteration = 1000
     losses=mp.Queue() # put get empty
@@ -219,7 +247,7 @@ def multi_process_train(
     for rank in range(cpu_count):
         p=mp.Process(
             target=sub_process_train,
-            args=(refine_mode,rank,barrier,lr,model,losses,pole_lists,iteration),
+            args=(refine_mode,rank,barrier,lr,model,myDataset,losses,pole_lists,iteration),
             name=f"train{rank}",
             daemon=True
         )
