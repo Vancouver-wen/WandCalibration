@@ -107,6 +107,7 @@ class BoundleAdjustment(nn.Module):
         if self.list_len<100:
             logger.warning(f"pole num:{self.list_len}<100, too low")
         self.cpu_count=min(os.cpu_count(),max(int(self.list_len/100),1),max_process) # 每个进程至少100组图片
+        self.cpu_count=max(self.cpu_count,1) # 防止max_process值异常
         self.save_path=save_path
         self.resolutions=[intrinsic['image_size'] for intrinsic in init_intrinsic]
         self.has_vmap=False
