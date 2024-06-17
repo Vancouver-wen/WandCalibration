@@ -216,10 +216,6 @@ def multi_process_train(
     使用fork启动多进程, 会导致无法创建大tensor,优化器会fail
     使用spawn启动多进程,虽然启动慢,但能够创建较大的tensor
     """
-    # 设置子进程的内存限制（单位：字节）
-    # memory_limit_bytes = 64 * 1024 * 1024 * 1024  # 4GB
-    # resource.setrlimit(resource.RLIMIT_AS, (memory_limit_bytes, memory_limit_bytes))
-    # resource.setrlimit(resource.RLIMIT_NOFILE, (131072, 131072))
     mp_start_method=mp.get_start_method() 
     mp_use_method='spawn'
     if mp_start_method!=mp_use_method:
@@ -229,8 +225,8 @@ def multi_process_train(
     cpu_count=model.cpu_count
     list_len=model.list_len
     myDataset=BoundAdjustmentDataset(list_len)
-    lr=min(2e-3*init_error/cpu_count,5e-3) # lr=5e-3 是比较合适的数值
-    iteration = max(int(1000/math.sqrt(cpu_count)),800) # iteration = 1000
+    lr=min(5e-3*init_error/cpu_count,1e-2) # lr=5e-3 是比较合适的数值
+    iteration = max(int(1000/math.sqrt(cpu_count)),1000) # iteration = 1000
     losses=mp.Queue() # put get empty
     mp.set_sharing_strategy('file_system')
     if refine_mode=="process":
