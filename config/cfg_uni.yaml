@@ -30,6 +30,7 @@ pole:
 
 image_path: "imageCollect/archery56"
 
+# https://imagecolorpicker.com/ 使用该网站确认 minThreshold
 maskBlobParam:
   minThreshold: 50
   minAreaRatio: 1.0e-7
