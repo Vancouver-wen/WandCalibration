@@ -88,7 +88,7 @@ def get_each_spread(
     spread_bool_map=spread_map>point_num_threashold
     spread=np.mean(spread_bool_map)
     if spread<spread_threshold:
-        logger.warning(f"cam{step+1} spread too slow!")
+        logger.warning(f"cam{step+1} spread too low!")
     return spread
 
 def get_spread(

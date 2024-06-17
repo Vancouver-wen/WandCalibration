@@ -11,7 +11,7 @@
 
 max_process: 100
 
-cam_num: 8
+cam_num: 2
 fast_blob: True
 vis_num: 100
 
@@ -28,7 +28,7 @@ pole:
   d1: 250
   d2: 510
 
-image_path: "imageCollect/88basketball"
+image_path: "imageCollect/archery56"
 
 maskBlobParam:
   minThreshold: 50

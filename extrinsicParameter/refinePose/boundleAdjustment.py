@@ -13,6 +13,7 @@ from torch import nn
 from torch.utils.data import Dataset
 from joblib import Parallel,delayed
 import torch.multiprocessing as mp
+from loguru import logger
 from extrinsicParameter.refinePose.so3_exp_map import so3_exp_map
 
 class BoundleAdjustment(nn.Module):
@@ -103,8 +104,9 @@ class BoundleAdjustment(nn.Module):
         
         assert len(self.pole_2d_lists)==len(self.pole3d_posotions)
         self.list_len=len(self.pole_2d_lists)
-        self.cpu_count=min(os.cpu_count(),int(self.list_len/100),max_process) # 每个进程至少100组图片
-
+        if self.list_len<100:
+            logger.warning(f"pole num:{self.list_len}<100, too low")
+        self.cpu_count=min(os.cpu_count(),max(int(self.list_len/100),1),max_process) # 每个进程至少100组图片
         self.save_path=save_path
         self.resolutions=[intrinsic['image_size'] for intrinsic in init_intrinsic]
         self.has_vmap=False
