@@ -8,7 +8,9 @@ import cv2
 import glob
 from natsort import natsorted
 from loguru import logger
+import torch
 
+from extrinsicParameter.refinePose.so3_exp_map import so3_exp_map
 from .clickPoint import click_point
 from extrinsicParameter.poleDetection.blobDetection import get_cam_list
 from extrinsicParameter.poleDetection.wandDetection import get_wand
@@ -18,6 +20,7 @@ from .solve_icp import solve_icp
 from utils.imageConcat import show_multi_imgs
 from .handle_labelme import get_labelme_json,vis_objs,format_labelme_objs,triangulate_points,vis_points
 from .handle_board import get_corner_map,triangulate_corner_map
+from .enhanced_labelme import EnhancedLabelme,fit_model
 
 def vis_point3ds(
         image_path,
@@ -122,33 +125,71 @@ def get_cam0_extrinsic(
             point_coordinates=world_coord_param['PointCoordinates']
         )
     elif world_coord_param['type']=="labelme":
-        json_paths=natsorted(glob.glob(os.path.join(image_path,'wand','labelme','*.json')))
-        assert cam_num==len(json_paths),f"wand/labelme/*.json file number not equal to camera number"
-        objs=[get_labelme_json(json_path) for json_path in json_paths]
-        vis_objs(
-            objs=objs,
-            image_path=wand_folder,
-            cam_num=cam_num,
-            save_folder=os.path.join(wand_folder,"vis_wand_detection")
-        )
-        points=format_labelme_objs(objs,cam_params,world_coord_param['PointCoordinates'])
-        points=triangulate_points(points)
-        point_3ds=[points[key]['pred_point_3d'] for key in points.keys()]
-        vis_points(
-            point_3ds=point_3ds,
-            image_path=wand_folder,
-            cam_num=cam_num,
-            cam_params=cam_params,
-            save_folder=os.path.join(wand_folder,"vis_reconstruct_points")
-        )
-        R,t=solve_icp(
-            target=point_3ds,
-            source=world_coord_param['PointCoordinates']
-        )
-        transfered_point_3ds=transfer_point_3ds(
-            point_3ds,R,t
-        )
-        cam0_R,cam0_t=R,t
+        if world_coord_param['mode']=="norm":
+            json_paths=natsorted(glob.glob(os.path.join(image_path,'wand','labelme','*.json')))
+            assert cam_num==len(json_paths),f"wand/labelme/*.json file number not equal to camera number"
+            objs=[get_labelme_json(json_path) for json_path in json_paths]
+            vis_objs(
+                objs=objs,
+                image_path=wand_folder,
+                cam_num=cam_num,
+                save_folder=os.path.join(wand_folder,"vis_wand_detection")
+            )
+            points=format_labelme_objs(objs,cam_params,world_coord_param['PointCoordinates'])
+            points=triangulate_points(points)
+            point_3ds=[points[key]['pred_point_3d'] for key in points.keys()]
+            vis_points(
+                point_3ds=point_3ds,
+                image_path=wand_folder,
+                cam_num=cam_num,
+                cam_params=cam_params,
+                save_folder=os.path.join(wand_folder,"vis_reconstruct_points")
+            )
+            R,t=solve_icp(
+                target=point_3ds,
+                source=world_coord_param['PointCoordinates']
+            )
+            transfered_point_3ds=transfer_point_3ds(
+                point_3ds,R,t
+            )
+            cam0_R,cam0_t=R,t
+            # print(R,t)
+        elif world_coord_param['mode']=="enhance":
+            json_paths=natsorted(glob.glob(os.path.join(image_path,'wand','labelme','*.json')))
+            labels=dict()
+            for json_path in json_paths:
+                key=json_path.split('/')[-1].split('.')[0]
+                try:
+                    obj=get_labelme_json(json_path)
+                    labels[key]=obj
+                except Exception as e:
+                    logger.warning(f"file {json_path} load fail, check format")
+            keys=labels.keys()
+            no_keys=[]
+            for i in range(cam_num):
+                if f'cam{i+1}' not in keys:
+                    lack_json_path=os.path.join(image_path,'wand','labelme',f'cam{i+1}.json')
+                    no_keys.append(f'cam{i+1}')
+                    logger.warning(f"can not fild {lack_json_path}")
+            if no_keys:
+                logger.warning(f"{no_keys} without label! this may cause calculation error!")
+            # TODO vis labels
+            model=EnhancedLabelme(
+                cam_params=cam_params,
+                labels=labels,
+                point_3ds=world_coord_param['PointCoordinates']
+            )
+            cam0_R,cam0_t=fit_model(
+                model=model,
+                iteration=int(1e5),
+                lr=2e0,
+                interval=int(2e4),
+                print_frequence=int(1e3),
+                gamma=0.25
+            )
+        else:
+            support_list=['norm','labelme']
+            logger.info(f"only support mode in {support_list}")
     elif world_coord_param['type']=="wand":
         # L型杆子
         # 检查是否有 wand 文件夹

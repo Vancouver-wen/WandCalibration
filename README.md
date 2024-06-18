@@ -40,4 +40,4 @@ conda update -n base -c defaults conda
     ```
 
 ##### TODO List:
-1. 增强labelme功能的鲁棒性(无标注文件,空标注,标注数量不够),使用torch进行优化,结合pnp与icp的优势
+1. labelme enhance 可视化
