@@ -140,6 +140,12 @@ class EnhancedLabelme(nn.Module):
                     loss=torch.norm(point_2d-pred_point_2d)
                     losses.append(loss)
             loss=torch.stack(losses).mean()
+            # loss 的数量级截断
+        if loss.item()>10000:
+            rate=pow(10,len(str(int(loss.item()/10000))))
+            origin=loss.item()
+            loss=loss/rate
+            logger.info(f"update loss to:{loss.item()}. loss_origin:{origin} too large, divide {rate}")
         return loss
 
     def get_cam_0(self):

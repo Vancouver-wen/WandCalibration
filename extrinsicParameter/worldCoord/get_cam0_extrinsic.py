@@ -181,11 +181,11 @@ def get_cam0_extrinsic(
             )
             cam0_R,cam0_t=fit_model(
                 model=model,
-                iteration=int(1e5),
+                iteration=int(5e4),
                 lr=2e0,
-                interval=int(2e4),
+                interval=int(1e4),
                 print_frequence=int(1e3),
-                gamma=0.25
+                gamma=0.2
             )
         else:
             support_list=['norm','labelme']
