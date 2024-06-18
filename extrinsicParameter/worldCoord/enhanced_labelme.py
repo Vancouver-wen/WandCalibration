@@ -13,6 +13,7 @@ from torch import nn
 from tqdm import tqdm
 
 from extrinsicParameter.refinePose.so3_exp_map import so3_exp_map
+from extrinsicParameter.poleDetection.blobDetection import get_cam_list
 
 class EnhancedLabelme(nn.Module):
     def __init__(
@@ -145,7 +146,7 @@ class EnhancedLabelme(nn.Module):
             rate=pow(10,len(str(int(loss.item()/10000))))
             origin=loss.item()
             loss=loss/rate
-            logger.info(f"update loss to:{loss.item()}. loss_origin:{origin} too large, divide {rate}")
+            logger.warning(f"update loss to:{loss.item()}. loss_origin:{origin} too large, divide {rate}")
         return loss
 
     def get_cam_0(self):
@@ -183,3 +184,45 @@ def fit_model(
         logger.info(f"enhanced labelme fit encounter error {e}")
     return model.get_cam_0()
 
+def vis_labels(
+        cam_num,
+        image_path,
+        labels,
+        save_folder
+    ):
+    if not os.path.exists(save_folder):
+        os.mkdir(save_folder)
+    frame_list=get_cam_list(image_path,cam_num)[0]
+    frames=[cv2.imread(frame_path) for frame_path in frame_list]
+    origins=[copy.deepcopy(frame) for frame in frames]
+    for cam_name in labels:
+        cam_index=int(cam_name.replace('cam',''))-1
+        frame=frames[cam_index]
+        label=labels[cam_name]
+        for point_id in label:
+            point=label[point_id].astype(np.int32)
+            frame=cv2.circle(
+                img=frame,
+                center=point,
+                radius=5,
+                color=(0,255,0),
+                thickness=-1
+            )
+            frame=cv2.putText(
+                img=frame,
+                text=str(point_id),
+                org=point,
+                fontFace=cv2.FONT_HERSHEY_COMPLEX,
+                fontScale=3,
+                color=(0,255,0),
+                thickness=3
+            )
+    frames=[
+        cv2.addWeighted(origin,0.5,frame,0.5,0)
+        for origin,frame in list(zip(origins,frames))
+    ]
+    for step,frame in enumerate(frames):
+        cv2.imwrite(
+            os.path.join(save_folder,f"cam{step+1}.jpg"),
+            frame
+        )

@@ -20,7 +20,7 @@ from .solve_icp import solve_icp
 from utils.imageConcat import show_multi_imgs
 from .handle_labelme import get_labelme_json,vis_objs,format_labelme_objs,triangulate_points,vis_points
 from .handle_board import get_corner_map,triangulate_corner_map
-from .enhanced_labelme import EnhancedLabelme,fit_model
+from .enhanced_labelme import EnhancedLabelme,fit_model,vis_labels
 
 def vis_point3ds(
         image_path,
@@ -173,7 +173,12 @@ def get_cam0_extrinsic(
                     logger.warning(f"can not fild {lack_json_path}")
             if no_keys:
                 logger.warning(f"{no_keys} without label! this may cause calculation error!")
-            # TODO vis labels
+            vis_labels(
+                cam_num=cam_num,
+                image_path=wand_folder,
+                labels=labels,
+                save_folder=os.path.join(wand_folder,"vis_wand_detection")
+            )
             model=EnhancedLabelme(
                 cam_params=cam_params,
                 labels=labels,
