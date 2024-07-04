@@ -102,8 +102,10 @@ def sub_process_train(
         dataset:Dataset,
         losses:mp.Queue,
         pole_lists,
-        iteration:int
+        iteration:int,
+        thread_count=1
     ):
+    torch.set_num_threads(thread_count)
     assert refine_mode in ['process','distributed']
     logger.info(f"{'ddp' if refine_mode=='distributed' else 'sub'} process rank:{rank} has been started")
     cpu_count=model.cpu_count
@@ -223,6 +225,7 @@ def multi_process_train(
         mp.set_start_method(mp_use_method,force=True)
     # 获取模型以外的训练超参
     cpu_count=model.cpu_count
+    thread_count=int(os.cpu_count()/cpu_count+0.5) # define the num threads used in current sub-processes
     list_len=model.list_len
     myDataset=BoundAdjustmentDataset(list_len)
     lr=min(5e-3*init_error/cpu_count,1e-2) # lr=5e-3 是比较合适的数值
@@ -243,7 +246,7 @@ def multi_process_train(
     for rank in range(cpu_count):
         p=mp.Process(
             target=sub_process_train,
-            args=(refine_mode,rank,barrier,lr,model,myDataset,losses,pole_lists,iteration),
+            args=(refine_mode,rank,barrier,lr,model,myDataset,losses,pole_lists,iteration,thread_count),
             name=f"train{rank}",
             daemon=True
         )

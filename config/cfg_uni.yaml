@@ -10,6 +10,7 @@
 #     - cam*
 
 max_process: 100
+refine_mode: 'process' # thread process distributed
 
 cam_num: 4
 fast_blob: True
