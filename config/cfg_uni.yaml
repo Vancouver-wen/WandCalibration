@@ -73,7 +73,7 @@ worldCoordParam:
   # 乒乓球桌子高 0.76m
   # L型尺高 0.14m = 14cm
   type: labelme
-  mode: enhance # norm enhance
+  mode: norm # norm enhance
   PointCoordinates:
     # 顺序严格对应 图像中点击的至少四个点
     # [x,y,z]

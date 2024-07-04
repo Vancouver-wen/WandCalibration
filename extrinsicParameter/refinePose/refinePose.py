@@ -4,7 +4,7 @@ import time
 import warnings
 warnings.filterwarnings('ignore')
 import math
-# import resource
+import threading
 
 import cv2
 import numpy as np
@@ -97,6 +97,7 @@ def sub_process_train(
         refine_mode:str,
         rank:int,
         barrier,
+        verify_message:mp.Queue,
         lr:float,
         model:BoundleAdjustment,
         dataset:Dataset,
@@ -193,19 +194,36 @@ def sub_process_train(
                     output=model.module.get_dict()
                 else:
                     output=model.get_dict() # 保存结果
-                # import pdb;pdb.set_trace() # p intrinsics -> 有 image_size 
-                verify_accuracy(
-                    camera_params=output['calibration'],
-                    pole_3ds=output['poles'],
-                    pole_lists=pole_lists,
-                    time_consume=time.time()-start
-                )
+                verify_message.put({
+                    'camera_params':output['calibration'],
+                    'pole_3ds':output['poles'],
+                    'pole_lists':pole_lists,
+                    'time_consume':time.time()-start
+                })
                 start=time.time()
             if step%step_frequence==0 and step!=0:
                 lrSchedular.step()
         except KeyboardInterrupt as e:
             logger.info(f"{'ddp' if refine_mode=='distributed' else 'sub'} process rank {rank} daemon early stop")
+            verify_message.put(None)
             break
+    verify_message.put(None)
+
+def verify_process(verify_message:mp.Queue):
+    logger.info(f'verify process has been started')
+    message=dict()
+    while True:
+        overstock=0
+        while not verify_message.empty():
+            message=verify_message.get() # 读取积压的message,只保存最新的
+            overstock+=1
+            time.sleep(0.1)
+        if message is None:
+            logger.info(f'verify process receieve None, stop ..')
+            break
+        if message: # 如果message不是空向量
+            verify_accuracy(**message)
+            logger.warning(f"clean overstock message number: {overstock}")
 
 def multi_process_train(
         refine_mode:str,
@@ -231,6 +249,7 @@ def multi_process_train(
     lr=min(5e-3*init_error/cpu_count,1e-2) # lr=5e-3 是比较合适的数值
     iteration = max(int(1000/math.sqrt(cpu_count)),1000) # iteration = 1000
     losses=mp.Queue() # put get empty
+    verify_message=mp.Queue()
     mp.set_sharing_strategy('file_system')
     if refine_mode=="process":
         barrier = mp.Barrier(cpu_count)
@@ -243,10 +262,18 @@ def multi_process_train(
         raise NotImplementedError(f"multi process train only support {support_list}")
 
     processes=[]
+    p=mp.Process(
+        target=verify_process,
+        args=(verify_message,),
+        name=f'verify',
+        daemon=True
+    )
+    p.start()
+    processes.append(p)
     for rank in range(cpu_count):
         p=mp.Process(
             target=sub_process_train,
-            args=(refine_mode,rank,barrier,lr,model,myDataset,losses,pole_lists,iteration,thread_count),
+            args=(refine_mode,rank,barrier,verify_message,lr,model,myDataset,losses,pole_lists,iteration,thread_count),
             name=f"train{rank}",
             daemon=True
         )
