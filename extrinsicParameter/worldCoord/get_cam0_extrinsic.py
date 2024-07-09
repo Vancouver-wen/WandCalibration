@@ -211,7 +211,7 @@ def get_cam0_extrinsic(
             resolutions=[cam_param['image_size'] for cam_param in cam_params],
             masks=masks,
             image_path=wand_folder,
-            color=world_coord_param.color,
+            color=world_coord_param['color'],
             wand_blob_param=wand_blob_param,
         )
         # vis wands
@@ -225,6 +225,7 @@ def get_cam0_extrinsic(
             cam_num=cam_num,
             cam_params=cam_params,
             wands=wands,
+            mode=world_coord_param['mode']
         )
         point_3ds=get_id_with_distance(
             point_3ds=point_3ds,

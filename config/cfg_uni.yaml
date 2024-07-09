@@ -57,6 +57,7 @@ wandBlobParam:
 
 worldCoordParam: 
   type: wand
+  mode: mcp # dbscan sort mcp
   color: "white"
   # 角B 是直角
   # AB 为短边

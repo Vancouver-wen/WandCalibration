@@ -7,7 +7,7 @@ import cv2
 from sklearn.cluster import DBSCAN,KMeans
 
 from extrinsicParameter.refinePose.multiViewTriangulate import multi_view_triangulate
-from .cluster import sort_cluster
+from .cluster import sort_cluster,mcp_cluster
 
 def vis_epipolar_line():
     pass # TODO
@@ -155,6 +155,7 @@ def no_id_reconstruct(
         cam_num,
         cam_params,
         wands,  
+        mode:str
     ):
     """
     先构建一个n*n的矩阵, n为所有相机所有点的个数
@@ -185,12 +186,24 @@ def no_id_reconstruct(
             )
     # 对 cost_matrix 进行聚类 -> 获取 clumps
     # 从points总获取 初始类中心点
-    assert init_cluster is not None,"no camera can detect complete wand" # 只要应该有一个相机能看到完整的L型标定杆
-    labels=sort_cluster(
-        init_cluster=init_cluster,
-        cost_matrix=cost_matrix
-    )
-    # labels=DBSCAN(eps=10, min_samples=2, metric="precomputed").fit_predict(cost_matrix) # DBSCAN作为密度聚类,并不适合这个任务场景
+    assert init_cluster is not None,"no camera can detect complete wand" # 至少应该有一个相机能看到完整的L型标定杆
+    support_list=['dbscan','sort','mcp']
+    assert mode in support_list,f'noIdReconstruction only support {support_list}'
+    if mode == "dbscan":
+        labels=DBSCAN(eps=10, min_samples=2, metric="precomputed").fit_predict(cost_matrix) # DBSCAN作为密度聚类,并不适合这个任务场景
+    elif mode == "sort":
+        labels=sort_cluster(
+            init_cluster=init_cluster,
+            cost_matrix=cost_matrix
+        )
+    elif mode == "mcp":
+        labels=mcp_cluster(
+            cost_matrix=cost_matrix,
+            eps=1e1,
+            min_samples=2
+        )
+    else:
+        raise NotImplementedError
     # np.set_printoptions(
     #     threshold=5000,
     #     linewidth=5000
