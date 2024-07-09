@@ -7,7 +7,7 @@ import cv2
 from sklearn.cluster import DBSCAN,KMeans
 
 from extrinsicParameter.refinePose.multiViewTriangulate import multi_view_triangulate
-from .cluster import cluster
+from .cluster import sort_cluster
 
 def vis_epipolar_line():
     pass # TODO
@@ -186,7 +186,7 @@ def no_id_reconstruct(
     # 对 cost_matrix 进行聚类 -> 获取 clumps
     # 从points总获取 初始类中心点
     assert init_cluster is not None,"no camera can detect complete wand" # 只要应该有一个相机能看到完整的L型标定杆
-    labels=cluster(
+    labels=sort_cluster(
         init_cluster=init_cluster,
         cost_matrix=cost_matrix
     )

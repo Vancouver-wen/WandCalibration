@@ -4,8 +4,7 @@ import sys
 import numpy as np
 import cv2
 
-
-def cluster(
+def sort_cluster(
         init_cluster,
         cost_matrix
     ):
