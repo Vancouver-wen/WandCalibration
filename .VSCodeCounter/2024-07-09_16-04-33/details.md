@@ -1,10 +1,10 @@
 # Details
 
-Date : 2024-06-18 13:45:10
+Date : 2024-07-09 16:04:33
 
 Directory /home/wenzihao/Desktop/WandCalibration
 
-Total : 72 files,  5211 codes, 529 comments, 614 blanks, all 6354 lines
+Total : 72 files,  5338 codes, 523 comments, 620 blanks, all 6481 lines
 
 [Summary](results.md) / Details / [Diff Summary](diff.md) / [Diff Details](diff-details.md)
 
@@ -18,7 +18,7 @@ Total : 72 files,  5211 codes, 529 comments, 614 blanks, all 6354 lines
 | [config/board/checkerboard_11_8.yaml](/config/board/checkerboard_11_8.yaml) | YAML | 4 | 12 | 2 | 18 |
 | [config/cfg_archery.yaml](/config/cfg_archery.yaml) | YAML | 25 | 11 | 13 | 49 |
 | [config/cfg_archery_outdoor.yaml](/config/cfg_archery_outdoor.yaml) | YAML | 25 | 11 | 13 | 49 |
-| [config/cfg_uni.yaml](/config/cfg_uni.yaml) | YAML | 44 | 33 | 9 | 86 |
+| [config/cfg_uni.yaml](/config/cfg_uni.yaml) | YAML | 49 | 30 | 9 | 88 |
 | [config/cfg_wtt.yaml](/config/cfg_wtt.yaml) | YAML | 26 | 11 | 8 | 45 |
 | [config/cfg_wtt_red.yaml](/config/cfg_wtt_red.yaml) | YAML | 25 | 11 | 7 | 43 |
 | [config/config.yaml](/config/config.yaml) | YAML | 17 | 10 | 13 | 40 |
@@ -50,19 +50,19 @@ Total : 72 files,  5211 codes, 529 comments, 614 blanks, all 6354 lines
 | [extrinsicParameter/refinePose/linear_warmup_cosine_annealing_warm_restarts_weight_decay/lr_scheduler.py](/extrinsicParameter/refinePose/linear_warmup_cosine_annealing_warm_restarts_weight_decay/lr_scheduler.py) | Python | 239 | 4 | 42 | 285 |
 | [extrinsicParameter/refinePose/multiViewTriangulate.py](/extrinsicParameter/refinePose/multiViewTriangulate.py) | Python | 194 | 16 | 11 | 221 |
 | [extrinsicParameter/refinePose/normalizedImagePlane.py](/extrinsicParameter/refinePose/normalizedImagePlane.py) | Python | 50 | 6 | 6 | 62 |
-| [extrinsicParameter/refinePose/refinePose.py](/extrinsicParameter/refinePose/refinePose.py) | Python | 298 | 19 | 15 | 332 |
+| [extrinsicParameter/refinePose/refinePose.py](/extrinsicParameter/refinePose/refinePose.py) | Python | 329 | 17 | 16 | 362 |
 | [extrinsicParameter/refinePose/rotation_conversions.py](/extrinsicParameter/refinePose/rotation_conversions.py) | Python | 412 | 24 | 98 | 534 |
 | [extrinsicParameter/refinePose/so3_exp_map.py](/extrinsicParameter/refinePose/so3_exp_map.py) | Python | 68 | 1 | 22 | 91 |
 | [extrinsicParameter/worldCoord/adjustCamParam.py](/extrinsicParameter/worldCoord/adjustCamParam.py) | Python | 65 | 0 | 3 | 68 |
 | [extrinsicParameter/worldCoord/clickPoint.py](/extrinsicParameter/worldCoord/clickPoint.py) | Python | 98 | 27 | 10 | 135 |
-| [extrinsicParameter/worldCoord/cluster.py](/extrinsicParameter/worldCoord/cluster.py) | Python | 40 | 4 | 5 | 49 |
+| [extrinsicParameter/worldCoord/cluster.py](/extrinsicParameter/worldCoord/cluster.py) | Python | 114 | 4 | 10 | 128 |
 | [extrinsicParameter/worldCoord/enhanced_labelme.py](/extrinsicParameter/worldCoord/enhanced_labelme.py) | Python | 206 | 6 | 16 | 228 |
-| [extrinsicParameter/worldCoord/get_cam0_extrinsic.py](/extrinsicParameter/worldCoord/get_cam0_extrinsic.py) | Python | 234 | 44 | 9 | 287 |
+| [extrinsicParameter/worldCoord/get_cam0_extrinsic.py](/extrinsicParameter/worldCoord/get_cam0_extrinsic.py) | Python | 235 | 44 | 9 | 288 |
 | [extrinsicParameter/worldCoord/get_id_with_distance.py](/extrinsicParameter/worldCoord/get_id_with_distance.py) | Python | 62 | 0 | 8 | 70 |
 | [extrinsicParameter/worldCoord/handle_board.py](/extrinsicParameter/worldCoord/handle_board.py) | Python | 106 | 3 | 5 | 114 |
 | [extrinsicParameter/worldCoord/handle_labelme.py](/extrinsicParameter/worldCoord/handle_labelme.py) | Python | 147 | 1 | 10 | 158 |
 | [extrinsicParameter/worldCoord/icp.py](/extrinsicParameter/worldCoord/icp.py) | Python | 78 | 16 | 28 | 122 |
-| [extrinsicParameter/worldCoord/noIdReconstruction.py](/extrinsicParameter/worldCoord/noIdReconstruction.py) | Python | 182 | 25 | 15 | 222 |
+| [extrinsicParameter/worldCoord/noIdReconstruction.py](/extrinsicParameter/worldCoord/noIdReconstruction.py) | Python | 196 | 24 | 15 | 235 |
 | [extrinsicParameter/worldCoord/solve_icp.py](/extrinsicParameter/worldCoord/solve_icp.py) | Python | 21 | 2 | 3 | 26 |
 | [intrinsicParameter/__init__.py](/intrinsicParameter/__init__.py) | Python | 0 | 0 | 1 | 1 |
 | [intrinsicParameter/charucoboardCalibration/get_cam_calibration.py](/intrinsicParameter/charucoboardCalibration/get_cam_calibration.py) | Python | 115 | 12 | 6 | 133 |
@@ -70,7 +70,7 @@ Total : 72 files,  5211 codes, 529 comments, 614 blanks, all 6354 lines
 | [intrinsicParameter/checkerboardCalibration/get_cam_calibration.py](/intrinsicParameter/checkerboardCalibration/get_cam_calibration.py) | Python | 91 | 9 | 5 | 105 |
 | [intrinsicParameter/checkerboardCalibration/test_cam_calibration.py](/intrinsicParameter/checkerboardCalibration/test_cam_calibration.py) | Python | 49 | 14 | 18 | 81 |
 | [intrinsicParameter/intrinsicCalibration/get_intrinsic.py](/intrinsicParameter/intrinsicCalibration/get_intrinsic.py) | Python | 73 | 6 | 6 | 85 |
-| [main.py](/main.py) | Python | 219 | 2 | 7 | 228 |
+| [main.py](/main.py) | Python | 221 | 2 | 7 | 230 |
 | [pyinstaller.md](/pyinstaller.md) | Markdown | 6 | 0 | 1 | 7 |
 | [requirements.txt](/requirements.txt) | pip requirements | 12 | 0 | 1 | 13 |
 | [utils/__init__.py](/utils/__init__.py) | Python | 0 | 0 | 1 | 1 |
