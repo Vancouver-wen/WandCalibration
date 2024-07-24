@@ -184,7 +184,8 @@ class OptiTrack(object):
             masks=self.mask,
             image_path=self.config.image_path,
             world_coord_param=self.config.worldCoordParam,
-            wand_blob_param=self.config.wandBlobParam
+            wand_blob_param=self.config.wandBlobParam,
+            fastBlob=self.config.fast_blob
         )
         self.world_camera_params=adjust_camera_params(
             cam_0_R=cam0_R,

@@ -40,7 +40,7 @@ class SimpleBlobDetection():
             filterByInertia  =   True,
             minInertiaRatio  =   0.1,
             fastBlob = False,
-            color="white"
+            color="red"
         ) -> None:
         """
         float thresholdStep
@@ -103,7 +103,7 @@ class SimpleBlobDetection():
             red_channel=frame[:,:,2].astype(np.int64)-np.maximum(frame[:,:,0].astype(np.int64),frame[:,:,1].astype(np.int64))
             red_channel=np.clip(red_channel,a_min=0,a_max=255).astype(np.uint8)
             # 形态学
-            kernel = np.ones((10,10),np.uint8)
+            kernel = np.ones((5,5),np.uint8)
             red_channel=cv2.morphologyEx(red_channel, cv2.MORPH_CLOSE, kernel,iterations=2)
             # red_channel=cv2.morphologyEx(red_channel,cv2.MORPH_OPEN, kernel,iterations=2)
             frame=red_channel

@@ -108,7 +108,8 @@ def get_cam0_extrinsic(
         masks,
         image_path,
         world_coord_param,
-        wand_blob_param
+        wand_blob_param,
+        fastBlob=True
     ):
     """
     给出 cam0 在 world coordinate 下的 Rotation 和 tran
@@ -213,6 +214,7 @@ def get_cam0_extrinsic(
             image_path=wand_folder,
             color=world_coord_param['color'],
             wand_blob_param=wand_blob_param,
+            fastBlob=fastBlob
         )
         # vis wands
         vis_wand_detection(

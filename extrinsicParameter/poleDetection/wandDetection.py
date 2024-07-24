@@ -35,6 +35,7 @@ class WandDetection(SimpleBlobDetection):
             minConvexity=0.4, 
             filterByInertia=True, 
             minInertiaRatio=0.1,
+            fastBlob=True,
             color="white"
         ):
         super().__init__(
@@ -54,6 +55,7 @@ class WandDetection(SimpleBlobDetection):
             minConvexity, 
             filterByInertia, 
             minInertiaRatio,
+            fastBlob,
             color
         )
     
@@ -62,6 +64,9 @@ class WandDetection(SimpleBlobDetection):
         if mask is None:
             mask=np.zeros_like(frame)
         frame=self.frame_pre_process(frame)
+        # 用于debug
+        # cv2.imwrite("./test.jpg",frame)
+        # import pdb;pdb.set_trace()
         keypoints = self.detector.detect(frame)
         points=[keypoint.pt for keypoint in keypoints]
         # 去除被 mask 掉的点
@@ -120,7 +125,8 @@ def get_wand(
         masks,
         image_path,
         color,
-        wand_blob_param
+        wand_blob_param,
+        fastBlob
     ):
     assert cam_num==len(resolutions),"camera num quantity is ambiguous"
     pickle_path=os.path.join(image_path,'wand.pkl')
@@ -155,6 +161,7 @@ def get_wand(
                 minConvexity  = wand_blob_param.minConvexity,
                 filterByInertia  =   True,
                 minInertiaRatio  =  wand_blob_param.minInertiaRatio,
+                fastBlob=fastBlob,
                 color=color
             )
             detectors.append(detector)
