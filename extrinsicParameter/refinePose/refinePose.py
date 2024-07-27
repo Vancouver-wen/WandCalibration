@@ -27,6 +27,7 @@ def multi_thread_train(
         init_error:float,
         model:BoundleAdjustment,
         pole_lists,
+        weights
     ):
     list_len=model.list_len
     myDataset=BoundAdjustmentDataset(list_len)
@@ -51,10 +52,10 @@ def multi_thread_train(
             time1=time.time()
             loss=model.forward(
                 mask=batch,
-                line_weight=1.0,
-                length_weight=1.0,
-                reproj_weight=1.0,
-                orthogonal_weight=10.0
+                line_weight=weights.line_weight,
+                length_weight=weights.length_weight,
+                reproj_weight=weights.reproj_weight,
+                orthogonal_weight=weights.orthogonal_weight
             )
             time2=time.time()
             optimizer.zero_grad()
@@ -100,11 +101,12 @@ def sub_process_train(
         verify_message:mp.Queue,
         lr:float,
         model:BoundleAdjustment,
+        weights,
         dataset:Dataset,
         losses:mp.Queue,
         pole_lists,
         iteration:int,
-        thread_count=1
+        thread_count=1,
     ):
     torch.set_num_threads(thread_count)
     assert refine_mode in ['process','distributed']
@@ -159,10 +161,10 @@ def sub_process_train(
             loss=model.forward(
                 mask=torch.tensor((mask_index==rank),dtype=torch.bool,requires_grad=False),
                 # mask=batch,
-                line_weight=1.0,
-                length_weight=1.0,
-                reproj_weight=1.0,
-                orthogonal_weight=10.0
+                line_weight=weights.line_weight,
+                length_weight=weights.length_weight,
+                reproj_weight=weights.reproj_weight,
+                orthogonal_weight=weights.orthogonal_weight
             )
             time2=time.time()
             optimizer.zero_grad()
@@ -230,6 +232,7 @@ def multi_process_train(
         init_error:float,
         model:BoundleAdjustment,
         pole_lists,
+        weights
     ):
     # mp.get_all_start_methods() ['fork', 'spawn', 'forkserver']
     """
@@ -273,7 +276,7 @@ def multi_process_train(
     for rank in range(cpu_count):
         p=mp.Process(
             target=sub_process_train,
-            args=(refine_mode,rank,barrier,verify_message,lr,model,myDataset,losses,pole_lists,iteration,thread_count),
+            args=(refine_mode,rank,barrier,verify_message,lr,model,weights,myDataset,losses,pole_lists,iteration,thread_count),
             name=f"train{rank}",
             daemon=True
         )
@@ -291,7 +294,8 @@ def get_refine_pose(
         pole_param,
         init_poses,
         save_path,
-        refine_mode
+        refine_mode,
+        weights
     ):
     # 先用cv2.undistort 把像素坐标系转换成归一化图像坐标系
     undistorted_pole_lists=get_undistort_points(cam_num,pole_lists,intrinsics)
@@ -341,14 +345,16 @@ def get_refine_pose(
         multi_thread_train(
             init_error=init_error,
             model=myBoundAdjustment,
-            pole_lists=pole_lists
+            pole_lists=pole_lists,
+            weights=weights
         )
     elif refine_mode=='process' or refine_mode=='distributed':
         multi_process_train(
             refine_mode=refine_mode,
             init_error=init_error,
             model=myBoundAdjustment,
-            pole_lists=pole_lists
+            pole_lists=pole_lists,
+            weights=weights
         )
     else:
         support_list=['thread','process','distributed']

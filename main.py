@@ -137,7 +137,8 @@ class OptiTrack(object):
                     pole_param=self.config.pole,
                     init_poses=self.pose,
                     save_path=save_path,
-                    refine_mode=refine_mode
+                    refine_mode=refine_mode,
+                    weights=self.config.bundleAdjustmentWeights
                 )
             except KeyboardInterrupt:
                 logger.info("early stop pose refiner")
@@ -152,7 +153,8 @@ class OptiTrack(object):
                 pole_param=self.config.pole,
                 init_poses=self.pose,
                 save_path=save_path,
-                refine_mode=refine_mode
+                refine_mode=refine_mode,
+                weights=self.config.bundleAdjustmentWeights
             )
         with open(save_path,'r') as f:
             self.output=json.load(f)

@@ -14,7 +14,7 @@ refine_mode: 'process' # thread process distributed
 
 cam_num: 4
 fast_blob: True
-vis_num: 10
+vis_num: 30
 
 board:
   type: charucoboard
@@ -24,12 +24,12 @@ board:
   marker_length: 0.15
 
 pole: 
-  color: "white"
+  color: "red"
   length_unit: "mm"
   d1: 250
   d2: 510
 
-image_path: "imageCollect/wtt_kaige"
+image_path: "imageCollect/paris_0726"
 
 # https://imagecolorpicker.com/ 使用该网站确认 minThreshold
 maskBlobParam:
@@ -55,33 +55,39 @@ wandBlobParam:
   minConvexity: 0.1
   minInertiaRatio: 0.1
 
+bundleAdjustmentWeights:
+  line_weight: 1.0
+  length_weight: 2.5e+1
+  reproj_weight: 1.0
+  orthogonal_weight: 1.0e+1
+
 worldCoordParam: 
-  type: wand
-  mode: mcp # dbscan sort mcp
-  color: "white"
-  # 角B 是直角
-  # AB 为短边
-  # BC 为长边
-  # AC 为斜边
-  WandDefinition:
-    - 0.45 
-    - 0.6
-    - 0.75
-  WandPointCoord:
-    - [ -0.45,    0,  0.9]
-    - [ 0 ,   0,    0.9]
-    - [0,    -0.6,  0.9]
+  # type: wand
+  # mode: mcp # dbscan sort mcp
+  # color: "red"
+  # # 角B 是直角
+  # # AB 为短边
+  # # BC 为长边
+  # # AC 为斜边
+  # WandDefinition:
+  #   - 0.45 
+  #   - 0.6
+  #   - 0.75
+  # WandPointCoord:
+  #   - [ -0.45,    0,  0.9]
+  #   - [ 0 ,   0,    0.9]
+  #   - [0,    -0.6,  0.9]
   # 乒乓球桌子高 0.76m
   # L型尺高 0.14m = 14cm
-  # type: labelme
-  # mode: enhance # norm enhance
-  # PointCoordinates:
+  type: labelme
+  mode: norm # norm enhance
+  PointCoordinates:
   #   # 顺序严格对应 图像中点击的至少四个点
   #   # [x,y,z]
-  #   - [0.7625,1.37,0.76]
-  #   - [-0.7625,1.37,0.76]
-  #   - [-0.7625,-1.37,0.76]
-  #   - [0.7625,-1.37,0.76]
+    - [0.7625,1.37,0.76]
+    - [-0.7625,1.37,0.76]
+    - [-0.7625,-1.37,0.76]
+    - [0.7625,-1.37,0.76]
   #   # - [-1.6,5.55,0]
   #   # - [-1.6,0,0]
   #   # - [1.6,0,0]
