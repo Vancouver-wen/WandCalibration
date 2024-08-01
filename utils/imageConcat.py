@@ -30,10 +30,10 @@ def show_multi_imgs(scale, imglist, order=None, border=2, border_color=(255, 255
     # 判断输入的显示格式与待显示图像数量的大小关系
     if sub > 0:
         for s in range(sub):
-            allimgs.append(np.zeros_like(allimgs[0]))
+            allimgs.append(np.zeros_like(allimgs[0],dtype=np.uint8))
     elif sub < 0:
         allimgs = allimgs[:sub]
-    imgblank = np.zeros(((h+border) * order[0], (w+border) * order[1], 3)) + border_color
+    imgblank = np.zeros(((h+border) * order[0], (w+border) * order[1], 3),dtype=np.uint8) + border_color
     imgblank = imgblank.astype(np.uint8)
     for i in range(order[0]):
         for j in range(order[1]):
