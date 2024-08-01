@@ -203,6 +203,7 @@ class OptiTrack(object):
             self.world_camera_params=json.load(f)
         vis_camera_params(
             camera_params=self.world_camera_params,
+            world_coord_param=self.config.worldCoordParam,
             save_path=os.path.join(self.config.image_path,'world.jpg')
         )
     def run(self,vis=True):

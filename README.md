@@ -40,7 +40,5 @@ conda update -n base -c defaults conda
     ```
 
 ##### TODO List:
-1. vis_spread通过颜色来区分可见视野数量
-2. vis_reproj_all展示所有重投影的pole,通过颜色展示其reproj_error与mean_pixel_error的比值
-3. world pose 使用matplotlib绘制gif图片,使之旋转起来,同时要避免matplotlib内存泄漏
-4. 给labelme的enhance mode添加初始化
+1. vis_reproj_all展示所有重投影的pole,通过颜色展示其reproj_error与mean_pixel_error的比值
+2. 给labelme的enhance mode添加初始化
