@@ -1,0 +1,43 @@
+Date : 2024-08-01 11:12:08
+Directory : /home/wenzihao/Desktop/WandCalibration
+Total : 9 files,  69 codes, 18 comments, 3 blanks, all 90 lines
+
+Languages
++------------------+------------+------------+------------+------------+------------+
+| language         | files      | code       | comment    | blank      | total      |
++------------------+------------+------------+------------+------------+------------+
+| Python           |          6 |         66 |         14 |          2 |         82 |
+| YAML             |          1 |          1 |          4 |          1 |          6 |
+| Markdown         |          1 |          1 |          0 |          0 |          1 |
+| pip requirements |          1 |          1 |          0 |          0 |          1 |
++------------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                       | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                          |          9 |         69 |         18 |          3 |         90 |
+| . (Files)                                                                                  |          3 |          6 |          0 |          0 |          6 |
+| config                                                                                     |          1 |          1 |          4 |          1 |          6 |
+| extrinsicParameter                                                                         |          3 |         12 |          3 |          0 |         15 |
+| extrinsicParameter/poleDetection                                                           |          1 |          4 |          3 |          0 |          7 |
+| extrinsicParameter/refinePose                                                              |          1 |          6 |          0 |          0 |          6 |
+| extrinsicParameter/worldCoord                                                              |          1 |          2 |          0 |          0 |          2 |
+| visualize                                                                                  |          2 |         50 |         11 |          2 |         63 |
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| filename                                                                                   | language         | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| /home/wenzihao/Desktop/WandCalibration/README.md                                           | Markdown         |          1 |          0 |          0 |          1 |
+| /home/wenzihao/Desktop/WandCalibration/config/cfg_uni.yaml                                 | YAML             |          1 |          4 |          1 |          6 |
+| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/poleDetection/wandDetection.py   | Python           |          4 |          3 |          0 |          7 |
+| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/refinePose/refinePose.py         | Python           |          6 |          0 |          0 |          6 |
+| /home/wenzihao/Desktop/WandCalibration/extrinsicParameter/worldCoord/get_cam0_extrinsic.py | Python           |          2 |          0 |          0 |          2 |
+| /home/wenzihao/Desktop/WandCalibration/main.py                                             | Python           |          4 |          0 |          0 |          4 |
+| /home/wenzihao/Desktop/WandCalibration/requirements.txt                                    | pip requirements |          1 |          0 |          0 |          1 |
+| /home/wenzihao/Desktop/WandCalibration/visualize/visCameraParams.py                        | Python           |         44 |         11 |          2 |         57 |
+| /home/wenzihao/Desktop/WandCalibration/visualize/vis_pole_spread.py                        | Python           |          6 |          0 |          0 |          6 |
+| Total                                                                                      |                  |         69 |         18 |          3 |         90 |
++--------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
