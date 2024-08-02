@@ -12,7 +12,7 @@
 max_process: 100
 refine_mode: 'process' # thread process distributed
 
-cam_num: 4
+cam_num: 8
 fast_blob: True
 vis_num: 30
 
@@ -29,7 +29,7 @@ pole:
   d1: 250
   d2: 510
 
-image_path: "imageCollect/paris_0726"
+image_path: "imageCollect/88basketball"
 
 # https://imagecolorpicker.com/ 使用该网站确认 minThreshold
 maskBlobParam:
@@ -56,9 +56,10 @@ wandBlobParam:
   minInertiaRatio: 0.1
 
 bundleAdjustmentWeights:
+  max_norm: 1.0 # 梯度裁减防止nan
   line_weight: 1.0
-  length_weight: 2.5e+1
-  reproj_weight: 1.0
+  length_weight: 2.0
+  reproj_weight: 1.0e-1
   orthogonal_weight: 1.0e+1
 
 worldCoordParam: 

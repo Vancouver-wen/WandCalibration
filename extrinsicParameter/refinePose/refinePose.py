@@ -15,6 +15,7 @@ import torch.multiprocessing as mp
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data import Dataset,DataLoader,DistributedSampler
+from torch.nn.utils import clip_grad_norm_
 
 from .normalizedImagePlane import get_undistort_points
 from .multiViewTriangulate import normalized_pole_triangulate
@@ -49,7 +50,6 @@ def multi_thread_train(
     start=time.time()
     for step in tqdm(range(iteration)):
         for batch in myDataLoader:
-            time1=time.time()
             loss=model.forward(
                 mask=batch,
                 line_weight=weights.line_weight,
@@ -57,13 +57,11 @@ def multi_thread_train(
                 reproj_weight=weights.reproj_weight,
                 orthogonal_weight=weights.orthogonal_weight
             )
-            time2=time.time()
             optimizer.zero_grad()
-            time3=time.time()
             loss.backward()
-            time4=time.time()
+            # clip the grad
+            clip_grad_norm_(model.parameters(), max_norm=weights.max_norm, norm_type=2)
             optimizer.step()
-            # logger.info(f"backward time consume:{time.time()-time1} forward:{time2-time1} zero_grad:{time3-time2} backward:{time4-time3} step:{time.time()-time4}")
         if step%10==0:
             logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t loss:{loss:.5f}")
             output=model.get_dict() # 保存结果
@@ -152,12 +150,10 @@ def sub_process_train(
         pass
     for step in loop:
         try:
-            time0=time.time()
             torch.manual_seed(step)
             mask_index=torch.multinomial(input=torch.ones(cpu_count),num_samples=list_len,replacement=True)
             # logger.info(f"shuffle time consume:{time.time()-time0}")
             # for batch in myDataLoader:
-            time1=time.time()
             loss=model.forward(
                 mask=torch.tensor((mask_index==rank),dtype=torch.bool,requires_grad=False),
                 # mask=batch,
@@ -166,13 +162,11 @@ def sub_process_train(
                 reproj_weight=weights.reproj_weight,
                 orthogonal_weight=weights.orthogonal_weight
             )
-            time2=time.time()
             optimizer.zero_grad()
-            time3=time.time()
             loss.backward()
-            time4=time.time()
+            # clip the grad
+            clip_grad_norm_(model.parameters(), max_norm=weights.max_norm, norm_type=2)
             optimizer.step()
-            # logger.info(f"backward time consume:{time.time()-time1} forward:{time2-time1} zero_grad:{time3-time2} backward:{time4-time3} step:{time.time()-time4}")
             if step%10==0:
                 losses.put((rank,loss.item()))
             # if step%10==0: # 不是同步导致的性能障碍
