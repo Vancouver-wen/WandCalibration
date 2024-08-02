@@ -141,7 +141,7 @@ class EnhancedLabelme(nn.Module):
                     loss=torch.norm(point_2d-pred_point_2d)
                     losses.append(loss)
             loss=torch.stack(losses).mean()
-            # loss 的数量级截断
+        # loss 的数量级截断
         if loss.item()>10000:
             rate=pow(10,len(str(int(loss.item()/10000))))
             origin=loss.item()

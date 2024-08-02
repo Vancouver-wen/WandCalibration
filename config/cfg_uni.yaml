@@ -56,10 +56,10 @@ wandBlobParam:
   minInertiaRatio: 0.1
 
 bundleAdjustmentWeights:
-  max_norm: 1.0 # 梯度裁减防止nan
-  line_weight: 1.0
-  length_weight: 2.0
-  reproj_weight: 1.0e-1
+  max_norm: null # 梯度裁减防止nan, null表示不使用梯度裁减
+  line_weight: 10.0
+  length_weight: 20.0
+  reproj_weight: 1.0
   orthogonal_weight: 1.0e+1
 
 worldCoordParam: 

@@ -292,6 +292,12 @@ class BoundleAdjustment(nn.Module):
 
         sequential_loss=torch.mean(sequential_losses)
         loss = sequential_loss
+        # loss 的数量级截断
+        if loss.item()>10000:
+            rate=pow(10,len(str(int(loss.item()/10000))))
+            origin=loss.item()
+            loss=loss/rate
+            logger.warning(f"update loss to:{loss.item()}. loss_origin:{origin} too large, divide {rate}")
         return loss
 
 

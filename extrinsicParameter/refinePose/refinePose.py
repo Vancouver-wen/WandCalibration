@@ -60,7 +60,8 @@ def multi_thread_train(
             optimizer.zero_grad()
             loss.backward()
             # clip the grad
-            clip_grad_norm_(model.parameters(), max_norm=weights.max_norm, norm_type=2)
+            if weights.max_norm:
+                clip_grad_norm_(model.parameters(), max_norm=weights.max_norm, norm_type=2)
             optimizer.step()
         if step%10==0:
             logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t loss:{loss:.5f}")
@@ -165,7 +166,8 @@ def sub_process_train(
             optimizer.zero_grad()
             loss.backward()
             # clip the grad
-            clip_grad_norm_(model.parameters(), max_norm=weights.max_norm, norm_type=2)
+            if weights.max_norm:
+                clip_grad_norm_(model.parameters(), max_norm=weights.max_norm, norm_type=2)
             optimizer.step()
             if step%10==0:
                 losses.put((rank,loss.item()))
