@@ -185,7 +185,7 @@ class BoundleAdjustment(nn.Module):
             'poles':pole_3ds
         }
         with open(self.save_path,'w') as f:
-            json.dump(output,f)
+            json.dump(output,f,indent=4)
         return output
     
     # @torch.compile

@@ -67,7 +67,7 @@ def get_init_pose(cam_num,pole_lists,intrinsics,pole_param,save_path):
     for step,pose in enumerate(list_poses):
         poses[f'cam_{step}_0']=pose
     with open(save_path,'w') as f:
-        json.dump(poses,f)
+        json.dump(poses,f,indent=4)
     # import pdb;pdb.set_trace()
     return poses
 

@@ -189,20 +189,19 @@ class OptiTrack(object):
             wand_blob_param=self.config.wandBlobParam,
             fastBlob=self.config.fast_blob
         )
-        self.world_camera_params=adjust_camera_params(
+        self.output['calibration'],self.output['poles']=adjust_camera_params(
             cam_0_R=cam0_R,
             cam_0_t=cam0_t,
             camera_params=self.output['calibration'],
+            poles=self.output['poles'],
             save_path=save_path,
             image_path=self.config.image_path,
             world_coord_param=self.config.worldCoordParam,
         )
     def visualize(self):
-        save_path=os.path.join(self.config.image_path,'world_pose.json')
-        with open(save_path,'r') as f:
-            self.world_camera_params=json.load(f)
         vis_camera_params(
-            camera_params=self.world_camera_params,
+            camera_params=self.output['calibration'],
+            poles=self.output['poles'],
             world_coord_param=self.config.worldCoordParam,
             save_path=os.path.join(self.config.image_path,'world.jpg')
         )
@@ -216,7 +215,7 @@ class OptiTrack(object):
         self.world_pose()
         if vis:
             self.visualize()
-        return self.world_camera_params
+        return self.output['calibration']
 
 
 def main():

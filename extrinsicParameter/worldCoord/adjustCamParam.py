@@ -11,17 +11,21 @@ def adjust_camera_params(
         cam_0_R,
         cam_0_t,
         camera_params,
+        poles,
         save_path,
         image_path,
         world_coord_param
     ):
     """
     给定 cam0 的 R,t 
-    返回所有 camera params 变换后的结果
+    return 
+        1. 所有 camera params 变换后的结果
+        2. 所有 poles 变换后的结果
     """
     wand_folder=os.path.join(image_path,"wand")
     if not os.path.exists(wand_folder):
         assert False,f"can not find {wand_folder}"
+    # 转换 所有 camera params
     world_camera_params=[]
     for camera_param in camera_params:
         world_camera_param=dict()
@@ -33,6 +37,15 @@ def adjust_camera_params(
         world_camera_param['R']=R.tolist()
         world_camera_param['t']=t.tolist()
         world_camera_params.append(world_camera_param)
+    # 转换 所有 poles
+    world_poles=[]
+    for pole in poles:
+        world_pole=[]
+        for point3d in pole:
+            world_point=np.linalg.inv(cam_0_R)@(np.array(point3d,dtype=np.float32)-cam_0_t)
+            world_pole.append(world_point.tolist())
+        world_poles.append(pole)
+    # 可视化 标记点
     if world_coord_param.type=="wand":
         point_3ds=np.array(world_coord_param['WandPointCoord'])
         vis_point3ds(
@@ -61,8 +74,8 @@ def adjust_camera_params(
             save_folder=os.path.join(wand_folder,'vis_wand_points')
         )
     with open(save_path,'w') as f:
-        json.dump(world_camera_params,f)
-    return world_camera_params
+        json.dump(world_camera_params,f,indent=4)
+    return world_camera_params,world_poles
 
 if __name__=="__main__":
     pass

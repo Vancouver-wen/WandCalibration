@@ -26,6 +26,7 @@ def get_img_from_fig(fig, dpi=180):
 
 def vis_camera_params(
         camera_params,
+        poles,
         world_coord_param,
         save_path
     ):

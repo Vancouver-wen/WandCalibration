@@ -12,7 +12,7 @@
 max_process: 100
 refine_mode: 'process' # thread process distributed
 
-cam_num: 8
+cam_num: 4
 fast_blob: True
 vis_num: 30
 
@@ -29,7 +29,7 @@ pole:
   d1: 250
   d2: 510
 
-image_path: "imageCollect/88basketball"
+image_path: "imageCollect/paris_0726"
 
 # https://imagecolorpicker.com/ 使用该网站确认 minThreshold
 maskBlobParam:
