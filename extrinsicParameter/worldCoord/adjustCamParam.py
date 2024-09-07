@@ -12,7 +12,6 @@ def adjust_camera_params(
         cam_0_t,
         camera_params,
         poles,
-        save_path,
         image_path,
         world_coord_param
     ):
@@ -44,7 +43,7 @@ def adjust_camera_params(
         for point3d in pole:
             world_point=np.linalg.inv(cam_0_R)@(np.array(point3d,dtype=np.float32)-cam_0_t)
             world_pole.append(world_point.tolist())
-        world_poles.append(pole)
+        world_poles.append(world_pole)
     # 可视化 标记点
     if world_coord_param.type=="wand":
         point_3ds=np.array(world_coord_param['WandPointCoord'])
@@ -73,8 +72,7 @@ def adjust_camera_params(
             cam_params=world_camera_params,
             save_folder=os.path.join(wand_folder,'vis_wand_points')
         )
-    with open(save_path,'w') as f:
-        json.dump(world_camera_params,f,indent=4)
+    
     return world_camera_params,world_poles
 
 if __name__=="__main__":

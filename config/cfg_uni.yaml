@@ -93,3 +93,11 @@ worldCoordParam:
   #   # - [-1.6,0,0]
   #   # - [1.6,0,0]
   #   # - [1.6,5.55,0]
+
+convexHull:
+  # length width height 采样点 范围
+  # sample 点之间的间隔 -> 控制采样点的数量
+  length: [-10,10]
+  width: [-10,10]
+  height: [0,20]
+  sample: 0.1

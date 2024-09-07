@@ -21,6 +21,7 @@ from extrinsicParameter.refinePose.refinePose import get_refine_pose
 from utils.verifyAccuracy import verify_accuracy
 from extrinsicParameter.worldCoord.get_cam0_extrinsic import get_cam0_extrinsic
 from extrinsicParameter.worldCoord.adjustCamParam import adjust_camera_params
+from extrinsicParameter.convexHull.getPointCloud import get_point_cloud
 from visualize.visCameraParams import vis_camera_params
 from visualize.vis_reproj_error import vis_reproj_error
 
@@ -178,8 +179,6 @@ class OptiTrack(object):
         except Exception as e:
             logger.warning(f"enter wrong {e}")
     def world_pose(self):
-        save_path=os.path.join(self.config.image_path,'world_pose.json')
-        # import pdb;pdb.set_trace() # p self.output
         cam0_R,cam0_t=get_cam0_extrinsic(
             cam_num=self.config.cam_num,
             cam_params=self.output['calibration'],
@@ -194,15 +193,24 @@ class OptiTrack(object):
             cam_0_t=cam0_t,
             camera_params=self.output['calibration'],
             poles=self.output['poles'],
-            save_path=save_path,
             image_path=self.config.image_path,
             world_coord_param=self.config.worldCoordParam,
         )
+        get_point_cloud(
+            camera_params=self.output['calibration'],
+            convex_hull=self.config.convexHull,
+        )
+        with open(os.path.join(self.config.image_path,'world_pose.json'),'w') as f:
+            json.dump(self.output['calibration'],f,indent=4)
+        with open(os.path.join(self.config.image_path,'world_pole.json'),'w') as f:
+            json.dump(self.output['poles'],f,indent=4)
     def visualize(self):
+
         vis_camera_params(
             camera_params=self.output['calibration'],
             poles=self.output['poles'],
             world_coord_param=self.config.worldCoordParam,
+            convex_hull=self.config.convexHull,
             save_path=os.path.join(self.config.image_path,'world.jpg')
         )
     def run(self,vis=True):
