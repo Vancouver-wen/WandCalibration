@@ -95,9 +95,11 @@ worldCoordParam:
   #   # - [1.6,5.55,0]
 
 convexHull:
-  # length width height 采样点 范围
-  # sample 点之间的间隔 -> 控制采样点的数量
+  # length width height 采样点 范围,单位m
+  # sample 点之间的间隔,单位m -> 控制采样点的数量
+  # min_vis 最好的共视相机数量阈值
   length: [-10,10]
   width: [-10,10]
   height: [0,20]
   sample: 0.1
+  min_vis: 3

@@ -196,7 +196,7 @@ class OptiTrack(object):
             image_path=self.config.image_path,
             world_coord_param=self.config.worldCoordParam,
         )
-        get_point_cloud(
+        self.output['sampled_points']=get_point_cloud(
             camera_params=self.output['calibration'],
             convex_hull=self.config.convexHull,
         )
@@ -205,13 +205,14 @@ class OptiTrack(object):
         with open(os.path.join(self.config.image_path,'world_pole.json'),'w') as f:
             json.dump(self.output['poles'],f,indent=4)
     def visualize(self):
-
         vis_camera_params(
             camera_params=self.output['calibration'],
             poles=self.output['poles'],
+            sampled_points=self.output['sampled_points'],
             world_coord_param=self.config.worldCoordParam,
             convex_hull=self.config.convexHull,
-            save_path=os.path.join(self.config.image_path,'world.jpg')
+            vis_num=self.config.vis_num,
+            save_path=os.path.join(self.config.image_path,'world.gif')
         )
     def run(self,vis=True):
         self.add_intrinsic()

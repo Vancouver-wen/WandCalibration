@@ -42,8 +42,15 @@ def can_vis(camera_param,sampled_points):
         image_points[:,0]>=0,
         image_points[:,0]<image_size[0],
         image_points[:,1]>=0,
-        image_points[:,1]<image_size[1]
+        image_points[:,1]<image_size[1],
     ])
+    # 朝向一致
+    for i in range(len(vis)):
+        if vis[i]:
+            point=np.array(R)@np.array(sampled_points[i])+np.array(t) # 投影到相机坐标系
+            z=point[2]
+            if z<=0:
+                vis[i]=False
     return vis
 
 def get_point_cloud(
@@ -52,11 +59,10 @@ def get_point_cloud(
     ):
     sampled_points=get_sampled_points(convex_hull)
     logger.info(f"project sampled points to judge whether in image")
-    vis=Parallel(n_jobs=1,backend="threading")( # min(len(camera_params),os.cpu_count())
+    vis=Parallel(n_jobs=min(len(camera_params),os.cpu_count()),backend="threading")( # min(len(camera_params),os.cpu_count())
         delayed(can_vis)(camera_param,sampled_points)
         for camera_param in camera_params
     )
     vis=np.array(vis).sum(axis=0)
-    sampled_points=sampled_points[vis>=2]
-    import pdb;pdb.set_trace()
-    return sampled_points
+    sampled_points=sampled_points[vis>=convex_hull.min_vis]
+    return sampled_points.tolist()
