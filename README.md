@@ -4,7 +4,7 @@
 
 <div align="center">
 
- |[English](https://github.com/Vancouver-wen/WandCalibration) | [中文简体](docs/README_CN.md) |
+ |[English](https://github.com/Vancouver-wen/WandCalibration) | [中文简体](assets/README_CN.md) |
 </div>
 
 ---
@@ -29,7 +29,7 @@
 https://github.com/user-attachments/assets/2ed1ab6d-a460-4aef-8a22-444395619660
 
 ## 📰 News
-* **[Jun. 26, 2024]**: Our Wand-Calibration has been used in the [Table-Tennis](https://h.xinhuaxmt.com/vh512/share/12129448) and [Archery](https://mp.weixin.qq.com/s/ZxIvB2N_dKBc4UrcW5A73A) events at the [Paris Olympics 🔗](https://olympics.com/en/paris-2024)!
+* **[Jul. 26, 2024]**: Our Wand-Calibration has been used in the [Table-Tennis](https://h.xinhuaxmt.com/vh512/share/12129448) and [Archery](https://mp.weixin.qq.com/s/ZxIvB2N_dKBc4UrcW5A73A) events at the [Paris Olympics 🔗](https://olympics.com/en/paris-2024)!
 * **[Jun. 15, 2024]**: Wand-Calibration has been used in our business collaboration with [Snow51](https://snowhowchina.com/cn/snow-51/)! ([bilibili 🔗](https://www.bilibili.com/video/BV1avJVeKEFL))
 * **[Jun. 12, 2024]**: We have completed tests in various scenarios and released the [Usage Method](https://github.com/Vancouver-wen/WandCalibration) for Wand Calibration! ([bilibili 🔗](https://www.bilibili.com/video/BV1HQgcebEx8))
 * **[May. 16, 2024]**: The initial development of the [Wand-Calibration](https://www.bilibili.com/video/BV13rJVeuE1L) was completed!
@@ -37,7 +37,7 @@ https://github.com/user-attachments/assets/2ed1ab6d-a460-4aef-8a22-444395619660
 ## 👋 Overview
 Wand Calibration is a tool used for multi-camera joint calibration, which achieves the joint calibration of multiple cameras by swinging a calibration wand. Given a set of captured calibration images, this tool can return precise camera intrinsic and extrinsic parameters. This is particularly important for applications such as large-format high-precision positioning and measurement, scene stitching, and 3D human pose estimation.
 
-![GIF展示](assets/animation.gif "GIF Title")
+![GIF展示](assets/animation.gif)
 
 
 ## 🚀 Set Up
