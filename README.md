@@ -58,7 +58,7 @@ python main.py --config "config file path"
 >
 > 2. Bundle Adjustment is very sensitive to the initial values of the intrinsic parameters. The accuracy of the intrinsic parameters directly affects the upper limit of bundle adjustment.
 >
-> 3. If you wish to construct your own calibration data, please follow the steps outlined in **_bluePrint/Material.md_**.
+> 3. If you wish to construct your own calibration data, please follow the steps outlined in [**_bluePrint/Material.md_**](https://github.com/Vancouver-wen/WandCalibration/blob/main/bluePrint/Material.md).
 
 
 Use the prepared intrinsic calibration data and extrinsic calibration data with the following command:
@@ -101,6 +101,9 @@ The well-organized directory structure should look like this:
 | Datasets | Google Drive | Baidu Netdisk |
 | - | - | - |
 | Indoor Tabletennis | [imageCollect.zip](https://drive.google.com/file/d/196Ow0GzzVFBvj4z0CCTwVlLGJvAHSYbq/view?usp=sharing) | [imageCollect](https://pan.baidu.com/s/1SihJdx6WulFQqCobCZn3_w?pwd=vwys) |
+
+## 🍎 Issues
+Welcome to provide your valuable suggestions!
 
 ## 💫 Contributions
 We would love to hear from the broader CV, Machine Learning, and Software Engineering research communities, and we welcome any contributions, pull requests, or issues!

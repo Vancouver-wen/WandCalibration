@@ -1,16 +1,19 @@
-挥杆标定法
+### 挥杆标定法硬件指南
 
-标准化器材展示
-使用方法视频
-https://ones.ainewera.com/wiki/api/wiki/editor/JNwe8qUX/XBUyqCL3/resources/f1ER88dfAgUgcS4XL_r0FJWpUisNO8msVDjNAJ03y6o.mp4?token=W.ofEhDdPUGjj6qIP_ZMxJ7W-NVd232OfKx0mpjVaJfqsDN6fQBUrxHfVW_2T8FTk
-细节展示
+##### 挥杆标定使用视频
+[![挥杆标定使用指南](https://i0.hdslb.com/bfs/archive/4476dad20dfd635f4ee25c27f88d74c1135718e7.png@320w_200h_1c_!web-space-index-myvideo.avif)]([Bilibili视频链接](https://www.bilibili.com/video/BV1HQgcebEx8))
 
 
+##### 标准化器材细节展示
+![T型标定杆与L型标定杆](T-Wand-Calibration.png)
+
+##### 加工厂图纸：
+```
+3MarkerWand.STEP
+```
 
 
-标准化采购器材（已采购）：
-
-
+##### 其余标准化采购器材：
 
 
 【淘宝】https://m.tb.cn/h.g0stCLRSFBMTDmu?tk=9j17WrtP4Ov CZ3456 「304不锈钢杯头内六角穿墙螺丝长螺杆加长螺栓对穿丝杆M2M3M4M5M20」 点击链接直接打开 或者 淘宝搜索直接打开 6份(共60个)                                                                                                                                                                                     

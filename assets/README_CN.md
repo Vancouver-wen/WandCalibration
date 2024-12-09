@@ -58,7 +58,7 @@ python main.py --config "config file path"
 >
 > 2. 捆绑调整对内参的初始值非常敏感。内参的准确性直接影响捆绑调整的上限。
 >
-> 3. 如果你想构建自己的校准数据，请按照**_bluePrint/Material.md_**中阐述的步骤进行。
+> 3. 如果你想构建自己的校准数据，请按照[**_bluePrint/Material.md_**](https://github.com/Vancouver-wen/WandCalibration/blob/main/bluePrint/Material.md)中阐述的步骤进行。
 
 
 使用准备好的内参标定数据和外参标定数据：
@@ -101,6 +101,9 @@ unzip imageCollect.zip
 | Datasets | Google Drive | Baidu Netdisk |
 | - | - | - |
 | Indoor Tabletennis | [imageCollect.zip](https://drive.google.com/file/d/196Ow0GzzVFBvj4z0CCTwVlLGJvAHSYbq/view?usp=sharing) | [imageCollect](https://pan.baidu.com/s/1SihJdx6WulFQqCobCZn3_w?pwd=vwys) |
+
+## 🍎 Issues
+欢迎您提出宝贵的建议！
 
 ## 💫 Contributions
 我们非常希望听到来自计算机视觉、机器学习以及软件工程研究社区的广泛声音，我们欢迎任何形式的贡献、拉取请求或问题！
