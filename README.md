@@ -4,7 +4,7 @@ calibratie multi cameras with 3 marker wand
 ##### 注意事项：
 1. 本仓库用于校准有共视区域的多相机系统
 2. 需保证采集的图像是帧同步的
-3. bundle adjustment 对内参初值非常敏感,内参的精度直接关系到捆绑调整的 upper bound
+3. Bundle Adjustment 对内参初值非常敏感,内参的精度直接关系到捆绑调整的上限
 
 ##### 环境配置 python=3.9
 conda update -n base -c defaults conda
@@ -13,6 +13,9 @@ conda update -n base -c defaults conda
 
 ##### 使用方法:
 1. 根据配置文件制作T型杆与L型杆
+    1. SolidWorks 制作图纸位于 bluePrint/3MarkerWand.STEP
+    2. 根据 bluePrint/Material.md 购买其他配件
+
 2. 采集
     1. 内参图像
     2. 空场图片
@@ -38,7 +41,3 @@ conda update -n base -c defaults conda
     ```
     python main.py --config "config file path"
     ```
-
-##### TODO List:
-1. vis_reproj_all展示所有重投影的pole,通过颜色展示其reproj_error与mean_pixel_error的比值
-2. 给labelme的enhance mode添加初始化
