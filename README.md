@@ -42,3 +42,4 @@ conda update -n base -c defaults conda
 ##### TODO List:
 1. vis_reproj_all展示所有重投影的pole,通过颜色展示其reproj_error与mean_pixel_error的比值
 2. 给labelme的enhance mode添加初始化
+3. 优化单相机视野的可视化，添加轨迹的动态显示
