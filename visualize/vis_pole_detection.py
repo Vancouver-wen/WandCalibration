@@ -2,12 +2,14 @@ import os
 import sys
 import random
 import copy
+import glob
 
 import numpy as np
 import cv2
 from joblib import Parallel,delayed
 from tqdm import tqdm
 from loguru import logger
+from natsort import natsorted
 
 from extrinsicParameter.poleDetection.blobDetection import get_cam_list
 from utils.imageConcat import show_multi_imgs
@@ -18,7 +20,8 @@ def vis_one_frame(
         frame_path,
         save_folder,
         color,
-        min_threshold
+        min_threshold,
+        return_image=False
     ):
     frame=cv2.imread(frame_path)
     origin=copy.deepcopy(frame)
@@ -48,7 +51,10 @@ def vis_one_frame(
     middle=cv2.cvtColor(middle,cv2.COLOR_GRAY2BGR)
     ret,threshold=cv2.threshold(middle,min_threshold,255,cv2.THRESH_BINARY)
     result=show_multi_imgs(scale=1,imglist=[frame,middle,threshold],order=(3,1))
-    cv2.imwrite(os.path.join(save_folder,f'cam{step+1}.jpg'),result)
+    if return_image:
+        return frame
+    else:
+        cv2.imwrite(os.path.join(save_folder,f'cam{step+1}.jpg'),result)
 
 def vis_each_pole(
         save_folder,
@@ -86,7 +92,8 @@ def vis_pole(
         pole_lists,
         vis_num=300,
         color='red',
-        threshold=100
+        threshold=100,
+        video=False
     ):
     debug_path=os.path.join(image_path,"vis_poles")
     if not os.path.exists(debug_path):
@@ -99,7 +106,20 @@ def vis_pole(
         delayed(save_each_pole)(pole_list,frame_list,debug_path,step,color,threshold)
         for step,(pole_list,frame_list) in enumerate(tqdm(iteration))
     )
-
+    if video:
+        out=None
+        for image_list,pole_list in tqdm(list(zip(frame_lists,pole_lists))):
+            images=Parallel(n_jobs=cam_num,backend="threading")(
+                delayed(vis_one_frame)(None,pole,frame_path,None,color,threshold,True)
+                for frame_path,pole in list(zip(image_list,pole_list))
+            )
+            image=show_multi_imgs(scale=1,imglist=images,order=(4,6))
+            if not out:
+                height,width,_=image.shape
+                out = cv2.VideoWriter(os.path.join(image_path,'video.avi'), cv2.VideoWriter_fourcc(*'MJPG'), 30, frameSize=(width,height))
+            out.write(image)
+        out.release()
+        # import pdb;pdb.set_trace()
 
 if __name__=="__main__":
     pass

@@ -81,7 +81,7 @@ def get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intri
 
 def get_scaled_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic):
     t_ratio=get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic,"init")
-    return R21,t21*t_ratio
+    return R21,t21*t_ratio,t_ratio
 
 def verify_scaled_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic):
     t_ratio=get_scale_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic,"verify_init")

@@ -15,6 +15,7 @@ from joblib import Parallel,delayed
 import torch.multiprocessing as mp
 from loguru import logger
 from extrinsicParameter.refinePose.so3_exp_map import so3_exp_map
+from extrinsicParameter.refinePose.rotation_conversions import matrix_to_quaternion,quaternion_to_matrix
 
 class BoundleAdjustment(nn.Module):
     def __init__(
@@ -23,6 +24,7 @@ class BoundleAdjustment(nn.Module):
             pole_definition,
             cam_num,
             init_intrinsic,
+            rotation_representation,
             init_extrinsic,
             image_num,
             init_pole_3ds,
@@ -30,6 +32,7 @@ class BoundleAdjustment(nn.Module):
             save_path,
         ):
         super().__init__()
+        self.image_num=image_num
         # 常量: pole
         if pole_definition.length_unit=="mm":
             pole_data=torch.tensor(
@@ -51,6 +54,9 @@ class BoundleAdjustment(nn.Module):
         # 常量: 2d检测点 -> 含有None
         self.avails,self.pole_2d_lists=self.get_pole_2d_lists(detected_pole_2ds)
         # 优化量: camera_param 
+        self.rotation_representation=rotation_representation
+        if self.rotation_representation not in ['matrix','vector','quaternion']:
+            raise NotImplementedError(f"rotation_representation should be matrix vector or quaternion")
         self.camera_params=nn.ParameterList()
         for i in range(cam_num):
             K=nn.Parameter(
@@ -67,13 +73,34 @@ class BoundleAdjustment(nn.Module):
                 ),
                 requires_grad=True
             )
-            R=nn.Parameter(
-                data=torch.tensor(
-                    data=self.matrix_to_vector(init_extrinsic[f'cam_{i}_0']['R']),
-                    dtype=torch.float32
-                ),
-                requires_grad=True # if i==0 else False # 第一个相机不需要反传,反传的效果会更好
-            )
+            if self.rotation_representation=='matrix':
+                R=nn.Parameter(
+                    data=torch.tensor(
+                        data=init_extrinsic[f'cam_{i}_0']['R'],
+                        dtype=torch.float32
+                    ),
+                    requires_grad=True
+                )
+            elif self.rotation_representation=='vector':
+                R=nn.Parameter(
+                    data=torch.tensor(
+                        data=self.matrix_to_vector(init_extrinsic[f'cam_{i}_0']['R']),
+                        dtype=torch.float32
+                    ),
+                    requires_grad=True # if i==0 else False # 第一个相机不需要反传,反传的效果会更好
+                )
+            elif self.rotation_representation=='quaternion':
+                R=nn.Parameter(
+                    data=matrix_to_quaternion(
+                        matrix=torch.tensor(
+                            data=init_extrinsic[f'cam_{i}_0']['R'],
+                            dtype=torch.float32
+                        )
+                    ),
+                    requires_grad=True # if i==0 else False # 第一个相机不需要反传,反传的效果会更好
+                )
+            else:
+                raise NotImplementedError(f"rotation_representation should be matrix vector or quaternion")
             t=nn.Parameter(
                 data=torch.tensor(
                     data=init_extrinsic[f'cam_{i}_0']['t'],
@@ -90,7 +117,13 @@ class BoundleAdjustment(nn.Module):
             
             self.camera_params.append(camera_param)
         # 优化量: 3d points
-        self.pole3d_posotions=nn.Parameter(data=torch.tensor(init_pole_3ds,dtype=torch.float32),requires_grad=True)
+        self.pole3d_positions=nn.Parameter(
+            data=torch.tensor(
+                data=init_pole_3ds,
+                dtype=torch.float32
+            ),
+            requires_grad=True
+        )
         # self.pole3d_posotions=nn.ParameterList()
         # for i in range(image_num):
         #     position=nn.Parameter(
@@ -102,7 +135,7 @@ class BoundleAdjustment(nn.Module):
         #     )
         #     self.pole3d_posotions.append(position)
         
-        assert len(self.pole_2d_lists)==len(self.pole3d_posotions)
+        assert len(self.pole_2d_lists)==len(self.pole3d_positions)
         self.list_len=len(self.pole_2d_lists)
         if self.list_len<100:
             logger.warning(f"pole num:{self.list_len}<100, too low")
@@ -118,7 +151,7 @@ class BoundleAdjustment(nn.Module):
         rvec,_=cv2.Rodrigues(rotation_matrix)
         return np.squeeze(rvec)
     
-    def vector_to_matrix(self,rotation_vector,batch=False):
+    def vector_to_matrix(self,rotation_vector,batch=True):
         # 需要支持tensor反向传播
         if batch:
             return so3_exp_map(rotation_vector)
@@ -130,6 +163,14 @@ class BoundleAdjustment(nn.Module):
         self.vmap_projectPoint=torch.vmap(self.projectPoint,in_dims=(1,None,None,None,None,None,None,None,None))
         self.vmap_projectIter=torch.vmap(self.projectIter,in_dims=(0,None,0,0,0,0))
         self.vmap_forward_iter=torch.vmap(self.forward_iter,in_dims=(0,0,0,None,None,None,None))
+        if self.rotation_representation=='matrix':
+            self.rotation_representation_convert=lambda x:x 
+        elif self.rotation_representation=='vector':
+            self.rotation_representation_convert=self.vector_to_matrix
+        elif self.rotation_representation=='quaternion':
+            self.rotation_representation_convert=torch.vmap(quaternion_to_matrix)
+        else:
+            raise NotImplementedError(f"rotation_representation should be matrix vector or quaternion")
     
     def get_pole_2d_lists(self,detected_pole_2d_lists):
         size=(3,2)
@@ -170,7 +211,14 @@ class BoundleAdjustment(nn.Module):
         for camera_param,resolution in list(zip(self.camera_params,self.resolutions)):
             K=camera_param['K'].tolist()
             dist=camera_param['dist'].tolist()
-            R=self.vector_to_matrix(camera_param['R'],batch=False).tolist()
+            if self.rotation_representation=='matrix':
+                R=camera_param['R'].tolist()
+            elif self.rotation_representation=='vector':
+                R=self.vector_to_matrix(camera_param['R'],batch=False).tolist()
+            elif self.rotation_representation=='quaternion':
+                R=quaternion_to_matrix(camera_param['R']).tolist()
+            else:
+                raise NotImplementedError(f"rotation_representation should be matrix vector or quaternion")
             t=camera_param['t'].tolist()
             camera_params.append({
                 'image_size': resolution,
@@ -178,7 +226,7 @@ class BoundleAdjustment(nn.Module):
                 'R':R,'t':t
             })
         pole_3ds=[]
-        for pole_3d in self.pole3d_posotions:
+        for pole_3d in self.pole3d_positions:
             pole_3ds.append(pole_3d.tolist())
         output={
             'calibration':camera_params,
@@ -191,9 +239,10 @@ class BoundleAdjustment(nn.Module):
     # @torch.compile
     def projectPoint(self,X,R,t,K,k1,k2,k3,p1,p2):
         x = R@X+ t
-        x=torch.divide(x,x[-1])
-        r=torch.norm(x[:2])
-        r_2,r_4,r_6=pow(r,2),pow(r,4),pow(r,6)
+        x=torch.divide(x,x[-1]+1e-5) # 防止除 0 
+        # r=torch.norm(x[:2])
+        r_2=torch.sum(x[:2]**2)
+        r_4,r_6=pow(r_2,2),pow(r_2,4)
         x_undistorted=x[0]*(1+k1*r_2+k2*r_4+k3*r_6)+2*p1*x[0]*x[1]+p2*(r_2+2*pow(x[0],2))
         y_undistorted=x[1]*(1+k1*r_2+k2*r_4+k3*r_6)+p1*(r_2+2*pow(x[1],2))+2*p2*x[0]*x[1]
         f_x,f_y,u_0,v_0=K[0][0],K[1][1],K[0,2],K[1,2]
@@ -217,7 +266,12 @@ class BoundleAdjustment(nn.Module):
     def projectIter(self,pole_2d,X,K,R,t,Kd):
         expect_pole_2d=self.projectPoints(X,K,R,t,Kd)
         diff=pole_2d-expect_pole_2d.T
-        loss_reproj=self.reproj_weight*torch.norm(diff,dim=1).mean()
+        # 使用 L1 loss 和 log函数 来防止NaN
+        loss_reproj=torch.norm(diff,dim=1,p=1)
+        # loss_reproj=torch.log(loss_reproj)
+        loss_reproj=self.reproj_weight*loss_reproj
+        # import pdb;pdb.set_trace()
+        loss_reproj=loss_reproj.mean()
         return loss_reproj
     
     def orthogonal(self,camera_params):
@@ -225,10 +279,19 @@ class BoundleAdjustment(nn.Module):
         for camera_param in camera_params:
             rotation_matrix=camera_param['R']
             diff=rotation_matrix@rotation_matrix.T-torch.eye(rotation_matrix.shape[0])
-            loss=torch.norm(diff)
+            loss=torch.norm(diff,p=1)
             losses.append(loss)
         orthogonal_loss=torch.stack(losses).sum()
         return self.orthogonal_weight*orthogonal_loss
+    
+    def quaternion(self,camera_params):
+        losses=[]
+        for camera_param in camera_params:
+            rotation_quaternion=camera_param['R']
+            loss=torch.abs(torch.norm(rotation_quaternion,p=2)-torch.tensor(1.0,dtype=torch.float32))
+            losses.append(loss)
+        quaternion_loss=torch.stack(losses)
+        return self.quaternion_weight*quaternion_loss
 
     def forward_iter(
             self,
@@ -239,17 +302,19 @@ class BoundleAdjustment(nn.Module):
         ):
         # 三个点在一条直线上
         except_pole_3d_1=(self.pole[1]*pole_3d[0]+self.pole[0]*pole_3d[2])/self.pole.sum()
-        loss_line=torch.norm(pole_3d[1]-except_pole_3d_1)
+        loss_line=torch.norm(pole_3d[1]-except_pole_3d_1,p=1)
         # 三点长度为760
-        loss_length=torch.abs(torch.norm(pole_3d[0]-pole_3d[2])-self.pole.sum())
+        loss_length=torch.abs(torch.norm(pole_3d[0]-pole_3d[2],p=1)-self.pole.sum())
         # 3 marker wand loss
         loss_wand=self.line_weight*loss_line+self.length_weight*loss_length
         # 重投影误差
-        # 只支持 rotation_vector 作为中间表示
-        Rs=self.vector_to_matrix(Rs,batch=True)
+        Rs=self.rotation_representation_convert(Rs)
+        # Rs=self.vector_to_matrix(Rs,batch=True)
+        # Rs=self.vmap_quaternion_to_matrix(Rs)
+
         loss_reproj=self.vmap_projectIter(pole_2d_list,pole_3d.T,Ks,Rs,ts,Kds)
         # RuntimeError: vmap: We do not support batching operators that can support dynamic shape. Attempting to batch over indexing with a boolean mask.
-        loss_reproj=loss_reproj*avail  # 起到mask的作用 
+        loss_reproj:torch.Tensor=loss_reproj*avail  # 起到mask的作用 
         # loss_reproj=loss_reproj/loss_reproj.detach() # * 的效果不明显; /的效果很差
         loss_reproj=loss_reproj.mean()
         loss=loss_wand+loss_reproj
@@ -266,7 +331,8 @@ class BoundleAdjustment(nn.Module):
             line_weight=1.0,
             length_weight=1.0,
             reproj_weight=1.0,
-            orthogonal_weight=10.0
+            orthogonal_weight=10.0,
+            quaternion_weight=10.0
         ):
         if not self.has_vmap:
             self.get_vmap_func()
@@ -274,6 +340,7 @@ class BoundleAdjustment(nn.Module):
         self.length_weight=length_weight
         self.reproj_weight=reproj_weight
         self.orthogonal_weight=orthogonal_weight
+        self.quaternion_weight=quaternion_weight
         # 转换 self.camera_params
         Ks,Rs,ts,Kds=[],[],[],[]
         for cam_param in self.camera_params:
@@ -282,19 +349,30 @@ class BoundleAdjustment(nn.Module):
             ts.append(cam_param['t'])
             Kds.append(cam_param['dist'])
         Ks,Rs,ts,Kds=torch.stack(Ks),torch.stack(Rs),torch.stack(ts),torch.stack(Kds)
+        # logger.info(Rs.norm(p=2,dim=1))
 
-        sequential_losses=self.vmap_forward_iter(
+        sequential_losses:torch.Tensor=self.vmap_forward_iter(
             self.pole_2d_lists[mask],
-            self.pole3d_posotions[mask],
+            self.pole3d_positions[mask],
             self.avails[mask],
             Ks,Rs,ts,Kds
         )
-
+        # logger.info(f"{torch.squeeze(sequential_losses)}")
+        sequential_losses=torch.nan_to_num(sequential_losses) # 将nan变成0
         sequential_loss=torch.mean(sequential_losses)
-        loss = sequential_loss
+        if self.rotation_representation=='matrix':
+            essential_loss=torch.mean(self.orthogonal(self.camera_params))
+            loss=sequential_loss + essential_loss
+        elif self.rotation_representation=='vector':
+            loss=sequential_loss
+        elif self.rotation_representation=='quaternion':
+            essential_loss=torch.mean(self.quaternion(self.camera_params))
+            loss=sequential_loss + essential_loss
+        else:
+            raise NotImplementedError(f"rotation representation should be matrix vector or quaternion")
         # loss 的数量级截断
-        if loss.item()>10000:
-            rate=pow(10,len(str(int(loss.item()/10000))))
+        if loss.item()>1000:
+            rate=pow(10,len(str(int(loss.item()/1000))))
             origin=loss.item()
             loss=loss/rate
             logger.warning(f"update loss to:{loss.item()}. loss_origin:{origin} too large, divide {rate}")

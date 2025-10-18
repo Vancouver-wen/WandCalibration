@@ -51,7 +51,7 @@ def get_init_pose(cam_num,pole_lists,intrinsics,pole_param,save_path):
         cam2_intrinsic=intrinsics[cam2_index]
         pole_pairs=get_pole_pairs(cam1_index,cam2_index,pole_lists)
         R21,t21=get_unscaled_intrinsic(pole_pairs,cam1_intrinsic,cam2_intrinsic)
-        R21,t21=get_scaled_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic)
+        R21,t21,t_ratio=get_scaled_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic)
         # verify_scaled_intrinsic(pole_length,pole_pairs,R21,t21,cam1_intrinsic,cam2_intrinsic)
         mst_extrinsic.append([
             cam1_index,
@@ -59,7 +59,7 @@ def get_init_pose(cam_num,pole_lists,intrinsics,pole_param,save_path):
             R21,
             np.squeeze(t21)
         ])
-    list_poses=integrate_pose(cam_num,mst_extrinsic)
+    list_poses:list[dict[str,np.ndarray]]=integrate_pose(cam_num,mst_extrinsic)
     for pose in list_poses:
         pose['R']=pose['R'].tolist()
         pose['t']=pose['t'].tolist()

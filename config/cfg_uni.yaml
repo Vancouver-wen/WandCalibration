@@ -9,19 +9,28 @@
 #     - [extrinsic.json] # 可选:提供的外参初始值
 #     - cam*
 
+seed: null # 3407 null
+
 max_process: 100
 refine_mode: 'process' # thread process distributed
+rotation_representation: 'vector' # matrix vector quaternion
 
-cam_num: 4
+cam_num: 24
 fast_blob: True
-vis_num: 30
+vis_num: 0
+vis_video: False
+
+# board:
+#   type: charucoboard
+#   height: 4
+#   width: 5
+#   square_length: 0.2
+#   marker_length: 0.15
 
 board:
-  type: charucoboard
-  height: 4
-  width: 5
-  square_length: 0.2
-  marker_length: 0.15
+  type: checkerboard
+  height: 8
+  width: 11
 
 pole: 
   color: "red"
@@ -29,17 +38,17 @@ pole:
   d1: 250
   d2: 510
 
-image_path: "imageCollect/paris_0726"
+image_path: "imageCollect/qu_gun_qiu_0927"
 
 # https://imagecolorpicker.com/ 使用该网站确认 minThreshold
 maskBlobParam:
   minThreshold: 50
   minAreaRatio: 1.0e-7
   maxAreaRatio: 1.0e-2
-  expandSize: 3
+  expandSize: 10
 
 poleBlobParam:
-  minThreshold: 50
+  minThreshold: 100
   minAreaRatio: 1.0e-6
   maxAreaRatio: 1.0e-3
   minCircularity: 0.1
@@ -48,7 +57,7 @@ poleBlobParam:
   lineAngle: 2
 
 wandBlobParam:
-  minThreshold: 50
+  minThreshold: 100
   minAreaRatio: 1.0e-6
   maxAreaRatio: 1.0e-3
   minCircularity: 0.1
@@ -56,11 +65,11 @@ wandBlobParam:
   minInertiaRatio: 0.1
 
 bundleAdjustmentWeights:
-  max_norm: null # 梯度裁减防止nan, null表示不使用梯度裁减
-  line_weight: 10.0
-  length_weight: 20.0
+  line_weight: 1.0 # e+1
+  length_weight: 1.0 # e+1
   reproj_weight: 1.0
-  orthogonal_weight: 1.0e+1
+  quaternion_weight: 1.0
+  orthogonal_weight: 10.0
 
 worldCoordParam: 
   # type: wand

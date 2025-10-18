@@ -4,6 +4,7 @@ import time
 import warnings
 warnings.filterwarnings('ignore')
 import math
+import copy
 import threading
 
 import cv2
@@ -24,6 +25,52 @@ from .dataLoader import BoundAdjustmentDataset
 from .linear_warmup_cosine_annealing_warm_restarts_weight_decay import ChainedScheduler
 from utils.verifyAccuracy import verify_accuracy
 
+def update(model:torch.nn.Module,init_error,param_names=[])->list:
+    param_list=[]
+    for name,p in model.named_parameters():
+        param_dict=dict()
+        param_dict['params']=p
+        if ('K' in name) or ('dist' in name):
+            param_dict['lr']=0.0001 # min(5e-4*init_error,1e-1) # lr=5e-3 是比较合适的数值
+            # continue
+        elif 'R' in name:
+            param_dict['lr']=0.001
+        elif 't' in name:
+            param_dict['lr']=0.005
+        else:
+            param_dict['lr']=0.005
+        param_names.append(name)
+        param_list.append(param_dict)
+    return param_list
+
+def nan_grad_to_zero(model:torch.nn.Module,nan_to_num=True):
+    """
+    检查所有参数的梯度是否存在NaN 或 Inf
+    将梯度中的NaN和Inf替换为0
+    """
+    parameters=model.named_parameters()
+    nan_params,inf_params = [],[]
+    for name, param in parameters:
+        if param.grad is not None:
+            if torch.isnan(param.grad).any():
+                nan_params.append(name)
+                # logger.warning(f"NaN gradient detected in parameter {name}, shape: {param.shape}")
+            if torch.isinf(param.grad).any():
+                inf_params.append(name)
+            if nan_to_num:
+                param.grad.data=torch.nan_to_num(param.grad.data,nan=0.0,posinf=0.0, neginf=0.0)
+    # logger.warning(f"NaN gradient detected in parameter {nan_params}")
+    # logger.warning(f"Inf gradient detected in parameter {inf_params}")
+    return nan_params,inf_params
+
+def apply_parameter_constraints(model:torch.nn.Module):
+    # with torch.no_grad():
+    for name,p in model.named_parameters():
+        if 'pole' in name:
+            p.data=torch.clamp(p.data,min=-250.0,max=250.0)
+        if 'dist' in name:
+            p.data=torch.clamp(p.data,min=-0.5, max=0.5)
+
 def multi_thread_train(
         init_error:float,
         model:BoundleAdjustment,
@@ -34,20 +81,19 @@ def multi_thread_train(
     myDataset=BoundAdjustmentDataset(list_len)
     myDataLoader=DataLoader(
         dataset=myDataset,
-        batch_size=100,
+        batch_size=100, # batch size不要开太大，随机梯度下降 随机才是灵魂
         shuffle=True,
         num_workers=1,
         drop_last=True
     )
     model.train()
-    lr=min(5e-4*init_error,1e-1) # lr=5e-3 是比较合适的数值
-    optimizer = torch.optim.Adam(
-        params=model.parameters(),
-        lr=lr
-    )
+    param_names=[]
+    # optimizer = torch.optim.Adam(model.parameters(),lr=min(5e-4*init_error,1e-1))
+    optimizer = torch.optim.Adam(update(model,init_error,param_names))
     lrSchedular = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.5) # ExponentialLR(optimizer, gamma=0.5)
     iteration = 1000 # iteration = 1000
     start=time.time()
+    loss=0.0
     for step in tqdm(range(iteration)):
         for batch in myDataLoader:
             loss=model.forward(
@@ -55,14 +101,28 @@ def multi_thread_train(
                 line_weight=weights.line_weight,
                 length_weight=weights.length_weight,
                 reproj_weight=weights.reproj_weight,
-                orthogonal_weight=weights.orthogonal_weight
+                orthogonal_weight=weights.orthogonal_weight,
+                quaternion_weight=weights.quaternion_weight
             )
             optimizer.zero_grad()
             loss.backward()
-            # clip the grad
-            if weights.max_norm:
-                clip_grad_norm_(model.parameters(), max_norm=weights.max_norm, norm_type=2)
+            # clip the grad 梯度裁剪没有效果
+            # if weights.max_norm:
+            #     clip_grad_norm_(model.parameters(), max_norm=weights.max_norm, norm_type=2)
+            nan_params,inf_params=nan_grad_to_zero(model,nan_to_num=True)
+            if nan_params or inf_params:
+                # import pdb;pdb.set_trace()
+                if set(nan_params+inf_params) & set(param_names): # 集合交集
+                    logger.warning(f"detect nan:{len(nan_params)}:{nan_params} and inf:{len(inf_params)}:{inf_params} in gradient, convert nan to zero")
+                    # continue
+            # if loss==0.0:
+            #     import pdb;pdb.set_trace()
+            model.get_dict()
+            # model_bkp=copy.deepcopy({**dict(model.named_parameters()),**{k+'.grad':v.grad for k,v in model.named_parameters()}})
             optimizer.step()
+            # apply_parameter_constraints(model)
+            # logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t loss:{loss:.5f}")
+            
         if step%10==0:
             logger.info(f"lr:{lrSchedular.get_last_lr()[-1]:.5f}\t loss:{loss:.5f}")
             output=model.get_dict() # 保存结果
@@ -98,7 +158,7 @@ def sub_process_train(
         rank:int,
         barrier,
         verify_message:mp.Queue,
-        lr:float,
+        init_error:float,
         model:BoundleAdjustment,
         weights,
         dataset:Dataset,
@@ -112,8 +172,10 @@ def sub_process_train(
     logger.info(f"{'ddp' if refine_mode=='distributed' else 'sub'} process rank:{rank} has been started")
     cpu_count=model.cpu_count
     list_len=model.list_len
+    lr=min(5e-3*init_error/cpu_count,1e-2) # lr=5e-3 是比较合适的数值
+    param_names=[]
     optimizer = torch.optim.Adam(
-        params=model.parameters(),
+        params=update(model,init_error,param_names),
         lr=lr
     )
     lrSchedular = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.5) # ExponentialLR(optimizer, gamma=0.5)
@@ -161,13 +223,20 @@ def sub_process_train(
                 line_weight=weights.line_weight,
                 length_weight=weights.length_weight,
                 reproj_weight=weights.reproj_weight,
-                orthogonal_weight=weights.orthogonal_weight
+                orthogonal_weight=weights.orthogonal_weight,
+                quaternion_weight=weights.quaternion_weight
             )
             optimizer.zero_grad()
             loss.backward()
             # clip the grad
-            if weights.max_norm:
-                clip_grad_norm_(model.parameters(), max_norm=weights.max_norm, norm_type=2)
+            # if weights.max_norm:
+            #     clip_grad_norm_(model.parameters(), max_norm=weights.max_norm, norm_type=2)
+            nan_params,inf_params=nan_grad_to_zero(model,nan_to_num=True)
+            if nan_params or inf_params:
+                # import pdb;pdb.set_trace()
+                if set(nan_params+inf_params) & set(param_names): # 集合交集
+                    logger.warning(f"process rank:{rank} detect nan:{len(nan_params)}:{nan_params} and inf:{len(inf_params)}:{inf_params} in gradient, convert nan to zero")
+                    # continue
             optimizer.step()
             if step%10==0:
                 losses.put((rank,loss.item()))
@@ -245,7 +314,6 @@ def multi_process_train(
     thread_count=int(os.cpu_count()/cpu_count+0.5) # define the num threads used in current sub-processes
     list_len=model.list_len
     myDataset=BoundAdjustmentDataset(list_len)
-    lr=min(5e-3*init_error/cpu_count,1e-2) # lr=5e-3 是比较合适的数值
     iteration = max(int(1000/math.sqrt(cpu_count)),1000) # iteration = 1000
     losses=mp.Queue() # put get empty
     verify_message=mp.Queue()
@@ -272,7 +340,7 @@ def multi_process_train(
     for rank in range(cpu_count):
         p=mp.Process(
             target=sub_process_train,
-            args=(refine_mode,rank,barrier,verify_message,lr,model,weights,myDataset,losses,pole_lists,iteration,thread_count),
+            args=(refine_mode,rank,barrier,verify_message,init_error,model,weights,myDataset,losses,pole_lists,iteration,thread_count),
             name=f"train{rank}",
             daemon=True
         )
@@ -282,11 +350,37 @@ def multi_process_train(
     for p in processes:
         p.join()
 
+def comprehensive_nan_check(model:torch.nn.Module, check_gradients=True):
+    """全面检查模型参数和梯度"""
+    issues_found = False
+    # 检查参数
+    for name, param in model.named_parameters():
+        if torch.isnan(param).any():
+            logger.error(f"NaN in parameter: {name}")
+            issues_found = True
+        elif torch.isinf(param).any():
+            logger.error(f"Inf in parameter: {name}")
+            issues_found = True
+    # 检查梯度
+    if check_gradients:
+        for name, param in model.named_parameters():
+            if param.grad is not None:
+                if torch.isnan(param.grad).any():
+                    logger.error(f"NaN in gradient: {name}")
+                    issues_found = True
+                elif torch.isinf(param.grad).any():
+                    logger.error(f"Inf in gradient: {name}")
+                    issues_found = True
+    # if not issues_found:
+    #     print("✅ 模型参数和梯度正常")
+    return issues_found
+
 def get_refine_pose(
         max_process,
         cam_num,
         pole_lists,
         intrinsics,
+        rotation_representation,
         pole_param,
         init_poses,
         save_path,
@@ -319,12 +413,15 @@ def get_refine_pose(
         pole_definition=pole_param,
         cam_num=cam_num,
         init_intrinsic=intrinsics,
+        rotation_representation=rotation_representation,
         init_extrinsic=init_poses,
         image_num=np.array(mask).sum(),
         init_pole_3ds=masked_pole_3ds,
         detected_pole_2ds=masked_pole_lists,
         save_path=save_path
     )
+    if comprehensive_nan_check(myBoundAdjustment):
+        import pdb;pdb.set_trace()
     # 计算初始化精度
     logger.info(f"calculate boundle adjustment init pixel error to set init learning rate")
     output=myBoundAdjustment.get_dict() # 保存结果

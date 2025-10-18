@@ -1,10 +1,13 @@
 import os
 import sys
+import random
 import json
 import argparse
 
 import cv2
 import yaml
+import torch
+import numpy as np
 from easydict import EasyDict
 from loguru import logger
 
@@ -29,6 +32,15 @@ class OptiTrack(object):
     def __init__(self,config_path):
         self.config=EasyDict(get_yaml_data(config_path))
         logger.info(self.config)
+        if self.config.seed:
+            random.seed(self.config.seed)
+            np.random.seed(self.config.seed)
+            torch.set_printoptions(precision=1) # torch打印一位小数
+            torch.manual_seed(self.config.seed)
+            torch.cuda.manual_seed(self.config.seed)
+            torch.cuda.manual_seed_all(self.config.seed)
+            torch.backends.cudnn.deterministic=True
+
     def add_intrinsic(self):
         self.intrinsic=get_intrinsic(
             cam_num=self.config.cam_num,
@@ -73,7 +85,8 @@ class OptiTrack(object):
                 pole_lists=self.pole,
                 vis_num=self.config.vis_num,
                 color=self.config.pole.color,
-                threshold=self.config.poleBlobParam.minThreshold
+                threshold=self.config.poleBlobParam.minThreshold,
+                video=self.config.vis_video
             )
         except KeyboardInterrupt:
             logger.info(f"early stop pole detection visualizer")
@@ -135,6 +148,7 @@ class OptiTrack(object):
                     cam_num=self.config.cam_num,
                     pole_lists=self.pole,
                     intrinsics=self.intrinsic,
+                    rotation_representation=self.config.rotation_representation,
                     pole_param=self.config.pole,
                     init_poses=self.pose,
                     save_path=save_path,
@@ -151,6 +165,7 @@ class OptiTrack(object):
                 cam_num=self.config.cam_num,
                 pole_lists=self.pole,
                 intrinsics=self.intrinsic,
+                rotation_representation=self.config.rotation_representation,
                 pole_param=self.config.pole,
                 init_poses=self.pose,
                 save_path=save_path,
