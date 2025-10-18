@@ -25,20 +25,20 @@ from .dataLoader import BoundAdjustmentDataset
 from .linear_warmup_cosine_annealing_warm_restarts_weight_decay import ChainedScheduler
 from utils.verifyAccuracy import verify_accuracy
 
-def update(model:torch.nn.Module,init_error,param_names=[])->list:
+def update(model:torch.nn.Module,lr=None,param_names=[])->list:
     param_list=[]
     for name,p in model.named_parameters():
         param_dict=dict()
         param_dict['params']=p
         if ('K' in name) or ('dist' in name):
-            param_dict['lr']=0.0001 # min(5e-4*init_error,1e-1) # lr=5e-3 是比较合适的数值
+            param_dict['lr']=lr if lr is not None else 0.0001#  min(5e-4*init_error,1e-1) min(5e-3*init_error/cpu_count,1e-2) # lr=5e-3 是比较合适的数值
             # continue
         elif 'R' in name:
-            param_dict['lr']=0.001
+            param_dict['lr']=lr if lr is not None else 0.001
         elif 't' in name:
-            param_dict['lr']=0.005
+            param_dict['lr']=lr if lr is not None else 0.005
         else:
-            param_dict['lr']=0.005
+            param_dict['lr']=lr if lr is not None else 0.005
         param_names.append(name)
         param_list.append(param_dict)
     return param_list
@@ -88,8 +88,9 @@ def multi_thread_train(
     )
     model.train()
     param_names=[]
+    lr=min(5e-4*init_error,1e-1)
     # optimizer = torch.optim.Adam(model.parameters(),lr=min(5e-4*init_error,1e-1))
-    optimizer = torch.optim.Adam(update(model,init_error,param_names))
+    optimizer = torch.optim.Adam(update(model,lr,param_names))
     lrSchedular = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.5) # ExponentialLR(optimizer, gamma=0.5)
     iteration = 1000 # iteration = 1000
     start=time.time()
@@ -172,12 +173,9 @@ def sub_process_train(
     logger.info(f"{'ddp' if refine_mode=='distributed' else 'sub'} process rank:{rank} has been started")
     cpu_count=model.cpu_count
     list_len=model.list_len
-    lr=min(5e-3*init_error/cpu_count,1e-2) # lr=5e-3 是比较合适的数值
     param_names=[]
-    optimizer = torch.optim.Adam(
-        params=update(model,init_error,param_names),
-        lr=lr
-    )
+    lr = min(5e-3*init_error/cpu_count,1e-2)
+    optimizer = torch.optim.Adam(update(model,lr,param_names))
     lrSchedular = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.5) # ExponentialLR(optimizer, gamma=0.5)
     step_frequence=100 # int(iteration/math.sqrt(cpu_count))
     start=time.time()

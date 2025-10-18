@@ -38,7 +38,7 @@ pole:
   d1: 250
   d2: 510
 
-image_path: "imageCollect/qu_gun_qiu_0927"
+image_path: "imageCollect/qu_gun_qiu_0917"
 
 # https://imagecolorpicker.com/ 使用该网站确认 minThreshold
 maskBlobParam:
