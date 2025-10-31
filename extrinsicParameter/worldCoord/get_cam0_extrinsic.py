@@ -137,21 +137,35 @@ def get_cam0_extrinsic(
                 save_folder=os.path.join(wand_folder,"vis_wand_detection")
             )
             points=format_labelme_objs(objs,cam_params,world_coord_param['PointCoordinates'])
+            # 排除 重建点数量不够的点
+            for key in list(points.keys()):
+                if len(points[key]['point_2ds'])<world_coord_param['min_vis_num']:
+                    points.pop(key)
+                    logger.warning(f"discard 3D point {key} for less than threshold:{world_coord_param['min_vis_num']} cameras")
+            # import pdb;pdb.set_trace()
             points=triangulate_points(points)
-            point_3ds=[points[key]['pred_point_3d'] for key in points.keys()]
+            # 排除 重建误差过大的点，认为是异常点，不应该参与ICP匹配
+            # for key in list(points.keys()):
+            #     if points[key]['reconstruction_mean_pixel_error']>50:
+            #         points.pop(key)
+            #         logger.warning(f"discard 3D point {key} for larger than threshold:{50} reconstruction mean pixel error")
+            # import pdb;pdb.set_trace()
             vis_points(
-                point_3ds=point_3ds,
+                point_3ds={key:points[key]['pred_point_3d'] for key in points.keys()},
                 image_path=wand_folder,
                 cam_num=cam_num,
                 cam_params=cam_params,
                 save_folder=os.path.join(wand_folder,"vis_reconstruct_points")
             )
+            # import pdb;pdb.set_trace()
             R,t=solve_icp(
-                target=point_3ds,
-                source=world_coord_param['PointCoordinates']
+                target=[points[key]['pred_point_3d'] for key in points.keys()],
+                source=[world_coord_param['PointCoordinates'][key] for key in points.keys()]
             )
             transfered_point_3ds=transfer_point_3ds(
-                point_3ds,R,t
+                point_3ds=[points[key]['pred_point_3d'] for key in points.keys()],
+                R=R,
+                t=t
             )
             cam0_R,cam0_t=R,t
             # print(R,t)

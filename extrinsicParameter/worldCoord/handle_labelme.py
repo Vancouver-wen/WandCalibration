@@ -37,7 +37,7 @@ def vis_objs(objs,image_path,cam_num,save_folder):
             frame=cv2.circle(
                 img=frame,
                 center=point.astype(np.int32),
-                radius=5,
+                radius=3,
                 color=(0,255,0),
                 thickness=-1
             )
@@ -46,9 +46,9 @@ def vis_objs(objs,image_path,cam_num,save_folder):
                 text=f"{key}",
                 org=point.astype(np.int32),
                 fontFace=cv2.FONT_HERSHEY_COMPLEX,
-                fontScale=3,
+                fontScale=1,
                 color=(0,255,0),
-                thickness=3
+                thickness=2
             )
     frames=[
         cv2.addWeighted(origin,0.5,frame,0.5,0)
@@ -60,17 +60,18 @@ def vis_objs(objs,image_path,cam_num,save_folder):
             frame
         )
 
-def format_labelme_objs(objs,cam_params,point_coordinates):
-    points=dict()
+def format_labelme_objs(objs:list[dict],cam_params,point_coordinates):
+    points:dict[int,dict[str,list]]=dict()
     for step,point_coordinate in enumerate(point_coordinates):
         points.setdefault(step,dict())
         points[step].setdefault('point_2ds',[])
         points[step].setdefault('cam_params',[])
         points[step]['expect_point_3d']=point_coordinate
+    assert len(objs)==len(cam_params),f"labelme json num must equal to camera num"
     for obj,cam_param in list(zip(objs,cam_params)):
         keys=natsorted(obj.keys())
         for key in keys:
-            point_2d=obj[key]
+            point_2d:np.ndarray=obj[key]
             points[key]['point_2ds'].append(point_2d.tolist())
             points[key]['cam_params'].append(cam_param)
     return points
@@ -97,17 +98,17 @@ def triangulate_point(key,point):
     diff=np.array(point_2ds)- pred_point_2ds
     diff=np.linalg.norm(diff,axis=1)
     logger.info(f"label:{key} reconstruction pixel error: {np.around(diff,3).tolist()}")
+    point['reconstruction_mean_pixel_error']=np.mean(diff)
     return point_3d
 
 def triangulate_points(points):
     keys=natsorted(points.keys())
     for key in keys:
-
         point_3d=triangulate_point(key,points[key])
     return points
 
 def vis_points(
-        point_3ds,
+        point_3ds:list|dict,
         image_path,
         cam_num,
         cam_params,
@@ -118,7 +119,13 @@ def vis_points(
     frame_list=get_cam_list(image_path,cam_num)[0]
     frames=[cv2.imread(frame_path) for frame_path in frame_list]
     origins=[copy.deepcopy(frame) for frame in frames]
-    for step,point_3d in enumerate(point_3ds):
+    if isinstance(point_3ds,list) or isinstance(point_3ds,np.ndarray):
+        generator=enumerate(point_3ds)
+    elif isinstance(point_3ds,dict):
+        generator=point_3ds.items()
+    else:
+        raise NotImplementedError(f"point_3ds only support type - list np.ndarray or dict")
+    for key,point_3d in generator:
         for frame,camera_param in list(zip(frames,cam_params)):
             pred_point_2d,_=cv2.projectPoints(
                 objectPoints=np.expand_dims(np.array(point_3d),axis=0),
@@ -137,7 +144,7 @@ def vis_points(
             )
             frame=cv2.putText(
                 img=frame,
-                text=f"{step}",
+                text=f"{key}",
                 org=pred_point_2d.astype(np.int32),
                 fontFace=cv2.FONT_HERSHEY_COMPLEX,
                 fontScale=1,
