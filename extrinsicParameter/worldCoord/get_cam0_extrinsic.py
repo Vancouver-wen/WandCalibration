@@ -21,6 +21,7 @@ from utils.imageConcat import show_multi_imgs
 from .handle_labelme import get_labelme_json,vis_objs,format_labelme_objs,triangulate_points,vis_points
 from .handle_board import get_corner_map,triangulate_corner_map
 from .enhanced_labelme import EnhancedLabelme,fit_model,vis_labels
+from .rescale import get_rescale_ratio,rescale_world_coord
 
 def vis_point3ds(
         image_path,
@@ -105,11 +106,12 @@ def transfer_point_3ds(
 def get_cam0_extrinsic(
         cam_num,
         cam_params,
+        poles,
         masks,
         image_path,
         world_coord_param,
         wand_blob_param,
-        fastBlob=True
+        fastBlob=True,
     ):
     """
     给出 cam0 在 world coordinate 下的 Rotation 和 tran
@@ -137,21 +139,53 @@ def get_cam0_extrinsic(
                 save_folder=os.path.join(wand_folder,"vis_wand_detection")
             )
             points=format_labelme_objs(objs,cam_params,world_coord_param['PointCoordinates'])
+            # 排除 重建点数量不够的点
+            for key in list(points.keys()):
+                if len(points[key]['point_2ds'])<world_coord_param['min_vis_num']:
+                    points.pop(key)
+                    logger.warning(f"discard 3D point {key} for less than threshold:{world_coord_param['min_vis_num']} cameras")
+            # import pdb;pdb.set_trace()
             points=triangulate_points(points)
-            point_3ds=[points[key]['pred_point_3d'] for key in points.keys()]
+            # 排除 重建误差过大的点，认为是异常点，不应该参与ICP匹配
+            # for key in list(points.keys()):
+            #     if points[key]['reconstruction_mean_pixel_error']>50:
+            #         points.pop(key)
+            #         logger.warning(f"discard 3D point {key} for larger than threshold:{50} reconstruction mean pixel error")
+            # import pdb;pdb.set_trace()
             vis_points(
-                point_3ds=point_3ds,
+                point_3ds={key:points[key]['pred_point_3d'] for key in points.keys()},
                 image_path=wand_folder,
                 cam_num=cam_num,
                 cam_params=cam_params,
                 save_folder=os.path.join(wand_folder,"vis_reconstruct_points")
             )
+            if world_coord_param.rescale:
+                rescale_ratio=get_rescale_ratio(
+                    source=[points[key]['pred_point_3d'] for key in points.keys()],
+                    target=[world_coord_param['PointCoordinates'][key] for key in points.keys()]
+                )
+                # print(cam_params)
+                # print(poles[:5])
+                # print([points[key]['pred_point_3d'] for key in points.keys()][:5])
+                rescale_world_coord(
+                    rescale_ratio=rescale_ratio,
+                    cam_params=cam_params,
+                    poles=poles,
+                    pred_points=[points[key]['pred_point_3d'] for key in points.keys()]
+                )
+                # print('-----------------')
+                # print(cam_params)
+                # print(poles[:5])
+                # print([points[key]['pred_point_3d'] for key in points.keys()][:5])
+                # import pdb;pdb.set_trace()
             R,t=solve_icp(
-                target=point_3ds,
-                source=world_coord_param['PointCoordinates']
+                target=[points[key]['pred_point_3d'] for key in points.keys()],
+                source=[world_coord_param['PointCoordinates'][key] for key in points.keys()]
             )
             transfered_point_3ds=transfer_point_3ds(
-                point_3ds,R,t
+                point_3ds=[points[key]['pred_point_3d'] for key in points.keys()],
+                R=R,
+                t=t
             )
             cam0_R,cam0_t=R,t
             # print(R,t)
@@ -241,6 +275,17 @@ def get_cam0_extrinsic(
             point_3ds=point_3ds,
             save_folder=os.path.join(wand_folder,'vis_reconstruct_points')
         )
+        if world_coord_param.rescale:
+            rescale_ratio=get_rescale_ratio(
+                source=point_3ds,
+                target=world_coord_param['WandPointCoord']
+            )
+            rescale_world_coord(
+                rescale_ratio=rescale_ratio,
+                cam_params=cam_params,
+                poles=poles,
+                pred_points=point_3ds
+            )
         R,t=solve_icp(
             target=point_3ds,
             source=world_coord_param['WandPointCoord']

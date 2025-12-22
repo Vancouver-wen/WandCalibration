@@ -242,7 +242,7 @@ class BoundleAdjustment(nn.Module):
         x=torch.divide(x,x[-1]+1e-5) # 防止除 0 
         # r=torch.norm(x[:2])
         r_2=torch.sum(x[:2]**2)
-        r_4,r_6=pow(r_2,2),pow(r_2,4)
+        r_4,r_6=pow(r_2,2),pow(r_2,3)
         x_undistorted=x[0]*(1+k1*r_2+k2*r_4+k3*r_6)+2*p1*x[0]*x[1]+p2*(r_2+2*pow(x[0],2))
         y_undistorted=x[1]*(1+k1*r_2+k2*r_4+k3*r_6)+p1*(r_2+2*pow(x[1],2))+2*p2*x[0]*x[1]
         f_x,f_y,u_0,v_0=K[0][0],K[1][1],K[0,2],K[1,2]
@@ -267,7 +267,7 @@ class BoundleAdjustment(nn.Module):
         expect_pole_2d=self.projectPoints(X,K,R,t,Kd)
         diff=pole_2d-expect_pole_2d.T
         # 使用 L1 loss 和 log函数 来防止NaN
-        loss_reproj=torch.norm(diff,dim=1,p=1)
+        loss_reproj=torch.norm(diff,dim=1,p=2) # 使用 l2 loss 收敛效果更好
         # loss_reproj=torch.log(loss_reproj)
         loss_reproj=self.reproj_weight*loss_reproj
         # import pdb;pdb.set_trace()
@@ -302,9 +302,9 @@ class BoundleAdjustment(nn.Module):
         ):
         # 三个点在一条直线上
         except_pole_3d_1=(self.pole[1]*pole_3d[0]+self.pole[0]*pole_3d[2])/self.pole.sum()
-        loss_line=torch.norm(pole_3d[1]-except_pole_3d_1,p=1)
+        loss_line=torch.norm(pole_3d[1]-except_pole_3d_1,p=2) # 使用 l2 loss 收敛效果更好
         # 三点长度为760
-        loss_length=torch.abs(torch.norm(pole_3d[0]-pole_3d[2],p=1)-self.pole.sum())
+        loss_length=torch.abs(torch.norm(pole_3d[0]-pole_3d[2],p=2)-self.pole.sum()) # 使用 l2 loss 收敛效果更好
         # 3 marker wand loss
         loss_wand=self.line_weight*loss_line+self.length_weight*loss_length
         # 重投影误差

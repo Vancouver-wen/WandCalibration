@@ -9,37 +9,105 @@
 #     - [extrinsic.json] # 可选:提供的外参初始值
 #     - cam*
 
-cam_num: 6
+seed: 3407 # 3407 null
 
-board: !include "config/board/charucoboard_4_5.yaml"
-pole: !include "config/pole/pole760.yaml"
+max_process: 100
+refine_mode: 'process' # thread process distributed
+rotation_representation: 'vector' # matrix vector quaternion
 
-image_path: "imageCollect/imageCollectWTT"
+cam_num: 4
+fast_blob: True
+vis_num: 30
+vis_video: False
 
-vis_num: 300
+# board:
+#   type: charucoboard
+#   height: 4
+#   width: 5
+#   square_length: 0.2
+#   marker_length: 0.15
 
+board:
+  type: checkerboard
+  height: 7
+  width: 8
+
+pole: 
+  color: "red"
+  length_unit: "mm"
+  d1: 250
+  d2: 510
+
+image_path: "imageCollect/wtt_1128"
+
+# https://imagecolorpicker.com/ 使用该网站确认 minThreshold
 maskBlobParam:
-  minThreshold: 220
+  minThreshold: 50
   minAreaRatio: 1.0e-7
   maxAreaRatio: 1.0e-2
-  expandSize: 3
+  expandSize: 10
 
 poleBlobParam:
-  minThreshold: 240
-  minAreaRatio: 2.0e-6
-  maxAreaRatio: 6.5e-4
-  minCircularity: 0.2
-  minConvexity: 0.2
+  minThreshold: 50
+  minAreaRatio: 1.0e-6
+  maxAreaRatio: 1.0e-3
+  minCircularity: 0.1
+  minConvexity: 0.1
   minInertiaRatio: 0.1
   lineAngle: 2
 
 wandBlobParam:
-  minThreshold: 240
-  minAreaRatio: 2.0e-6
-  maxAreaRatio: 6.5e-4
-  minCircularity: 0.2
-  minConvexity: 0.2
+  minThreshold: 50
+  minAreaRatio: 1.0e-6
+  maxAreaRatio: 1.0e-3
+  minCircularity: 0.1
+  minConvexity: 0.1
   minInertiaRatio: 0.1
 
-# worldCoordParam: !include "config/point/point_wtt.yaml"
-worldCoordParam: !include "config/wand/wand_wtt.yaml"
+bundleAdjustmentWeights:
+  line_weight: 10.0 # e+1
+  length_weight: 20.0 # e+1
+  reproj_weight: 1.0
+  quaternion_weight: 1.0
+  orthogonal_weight: 10.0
+
+worldCoordParam: 
+  # rescale 仅仅适用于 type 为 wand 与 labelme
+  rescale: True # 捆绑调整后是否进行缩放以更好地对齐世界坐标系
+  # type: wand
+  # mode: mcp # dbscan sort mcp
+  # color: "red"
+  # # 角B 是直角
+  # # AB 为短边
+  # # BC 为长边
+  # # AC 为斜边
+  # WandDefinition:
+  #   - 0.45 
+  #   - 0.6
+  #   - 0.75
+  # WandPointCoord:
+  #   - [ -0.45,    0,  0.9]
+  #   - [ 0 ,   0,    0.9]
+  #   - [0,    -0.6,  0.9]
+  # 乒乓球桌子高 0.76m
+  # L型尺高 0.14m = 14cm
+  type: labelme
+  mode: norm # norm enhance
+  min_vis_num: 2 # 最少应该有几个相机能看到角点 数量少于阈值的角点将会被抛弃
+  PointCoordinates:  # 请注意遵循右手系
+  #   # 顺序严格对应 图像中点击的至少四个点
+  #   # [x,y,z]
+    - [0.7625,1.37,0.76]
+    - [-0.7625,1.37,0.76]
+    - [-0.7625,-1.37,0.76]
+    - [0.7625,-1.37,0.76]
+
+convexHull:
+  # length width height 采样点 范围,单位m
+  # sample 点之间的间隔,单位m -> 控制采样点的数量
+  # min_vis 最好的共视相机数量阈值
+  length: [-10,10]
+  width: [-10,10]
+  height: [0,10]
+  sample: 0.1
+  min_vis: 2

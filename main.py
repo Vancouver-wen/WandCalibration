@@ -22,6 +22,7 @@ from extrinsicParameter.initPose.initPose import get_init_pose
 from visualize.get_init_camera_params import get_init_camera_params
 from extrinsicParameter.refinePose.refinePose import get_refine_pose
 from utils.verifyAccuracy import verify_accuracy
+from extrinsicParameter.worldCoord.rescale import rescale_world_coord
 from extrinsicParameter.worldCoord.get_cam0_extrinsic import get_cam0_extrinsic
 from extrinsicParameter.worldCoord.adjustCamParam import adjust_camera_params
 from extrinsicParameter.convexHull.getPointCloud import get_point_cloud
@@ -197,6 +198,7 @@ class OptiTrack(object):
         cam0_R,cam0_t=get_cam0_extrinsic(
             cam_num=self.config.cam_num,
             cam_params=self.output['calibration'],
+            poles=self.output['poles'],
             masks=self.mask,
             image_path=self.config.image_path,
             world_coord_param=self.config.worldCoordParam,
@@ -211,15 +213,15 @@ class OptiTrack(object):
             image_path=self.config.image_path,
             world_coord_param=self.config.worldCoordParam,
         )
-        self.output['sampled_points']=get_point_cloud(
-            camera_params=self.output['calibration'],
-            convex_hull=self.config.convexHull,
-        )
         with open(os.path.join(self.config.image_path,'world_pose.json'),'w') as f:
             json.dump(self.output['calibration'],f,indent=4)
         with open(os.path.join(self.config.image_path,'world_pole.json'),'w') as f:
             json.dump(self.output['poles'],f,indent=4)
     def visualize(self):
+        self.output['sampled_points']=get_point_cloud(
+            camera_params=self.output['calibration'],
+            convex_hull=self.config.convexHull,
+        )
         vis_camera_params(
             camera_params=self.output['calibration'],
             poles=self.output['poles'],

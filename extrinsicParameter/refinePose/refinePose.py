@@ -312,7 +312,8 @@ def multi_process_train(
     thread_count=int(os.cpu_count()/cpu_count+0.5) # define the num threads used in current sub-processes
     list_len=model.list_len
     myDataset=BoundAdjustmentDataset(list_len)
-    iteration = max(int(1000/math.sqrt(cpu_count)),1000) # iteration = 1000
+    iteration = 1000
+    iteration = max(int(iteration/math.sqrt(cpu_count)),iteration) 
     losses=mp.Queue() # put get empty
     verify_message=mp.Queue()
     mp.set_sharing_strategy('file_system')

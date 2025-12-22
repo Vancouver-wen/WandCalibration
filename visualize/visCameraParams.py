@@ -82,7 +82,7 @@ def vis_camera_params(
                 color='gray'
             )
         # 获取 pole 位置
-        for pole in poles if len(poles)<=vis_num else random.sample(poles,vis_num):
+        for pole in poles if len(poles)<=vis_num*5 else random.sample(poles,vis_num*5):
             for point in pole:
                 ax.scatter3D(point[0],point[1],point[2],s=1,color='lightpink')
             A,B,C=pole
@@ -116,9 +116,9 @@ def vis_camera_params(
     def rotate(angle): 
         pbar.update(1)
         ax.view_init(elev=30.0, azim=angle)
-        random.seed(angle) # 更新采样种子
+        random.seed(float(angle)) # 更新采样种子
     # animate, frames=values will be passed to rotate, interval means the the delay between frames in milliseconds
-    rot_animation = animation.FuncAnimation(fig, rotate, init_func=init,frames=np.arange(0,360,angle_interval), interval=15*angle_interval) # 50ms的间隔
+    rot_animation = animation.FuncAnimation(fig, rotate, init_func=init,frames=np.arange(0,360,angle_interval,dtype=np.float32), interval=15*angle_interval) # 50ms的间隔
     # save the animat
     if 'gif' not in save_path:
         logger.warning(f"gif not in save_path:{save_path}, replace it!")
