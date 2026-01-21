@@ -88,8 +88,8 @@ def multi_thread_train(
     )
     model.train()
     param_names=[]
-    lr=min(5e-4*init_error,1e-1)
-    # optimizer = torch.optim.Adam(model.parameters(),lr=min(5e-4*init_error,1e-1))
+    lr=min(5e-4*init_error,1e-2)
+    # optimizer = torch.optim.Adam(model.parameters(),lr=min(5e-4*init_error,1e-2))
     optimizer = torch.optim.Adam(update(model,lr,param_names))
     lrSchedular = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.5) # ExponentialLR(optimizer, gamma=0.5)
     iteration = 1000 # iteration = 1000
@@ -175,8 +175,9 @@ def sub_process_train(
     list_len=model.list_len
     param_names=[]
     lr = min(5e-3*init_error/cpu_count,1e-2)
+    # optimizer = torch.optim.Adam(model.parameters(),lr)
     optimizer = torch.optim.Adam(update(model,lr,param_names))
-    lrSchedular = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.5) # ExponentialLR(optimizer, gamma=0.5)
+    lrSchedular = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.7) # ExponentialLR(optimizer, gamma=0.5)
     step_frequence=100 # int(iteration/math.sqrt(cpu_count))
     start=time.time()
     if rank==0:
@@ -229,7 +230,7 @@ def sub_process_train(
             # clip the grad
             # if weights.max_norm:
             #     clip_grad_norm_(model.parameters(), max_norm=weights.max_norm, norm_type=2)
-            nan_params,inf_params=nan_grad_to_zero(model,nan_to_num=True)
+            nan_params,inf_params=nan_grad_to_zero(model,nan_to_num=True) # 去除梯度中的nan
             if nan_params or inf_params:
                 # import pdb;pdb.set_trace()
                 if set(nan_params+inf_params) & set(param_names): # 集合交集
@@ -312,7 +313,7 @@ def multi_process_train(
     thread_count=int(os.cpu_count()/cpu_count+0.5) # define the num threads used in current sub-processes
     list_len=model.list_len
     myDataset=BoundAdjustmentDataset(list_len)
-    iteration = 1000
+    iteration = 2000
     iteration = max(int(iteration/math.sqrt(cpu_count)),iteration) 
     losses=mp.Queue() # put get empty
     verify_message=mp.Queue()
@@ -429,8 +430,8 @@ def get_refine_pose(
         pole_3ds=output['poles'],
         pole_lists=pole_lists
     )
-    if init_error>=20:
-        logger.warning(f"init pixel error too large, please check intrinsic calibration!")
+    if init_error>=20.0:
+        logger.warning(f"init pixel error:{init_error} too large, please check intrinsic calibration!")
 
     # 训练
     if refine_mode=='thread':

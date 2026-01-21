@@ -49,6 +49,8 @@ class IntrinsicCalibration(object):
         img_points = []
         for image_path in tqdm(image_path_list,position=cam_index):
             img = cv2.imread(image_path)
+            # if img is None:  # 可能存在部分图片损坏的情况
+            #     import pdb;pdb.set_trace()
             img_height, img_width = img.shape[:2]
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             size = gray.shape[::-1]

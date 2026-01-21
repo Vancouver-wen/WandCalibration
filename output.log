@@ -1,0 +1,632 @@
+2026-01-04 19:36:26.095 | INFO     | __main__:__init__:35 - {'seed': None, 'max_process': 100, 'refine_mode': 'process', 'rotation_representation': 'vector', 'cam_num': 24, 'fast_blob': True, 'vis_num': 30, 'vis_video': False, 'board': {'type': 'checkerboard', 'height': 8, 'width': 11}, 'pole': {'color': 'red', 'length_unit': 'mm', 'd1': 500, 'd2': 1000}, 'image_path': 'imageCollect/qu_gun_qiu_1216', 'maskBlobParam': {'minThreshold': 20, 'minAreaRatio': 1e-07, 'maxAreaRatio': 0.01, 'expandSize': 10}, 'poleBlobParam': {'minThreshold': 40, 'minAreaRatio': 1e-06, 'maxAreaRatio': 0.001, 'minCircularity': 0.1, 'minConvexity': 0.1, 'minInertiaRatio': 0.1, 'lineAngle': 2}, 'wandBlobParam': {'minThreshold': 40, 'minAreaRatio': 1e-06, 'maxAreaRatio': 0.001, 'minCircularity': 0.1, 'minConvexity': 0.1, 'minInertiaRatio': 0.1}, 'bundleAdjustmentWeights': {'line_weight': 10.0, 'length_weight': 20.0, 'reproj_weight': 1.0, 'quaternion_weight': 1.0, 'orthogonal_weight': 10.0}, 'worldCoordParam': {'rescale': True, 'type': 'labelme', 'mode': 'norm', 'min_vis_num': 5, 'PointCoordinates': [[0.7, 5.0, 0.0], [5.7, 5.0, 0.0], [10.7, 5.0, 0.0], [15.7, 5.0, 0.0], [20.7, 5.0, 0.0], [25.7, 5.0, 0.0], [30.7, 5.0, 0.0], [35.7, 5.0, 0.0], [40.7, 5.0, 0.0], [45.7, 5.0, 0.0], [50.7, 5.0, 0.0], [55.7, 5.0, 0.0], [60.7, 5.0, 0.0], [65.7, 5.0, 0.0], [70.7, 5.0, 0.0], [75.7, 5.0, 0.0], [80.7, 5.0, 0.0], [85.7, 5.0, 0.0], [90.7, 5.0, 0.0], [0.7, 10.0, 0.0], [5.7, 10.0, 0.0], [10.7, 10.0, 0.0], [15.7, 10.0, 0.0], [20.7, 10.0, 0.0], [25.7, 10.0, 0.0], [30.7, 10.0, 0.0], [35.7, 10.0, 0.0], [40.7, 10.0, 0.0], [45.7, 10.0, 0.0], [50.7, 10.0, 0.0], [55.7, 10.0, 0.0], [60.7, 10.0, 0.0], [65.7, 10.0, 0.0], [70.7, 10.0, 0.0], [75.7, 10.0, 0.0], [80.7, 10.0, 0.0], [85.7, 10.0, 0.0], [90.7, 10.0, 0.0], [0.7, 15.0, 0.0], [5.7, 15.0, 0.0], [10.7, 15.0, 0.0], [15.7, 15.0, 0.0], [20.7, 15.0, 0.0], [25.7, 15.0, 0.0], [30.7, 15.0, 0.0], [35.7, 15.0, 0.0], [40.7, 15.0, 0.0], [45.7, 15.0, 0.0], [50.7, 15.0, 0.0], [55.7, 15.0, 0.0], [60.7, 15.0, 0.0], [65.7, 15.0, 0.0], [70.7, 15.0, 0.0], [75.7, 15.0, 0.0], [80.7, 15.0, 0.0], [85.7, 15.0, 0.0], [90.7, 15.0, 0.0], [0.7, 20.0, 0.0], [5.7, 20.0, 0.0], [10.7, 20.0, 0.0], [15.7, 20.0, 0.0], [20.7, 20.0, 0.0], [25.7, 20.0, 0.0], [30.7, 20.0, 0.0], [35.7, 20.0, 0.0], [40.7, 20.0, 0.0], [45.7, 20.0, 0.0], [50.7, 20.0, 0.0], [55.7, 20.0, 0.0], [60.7, 20.0, 0.0], [65.7, 20.0, 0.0], [70.7, 20.0, 0.0], [75.7, 20.0, 0.0], [80.7, 20.0, 0.0], [85.7, 20.0, 0.0], [90.7, 20.0, 0.0], [0.7, 25.0, 0.0], [5.7, 25.0, 0.0], [10.7, 25.0, 0.0], [15.7, 25.0, 0.0], [20.7, 25.0, 0.0], [25.7, 25.0, 0.0], [30.7, 25.0, 0.0], [35.7, 25.0, 0.0], [40.7, 25.0, 0.0], [45.7, 25.0, 0.0], [50.7, 25.0, 0.0], [55.7, 25.0, 0.0], [60.7, 25.0, 0.0], [65.7, 25.0, 0.0], [70.7, 25.0, 0.0], [75.7, 25.0, 0.0], [80.7, 25.0, 0.0], [85.7, 25.0, 0.0], [90.7, 25.0, 0.0], [0.7, 30.0, 0.0], [5.7, 30.0, 0.0], [10.7, 30.0, 0.0], [15.7, 30.0, 0.0], [20.7, 30.0, 0.0], [25.7, 30.0, 0.0], [30.7, 30.0, 0.0], [35.7, 30.0, 0.0], [40.7, 30.0, 0.0], [45.7, 30.0, 0.0], [50.7, 30.0, 0.0], [55.7, 30.0, 0.0], [60.7, 30.0, 0.0], [65.7, 30.0, 0.0], [70.7, 30.0, 0.0], [75.7, 30.0, 0.0], [80.7, 30.0, 0.0], [85.7, 30.0, 0.0], [90.7, 30.0, 0.0], [0.7, 35.0, 0.0], [5.7, 35.0, 0.0], [10.7, 35.0, 0.0], [15.7, 35.0, 0.0], [20.7, 35.0, 0.0], [25.7, 35.0, 0.0], [30.7, 35.0, 0.0], [35.7, 35.0, 0.0], [40.7, 35.0, 0.0], [45.7, 35.0, 0.0], [50.7, 35.0, 0.0], [55.7, 35.0, 0.0], [60.7, 35.0, 0.0], [65.7, 35.0, 0.0], [70.7, 35.0, 0.0], [75.7, 35.0, 0.0], [80.7, 35.0, 0.0], [85.7, 35.0, 0.0], [90.7, 35.0, 0.0], [0.7, 40.0, 0.0], [5.7, 40.0, 0.0], [10.7, 40.0, 0.0], [15.7, 40.0, 0.0], [20.7, 40.0, 0.0], [25.7, 40.0, 0.0], [30.7, 40.0, 0.0], [35.7, 40.0, 0.0], [40.7, 40.0, 0.0], [45.7, 40.0, 0.0], [50.7, 40.0, 0.0], [55.7, 40.0, 0.0], [60.7, 40.0, 0.0], [65.7, 40.0, 0.0], [70.7, 40.0, 0.0], [75.7, 40.0, 0.0], [80.7, 40.0, 0.0], [85.7, 40.0, 0.0], [90.7, 40.0, 0.0], [0.7, 45.0, 0.0], [5.7, 45.0, 0.0], [10.7, 45.0, 0.0], [15.7, 45.0, 0.0], [20.7, 45.0, 0.0], [25.7, 45.0, 0.0], [30.7, 45.0, 0.0], [35.7, 45.0, 0.0], [40.7, 45.0, 0.0], [45.7, 45.0, 0.0], [50.7, 45.0, 0.0], [55.7, 45.0, 0.0], [60.7, 45.0, 0.0], [65.7, 45.0, 0.0], [70.7, 45.0, 0.0], [75.7, 45.0, 0.0], [80.7, 45.0, 0.0], [85.7, 45.0, 0.0], [90.7, 45.0, 0.0], [0.7, 50.0, 0.0], [5.7, 50.0, 0.0], [10.7, 50.0, 0.0], [15.7, 50.0, 0.0], [20.7, 50.0, 0.0], [25.7, 50.0, 0.0], [30.7, 50.0, 0.0], [35.7, 50.0, 0.0], [40.7, 50.0, 0.0], [45.7, 50.0, 0.0], [50.7, 50.0, 0.0], [55.7, 50.0, 0.0], [60.7, 50.0, 0.0], [65.7, 50.0, 0.0], [70.7, 50.0, 0.0], [75.7, 50.0, 0.0], [80.7, 50.0, 0.0], [85.7, 50.0, 0.0], [90.7, 50.0, 0.0]]}, 'convexHull': {'length': [-100, 100], 'width': [-100, 100], 'height': [0, 20], 'sample': 0.5, 'min_vis': 5}}
+2026-01-04 19:36:26.096 | INFO     | intrinsicParameter.intrinsicCalibration.get_intrinsic:get_intrinsic:21 - find existed intrinsic.json file and load it successfully
+2026-01-04 19:36:34.682 | INFO     | extrinsicParameter.poleDetection.maskGeneration:get_mask:30 - find exist mask and load ..
+2026-01-04 19:36:34.691 | INFO     | extrinsicParameter.poleDetection.poleDetection:get_pole:172 - find and load existed pole.pkl successfully
+2026-01-04 19:36:34.693 | INFO     | extrinsicParameter.poleDetection.poleDetection:get_pole:180 - available pole number: [328, 469, 501, 480, 423, 451, 529, 387, 370, 141, 262, 524, 294, 381, 408, 327, 311, 389, 341, 317, 319, 218, 305, 361]/2901
+2026-01-04 19:36:34.854 | INFO     | visualize.vis_pole_detection:vis_pole:104 - visualize pole detection result 
+  0%|          | 0/30 [00:00<?, ?it/s] 67%|██████▋   | 20/30 [00:14<00:07,  1.43it/s]100%|██████████| 30/30 [00:28<00:00,  1.01it/s]100%|██████████| 30/30 [00:28<00:00,  1.07it/s]
+2026-01-04 19:37:17.738 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam4 spread too low!
+2026-01-04 19:37:17.740 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam3 spread too low!
+2026-01-04 19:37:17.743 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam2 spread too low!
+2026-01-04 19:37:17.744 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam5 spread too low!
+2026-01-04 19:37:17.747 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam6 spread too low!
+2026-01-04 19:37:17.748 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam1 spread too low!
+2026-01-04 19:37:17.751 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam7 spread too low!
+2026-01-04 19:37:17.752 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam8 spread too low!
+2026-01-04 19:37:17.753 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam10 spread too low!
+2026-01-04 19:37:17.755 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam9 spread too low!
+2026-01-04 19:37:17.756 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam11 spread too low!
+2026-01-04 19:37:17.768 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam12 spread too low!
+2026-01-04 19:37:17.774 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam15 spread too low!
+2026-01-04 19:37:17.775 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam21 spread too low!
+2026-01-04 19:37:17.777 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam14 spread too low!
+2026-01-04 19:37:17.779 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam17 spread too low!
+2026-01-04 19:37:17.780 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam16 spread too low!
+2026-01-04 19:37:17.781 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam13 spread too low!
+2026-01-04 19:37:17.783 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam18 spread too low!
+2026-01-04 19:37:17.784 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam20 spread too low!
+2026-01-04 19:37:17.786 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam19 spread too low!
+2026-01-04 19:37:17.789 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam22 spread too low!
+2026-01-04 19:37:17.795 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam23 spread too low!
+2026-01-04 19:37:17.798 | WARNING  | visualize.vis_pole_spread:get_each_spread:97 - cam24 spread too low!
+2026-01-04 19:37:17.799 | INFO     | __main__:add_pole:101 - spread:[0.08333333333333333, 0.08333333333333333, 0.16666666666666666, 0.08333333333333333, 0.0, 0.08333333333333333, 0.16666666666666666, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.08333333333333333, 0.0, 0.0, 0.0, 0.08333333333333333, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+2026-01-04 19:37:17.981 | INFO     | visualize.vis_pole_spread:vis_spread:65 - visualize pole spread result
+  0%|          | 0/2901 [00:00<?, ?it/s] 22%|██▏       | 650/2901 [00:00<00:00, 6449.75it/s] 45%|████▍     | 1295/2901 [00:00<00:00, 4830.98it/s] 62%|██████▏   | 1803/2901 [00:00<00:00, 4539.39it/s] 83%|████████▎ | 2420/2901 [00:00<00:00, 5071.44it/s]100%|██████████| 2901/2901 [00:00<00:00, 5487.63it/s]
+2026-01-04 19:37:18.763 | INFO     | extrinsicParameter.initPose.initPose:get_init_pose:40 - find and load imageCollect/qu_gun_qiu_1216/init_pose.json successfully
+2026-01-04 19:37:19.013 | INFO     | visualize.vis_reproj_error:vis_reproj_error:103 - visualize reprojection error in folder:vis_init_reproj
+  0%|          | 0/30 [00:00<?, ?it/s] 67%|██████▋   | 20/30 [00:00<00:00, 24.15it/s]100%|██████████| 30/30 [00:01<00:00, 16.12it/s]100%|██████████| 30/30 [00:01<00:00, 17.27it/s]
+2026-01-04 19:37:22.932 | INFO     | extrinsicParameter.refinePose.refinePose:get_refine_pose:426 - calculate boundle adjustment init pixel error to set init learning rate
+2026-01-04 19:37:23.417 | INFO     | utils.verifyAccuracy:verify_accuracy:63 - mean_pixel_error: 74.18    mean_coord_error: [54.310481038349, 37.5903760683917]
+2026-01-04 19:37:23.417 | INFO     | utils.verifyAccuracy:verify_accuracy:67 - each_camera_pixel_error:[83.9, 71.49, 88.76, 45.2, 65.97, 61.25, 46.66, 30.38, 32.32, 59.3, 53.58, 32.29, 21.69, 35.97, 60.96, 47.5, 46.77, 62.65, 276.52, 112.28, 230.55, 164.91, 99.72, 38.75]
+2026-01-04 19:37:23.418 | WARNING  | extrinsicParameter.refinePose.refinePose:get_refine_pose:434 - init pixel error:74.18013724691123 too large, please check intrinsic calibration!
+2026-01-04 19:37:24.911 | INFO     | extrinsicParameter.refinePose.refinePose:verify_process:279 - verify process has been started
+2026-01-04 19:37:24.976 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:173 - sub process rank:0 has been started
+  0%|          | 0/1000 [00:00<?, ?it/s]2026-01-04 19:37:26.313 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:173 - sub process rank:1 has been started
+2026-01-04 19:37:27.630 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:173 - sub process rank:2 has been started
+2026-01-04 19:37:28.066 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:166.06764221191406. loss_origin:166067.640625 too large, multiple 0.001
+2026-01-04 19:37:28.947 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:173 - sub process rank:3 has been started
+2026-01-04 19:37:30.272 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:173 - sub process rank:4 has been started
+2026-01-04 19:37:31.592 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:173 - sub process rank:5 has been started
+2026-01-04 19:37:32.819 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:173 - sub process rank:6 has been started
+2026-01-04 19:37:34.124 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:173 - sub process rank:7 has been started
+2026-01-04 19:37:34.584 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:943.1573486328125. loss_origin:94315.734375 too large, multiple 0.01
+2026-01-04 19:37:35.432 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:173 - sub process rank:8 has been started
+2026-01-04 19:37:36.733 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:173 - sub process rank:9 has been started
+2026-01-04 19:37:37.069 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.01000	 avg_loss:132.96592
+2026-01-04 19:37:37.070 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[14.8, 21.8, 166.1, 19.1, 16.2, 21.0, 15.8, 943.2, 17.9, 93.8]
+2026-01-04 19:37:37.074 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:548.9768676757812. loss_origin:548976896.0 too large, multiple 1e-06
+  0%|          | 1/1000 [00:11<3:14:05, 11.66s/it]2026-01-04 19:37:37.119 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:146.12216186523438. loss_origin:14612216.0 too large, multiple 1e-05
+2026-01-04 19:37:37.125 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:146.04393005371094. loss_origin:1.4604391818317143e+36 too large, multiple 1e-34
+2026-01-04 19:37:37.127 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:735.6728515625. loss_origin:7356728.5 too large, multiple 0.0001
+2026-01-04 19:37:37.128 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:314.41986083984375. loss_origin:314419872.0 too large, multiple 1e-06
+2026-01-04 19:37:37.128 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:401.8674011230469. loss_origin:4018.674072265625 too large, multiple 0.1
+2026-01-04 19:37:37.137 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:890.83837890625. loss_origin:8908.3837890625 too large, multiple 0.1
+2026-01-04 19:37:37.139 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:373.2452087402344. loss_origin:3732452096.0 too large, multiple 1e-07
+2026-01-04 19:37:37.140 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:196.42930603027344. loss_origin:1964.2930908203125 too large, multiple 0.1
+2026-01-04 19:37:37.140 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:327.6127014160156. loss_origin:3276127.0 too large, multiple 0.0001
+2026-01-04 19:37:37.150 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:963.3582763671875. loss_origin:96335.828125 too large, multiple 0.01
+2026-01-04 19:37:37.152 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:335.3449401855469. loss_origin:335344.9375 too large, multiple 0.001
+2026-01-04 19:37:37.152 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:201.01318359375. loss_origin:20101.318359375 too large, multiple 0.01
+2026-01-04 19:37:37.162 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:786.9862670898438. loss_origin:7869863.0 too large, multiple 0.0001
+2026-01-04 19:37:37.162 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:376.47418212890625. loss_origin:376474176.0 too large, multiple 1e-06
+2026-01-04 19:37:37.162 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:123.07662963867188. loss_origin:123076632576.0 too large, multiple 1e-09
+2026-01-04 19:37:37.165 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:659.4158935546875. loss_origin:65941.59375 too large, multiple 0.01
+2026-01-04 19:37:37.174 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:367.8399658203125. loss_origin:36783996.0 too large, multiple 1e-05
+2026-01-04 19:37:37.174 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:575.1297607421875. loss_origin:57512976.0 too large, multiple 1e-05
+2026-01-04 19:37:37.174 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:446.31787109375. loss_origin:446317.84375 too large, multiple 0.001
+2026-01-04 19:37:37.177 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:512.1968994140625. loss_origin:51219.69140625 too large, multiple 0.01
+2026-01-04 19:37:37.177 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:335.9747619628906. loss_origin:33597476.0 too large, multiple 1e-05
+2026-01-04 19:37:37.186 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:515.2646484375. loss_origin:51526.46875 too large, multiple 0.01
+2026-01-04 19:37:37.189 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:557.4624633789062. loss_origin:5574.62451171875 too large, multiple 0.1
+2026-01-04 19:37:37.189 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:142.07870483398438. loss_origin:142078704.0 too large, multiple 1e-06
+2026-01-04 19:37:37.190 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:693.9832153320312. loss_origin:693983232.0 too large, multiple 1e-06
+  1%|          | 8/1000 [00:11<17:44,  1.07s/it]  2026-01-04 19:37:37.199 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:361.8206481933594. loss_origin:3618.20654296875 too large, multiple 0.1
+2026-01-04 19:37:37.200 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:276.95599365234375. loss_origin:27695600.0 too large, multiple 1e-05
+2026-01-04 19:37:37.202 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:334.73101806640625. loss_origin:3347.31005859375 too large, multiple 0.1
+2026-01-04 19:37:37.200 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:928.6373291015625. loss_origin:9286373376.0 too large, multiple 1e-07
+2026-01-04 19:37:37.212 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:311.801025390625. loss_origin:31180.103515625 too large, multiple 0.01
+2026-01-04 19:37:37.214 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:475.4908447265625. loss_origin:4754908.5 too large, multiple 0.0001
+2026-01-04 19:37:37.214 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:865.71533203125. loss_origin:8657.1533203125 too large, multiple 0.1
+2026-01-04 19:37:37.223 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:148.01113891601562. loss_origin:1480111423488.0 too large, multiple 1e-10
+2026-01-04 19:37:37.223 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:513.7977294921875. loss_origin:513797760.0 too large, multiple 1e-06
+2026-01-04 19:37:37.228 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:173.55120849609375. loss_origin:1735512031232.0 too large, multiple 1e-10
+2026-01-04 19:37:37.234 | WARNING  | extrinsicParameter.refinePose.refinePose:sub_process_train:255 - expect 10 num losses but get 9 num losses
+2026-01-04 19:37:37.234 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.01000	 avg_loss:97.66936
+2026-01-04 19:37:37.234 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[29.4, 28.9, 31.1, 31.0, 513.8, 34.4, 148.0, 28.7, 33.7]
+2026-01-04 19:37:37.239 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:619.606689453125. loss_origin:619606.6875 too large, multiple 0.001
+2026-01-04 19:37:37.242 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:275.6023864746094. loss_origin:275602380685312.0 too large, multiple 1e-12
+2026-01-04 19:37:37.300 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:215.2705078125. loss_origin:215270.5 too large, multiple 0.001
+2026-01-04 19:37:37.302 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:327.4996643066406. loss_origin:327499680.0 too large, multiple 1e-06
+2026-01-04 19:37:37.315 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:183.25360107421875. loss_origin:18325360.0 too large, multiple 1e-05
+2026-01-04 19:37:37.315 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:853.9659423828125. loss_origin:853965.875 too large, multiple 0.001
+2026-01-04 19:37:37.325 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:180.5221405029297. loss_origin:1805.221435546875 too large, multiple 0.1
+  2%|▏         | 15/1000 [00:11<07:50,  2.09it/s]2026-01-04 19:37:37.340 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:157.01727294921875. loss_origin:157017.265625 too large, multiple 0.001
+2026-01-04 19:37:37.353 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:487.6768798828125. loss_origin:4876768768.0 too large, multiple 1e-07
+2026-01-04 19:37:37.364 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:871.4410400390625. loss_origin:871441024.0 too large, multiple 1e-06
+2026-01-04 19:37:37.379 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:245.4762420654297. loss_origin:2454762.5 too large, multiple 0.0001
+2026-01-04 19:37:37.393 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:512.9703979492188. loss_origin:51297.04296875 too large, multiple 0.01
+2026-01-04 19:37:37.403 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:607.4041748046875. loss_origin:6074.04150390625 too large, multiple 0.1
+2026-01-04 19:37:37.405 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:357.3914794921875. loss_origin:3573.914794921875 too large, multiple 0.1
+2026-01-04 19:37:37.406 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:106.98728942871094. loss_origin:10698728931328.0 too large, multiple 1e-11
+2026-01-04 19:37:37.414 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.01000	 avg_loss:129.94119
+2026-01-04 19:37:37.414 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[357.4, 32.9, 607.4, 24.6, 21.6, 26.8, 23.8, 71.3, 26.7, 107.0]
+2026-01-04 19:37:37.416 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:341.3941955566406. loss_origin:341394194432.0 too large, multiple 1e-09
+  2%|▏         | 21/1000 [00:12<04:43,  3.45it/s]2026-01-04 19:37:37.457 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:115.78207397460938. loss_origin:11578207232.0 too large, multiple 1e-08
+2026-01-04 19:37:37.462 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:285.8119812011719. loss_origin:2858120.0 too large, multiple 0.0001
+2026-01-04 19:37:37.472 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:829.5043334960938. loss_origin:829504320.0 too large, multiple 1e-06
+2026-01-04 19:37:37.481 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:209.724365234375. loss_origin:209724368.0 too large, multiple 1e-06
+2026-01-04 19:37:37.497 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:213.62728881835938. loss_origin:2136273.0 too large, multiple 0.0001
+2026-01-04 19:37:37.512 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:407.18402099609375. loss_origin:4071840022528.0 too large, multiple 1e-10
+2026-01-04 19:37:37.525 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:127.93209075927734. loss_origin:127932.0859375 too large, multiple 0.001
+2026-01-04 19:37:37.538 | WARNING  | extrinsicParameter.refinePose.boundleAdjustment:forward:382 - update loss to:264.60748291015625. loss_origin:2646.07470703125 too large, multiple 0.1
+  3%|▎         | 29/1000 [00:12<02:43,  5.93it/s]2026-01-04 19:37:37.578 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.01000	 avg_loss:22.84100
+2026-01-04 19:37:37.578 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[21.1, 43.4, 18.6, 20.7, 20.4, 22.2, 18.0, 21.4, 22.3, 20.3]
+  4%|▎         | 36/1000 [00:12<01:51,  8.68it/s]2026-01-04 19:37:37.746 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.01000	 avg_loss:18.56332
+2026-01-04 19:37:37.746 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[17.9, 17.1, 14.3, 18.0, 16.5, 20.7, 20.4, 20.6, 19.6, 20.4]
+  4%|▍         | 43/1000 [00:12<01:18, 12.15it/s]2026-01-04 19:37:37.898 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.01000	 avg_loss:16.78988
+2026-01-04 19:37:37.898 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[20.8, 17.7, 15.2, 15.5, 16.5, 16.3, 19.2, 15.6, 15.3, 15.8]
+  5%|▌         | 51/1000 [00:12<00:56, 16.93it/s]2026-01-04 19:37:37.998 | INFO     | utils.verifyAccuracy:verify_accuracy:66 - mean_pixel_error: 4739774699.07    mean_coord_error: [4348074506.06, 1885735431.52]   second_consume: 11.66
+2026-01-04 19:37:37.998 | INFO     | utils.verifyAccuracy:verify_accuracy:67 - each_camera_pixel_error:[85.45, 77.04, 84.71, 46.67, 69.88, 62.41, 64.82, 33.19, 32.97, 70.19, 88.15, 121.24, 43.52, 211.5, 106.9, 326.54, 60.06, 117.32, 122379289787.8, 35394445.78, 258.07, 291.47, 95.11, 53.57]
+2026-01-04 19:37:37.999 | WARNING  | extrinsicParameter.refinePose.refinePose:verify_process:292 - clean overstock message number: 1
+  6%|▌         | 58/1000 [00:12<00:42, 21.98it/s]2026-01-04 19:37:38.072 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.01000	 avg_loss:16.44123
+2026-01-04 19:37:38.072 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[18.0, 15.5, 17.2, 17.1, 15.2, 15.2, 16.6, 16.2, 16.8, 16.6]
+  6%|▋         | 65/1000 [00:12<00:35, 26.71it/s]2026-01-04 19:37:38.239 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.01000	 avg_loss:16.62550
+2026-01-04 19:37:38.239 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[16.2, 16.8, 17.4, 14.3, 15.1, 15.5, 15.9, 18.1, 18.2, 18.8]
+  7%|▋         | 71/1000 [00:12<00:32, 28.61it/s]  8%|▊         | 79/1000 [00:13<00:25, 36.14it/s]2026-01-04 19:37:38.466 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.01000	 avg_loss:16.71451
+2026-01-04 19:37:38.467 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[14.5, 16.2, 14.9, 15.6, 18.8, 18.2, 16.6, 17.3, 16.4, 18.6]
+  8%|▊         | 85/1000 [00:13<00:23, 39.61it/s]2026-01-04 19:37:38.623 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.01000	 avg_loss:15.16765
+2026-01-04 19:37:38.623 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[15.9, 13.3, 16.3, 17.7, 15.4, 16.2, 16.1, 12.8, 14.5, 13.6]
+  9%|▉         | 91/1000 [00:13<00:21, 42.12it/s] 10%|█         | 100/1000 [00:13<00:18, 49.94it/s]2026-01-04 19:37:38.810 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.01000	 avg_loss:15.89806
+2026-01-04 19:37:38.810 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[14.9, 15.6, 17.4, 15.4, 17.1, 16.0, 15.3, 16.2, 16.2, 14.9]
+ 11%|█         | 107/1000 [00:13<00:17, 51.64it/s]2026-01-04 19:37:38.969 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00500	 avg_loss:14.33848
+2026-01-04 19:37:38.970 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[14.5, 15.4, 15.2, 12.7, 11.7, 13.0, 15.4, 13.3, 14.2, 17.9]
+ 11%|█▏        | 113/1000 [00:13<00:17, 52.05it/s]2026-01-04 19:37:39.149 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00500	 avg_loss:12.41513
+2026-01-04 19:37:39.149 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[13.2, 13.1, 11.3, 12.0, 11.3, 11.0, 14.6, 12.3, 13.6, 11.9]
+ 12%|█▏        | 121/1000 [00:13<00:16, 53.15it/s] 13%|█▎        | 128/1000 [00:13<00:15, 57.15it/s]2026-01-04 19:37:39.316 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00500	 avg_loss:11.88353
+2026-01-04 19:37:39.316 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.3, 12.8, 11.2, 10.9, 12.1, 10.7, 13.7, 11.8, 11.8, 14.7]
+ 14%|█▎        | 135/1000 [00:13<00:15, 56.62it/s]2026-01-04 19:37:39.479 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00500	 avg_loss:12.27602
+2026-01-04 19:37:39.479 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.4, 13.1, 13.1, 10.8, 13.1, 12.4, 13.2, 13.5, 12.1, 11.2]
+ 14%|█▍        | 141/1000 [00:14<00:15, 56.55it/s] 15%|█▍        | 148/1000 [00:14<00:14, 59.46it/s]2026-01-04 19:37:39.652 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00500	 avg_loss:12.05231
+2026-01-04 19:37:39.653 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[11.9, 12.7, 10.9, 10.9, 12.6, 11.6, 12.3, 13.6, 12.2, 11.7]
+ 16%|█▌        | 155/1000 [00:14<00:14, 57.28it/s]2026-01-04 19:37:39.823 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00500	 avg_loss:12.69205
+2026-01-04 19:37:39.824 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.9, 12.7, 14.0, 13.5, 12.6, 11.9, 12.7, 12.7, 12.5, 13.3]
+ 16%|█▌        | 161/1000 [00:14<00:14, 56.92it/s] 17%|█▋        | 167/1000 [00:14<00:16, 51.30it/s]2026-01-04 19:37:40.053 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00500	 avg_loss:12.34477
+2026-01-04 19:37:40.053 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[13.7, 11.0, 12.2, 10.5, 11.6, 12.9, 13.2, 12.2, 12.7, 13.5]
+ 17%|█▋        | 173/1000 [00:14<00:15, 52.51it/s]2026-01-04 19:37:40.222 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00500	 avg_loss:12.12696
+2026-01-04 19:37:40.222 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[11.0, 12.1, 14.2, 13.1, 11.8, 10.3, 11.9, 12.3, 12.4, 12.0]
+ 18%|█▊        | 181/1000 [00:14<00:15, 54.01it/s] 19%|█▉        | 189/1000 [00:14<00:13, 60.53it/s]2026-01-04 19:37:40.376 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00500	 avg_loss:11.48818
+2026-01-04 19:37:40.377 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.8, 12.4, 10.3, 12.1, 10.7, 11.2, 11.9, 13.1, 12.6, 10.8]
+ 20%|█▉        | 196/1000 [00:15<00:13, 58.80it/s]2026-01-04 19:37:40.557 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00500	 avg_loss:11.53824
+2026-01-04 19:37:40.557 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.6, 11.4, 12.7, 14.2, 9.9, 9.7, 11.2, 13.2, 11.5, 11.0]
+2026-01-04 19:37:40.571 | INFO     | utils.verifyAccuracy:verify_accuracy:66 - mean_pixel_error: 83.98    mean_coord_error: [60.72, 47.23]   second_consume: 0.17
+2026-01-04 19:37:40.571 | INFO     | utils.verifyAccuracy:verify_accuracy:67 - each_camera_pixel_error:[56.07, 52.46, 41.54, 44.49, 44.42, 70.86, 38.83, 42.51, 80.53, 45.01, 96.93, 39.75, 50.5, 28.79, 295.53, 38.18, 29.48, 36.33, 100.43, 631.89, 68.86, 53.36, 51.01, 34.23]
+2026-01-04 19:37:40.572 | WARNING  | extrinsicParameter.refinePose.refinePose:verify_process:292 - clean overstock message number: 15
+ 20%|██        | 203/1000 [00:15<00:14, 54.75it/s] 21%|██        | 210/1000 [00:15<00:13, 57.90it/s]2026-01-04 19:37:40.742 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00250	 avg_loss:10.95133
+2026-01-04 19:37:40.742 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[11.4, 10.9, 9.5, 10.6, 11.6, 10.9, 9.9, 14.3, 10.6, 10.0]
+ 22%|██▏       | 216/1000 [00:15<00:13, 56.51it/s]2026-01-04 19:37:40.902 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00250	 avg_loss:10.30647
+2026-01-04 19:37:40.902 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.4, 11.0, 9.4, 10.3, 8.7, 11.6, 11.4, 9.2, 12.0, 9.2]
+ 22%|██▏       | 222/1000 [00:15<00:14, 55.16it/s] 23%|██▎       | 229/1000 [00:15<00:13, 58.26it/s]2026-01-04 19:37:41.089 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00250	 avg_loss:10.00382
+2026-01-04 19:37:41.089 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.0, 8.7, 10.0, 11.1, 10.3, 9.3, 10.4, 10.9, 10.6, 8.7]
+ 24%|██▎       | 235/1000 [00:15<00:13, 55.60it/s]2026-01-04 19:37:41.256 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00250	 avg_loss:9.78331
+2026-01-04 19:37:41.256 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.3, 12.4, 10.1, 9.5, 9.9, 9.3, 8.6, 9.4, 10.0, 9.5]
+ 24%|██▍       | 241/1000 [00:15<00:14, 53.83it/s] 25%|██▌       | 250/1000 [00:15<00:12, 60.51it/s]2026-01-04 19:37:41.436 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00250	 avg_loss:10.50782
+2026-01-04 19:37:41.436 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[7.9, 11.9, 9.7, 11.5, 17.3, 8.9, 10.7, 8.1, 8.4, 10.6]
+ 26%|██▌       | 257/1000 [00:16<00:13, 56.84it/s]2026-01-04 19:37:41.611 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00250	 avg_loss:10.90780
+2026-01-04 19:37:41.611 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[7.8, 9.1, 10.6, 8.1, 10.7, 9.5, 9.0, 10.0, 8.2, 26.2]
+ 26%|██▋       | 263/1000 [00:16<00:14, 50.77it/s]2026-01-04 19:37:41.812 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00250	 avg_loss:9.86896
+2026-01-04 19:37:41.812 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[11.0, 11.2, 8.6, 8.8, 10.1, 8.6, 9.4, 12.7, 10.0, 8.2]
+ 27%|██▋       | 271/1000 [00:16<00:13, 54.57it/s] 28%|██▊       | 279/1000 [00:16<00:12, 59.55it/s]2026-01-04 19:37:41.975 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00250	 avg_loss:9.98189
+2026-01-04 19:37:41.975 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.7, 10.1, 9.0, 12.5, 9.8, 11.0, 7.8, 10.7, 8.5, 9.7]
+ 29%|██▊       | 286/1000 [00:16<00:12, 58.56it/s]2026-01-04 19:37:42.141 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00250	 avg_loss:9.95952
+2026-01-04 19:37:42.141 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.9, 8.1, 9.2, 9.0, 13.7, 8.8, 10.6, 10.4, 9.8, 10.2]
+ 29%|██▉       | 293/1000 [00:16<00:11, 59.68it/s]2026-01-04 19:37:42.288 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00250	 avg_loss:9.95821
+2026-01-04 19:37:42.288 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.2, 9.4, 10.1, 10.5, 8.4, 10.0, 9.7, 10.3, 11.3, 9.7]
+ 30%|███       | 301/1000 [00:16<00:11, 60.95it/s] 31%|███       | 310/1000 [00:16<00:10, 66.66it/s]2026-01-04 19:37:42.438 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00125	 avg_loss:9.54265
+2026-01-04 19:37:42.438 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.6, 10.0, 9.3, 7.6, 9.0, 10.9, 8.9, 9.9, 12.0, 8.2]
+ 32%|███▏      | 317/1000 [00:17<00:10, 62.96it/s]2026-01-04 19:37:42.615 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00125	 avg_loss:9.50242
+2026-01-04 19:37:42.615 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.5, 9.3, 8.7, 10.6, 8.1, 11.0, 9.9, 10.5, 9.6, 8.0]
+ 32%|███▏      | 324/1000 [00:17<00:11, 60.14it/s]2026-01-04 19:37:42.775 | INFO     | utils.verifyAccuracy:verify_accuracy:66 - mean_pixel_error: 70.84    mean_coord_error: [52.93, 38.17]   second_consume: 0.16
+2026-01-04 19:37:42.775 | INFO     | utils.verifyAccuracy:verify_accuracy:67 - each_camera_pixel_error:[53.81, 48.21, 37.35, 32.88, 35.72, 57.9, 32.72, 23.61, 30.12, 62.75, 44.36, 37.75, 20.01, 26.98, 267.2, 36.47, 29.18, 35.7, 89.71, 585.43, 67.87, 29.7, 29.55, 31.61]
+2026-01-04 19:37:42.777 | WARNING  | extrinsicParameter.refinePose.refinePose:verify_process:292 - clean overstock message number: 12
+2026-01-04 19:37:42.799 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00125	 avg_loss:9.31244
+2026-01-04 19:37:42.802 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.3, 7.8, 12.0, 9.9, 9.0, 9.8, 7.9, 10.1, 8.3, 10.0]
+ 33%|███▎      | 331/1000 [00:17<00:12, 55.73it/s] 34%|███▍      | 338/1000 [00:17<00:11, 59.04it/s]2026-01-04 19:37:42.969 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00125	 avg_loss:9.27577
+2026-01-04 19:37:42.974 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.8, 8.1, 10.5, 9.5, 10.0, 8.9, 10.2, 8.9, 10.2, 7.5]
+ 34%|███▍      | 345/1000 [00:17<00:11, 57.36it/s]2026-01-04 19:37:43.131 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00125	 avg_loss:9.27517
+2026-01-04 19:37:43.131 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.3, 8.6, 9.2, 9.8, 7.9, 10.0, 10.4, 11.2, 8.2, 8.2]
+ 35%|███▌      | 351/1000 [00:17<00:13, 49.58it/s] 36%|███▌      | 359/1000 [00:17<00:11, 55.64it/s]2026-01-04 19:37:43.360 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00125	 avg_loss:9.25408
+2026-01-04 19:37:43.361 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.1, 8.3, 8.7, 10.3, 9.0, 8.9, 9.6, 8.3, 10.3, 10.1]
+ 36%|███▋      | 365/1000 [00:18<00:11, 54.66it/s]2026-01-04 19:37:43.544 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00125	 avg_loss:9.20991
+2026-01-04 19:37:43.545 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.6, 8.9, 7.7, 9.5, 8.9, 10.5, 10.4, 9.0, 9.4, 9.2]
+ 37%|███▋      | 371/1000 [00:18<00:11, 53.18it/s] 38%|███▊      | 379/1000 [00:18<00:10, 58.46it/s]2026-01-04 19:37:43.707 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00125	 avg_loss:9.22738
+2026-01-04 19:37:43.707 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.4, 8.2, 9.7, 9.2, 10.1, 7.0, 11.0, 10.8, 10.4, 7.5]
+ 38%|███▊      | 385/1000 [00:18<00:10, 57.02it/s]2026-01-04 19:37:43.890 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00125	 avg_loss:9.14250
+2026-01-04 19:37:43.890 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.1, 11.5, 9.0, 9.8, 8.8, 7.9, 8.4, 11.1, 8.3, 8.5]
+ 39%|███▉      | 391/1000 [00:18<00:11, 54.22it/s] 40%|███▉      | 398/1000 [00:18<00:10, 57.86it/s]2026-01-04 19:37:44.055 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00125	 avg_loss:9.17300
+2026-01-04 19:37:44.055 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.9, 8.9, 9.0, 9.1, 8.8, 9.4, 9.5, 9.5, 7.9, 9.7]
+ 40%|████      | 404/1000 [00:18<00:10, 56.57it/s]2026-01-04 19:37:44.220 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00063	 avg_loss:9.06270
+2026-01-04 19:37:44.220 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.8, 6.6, 8.5, 9.8, 8.9, 10.0, 10.5, 10.4, 8.3, 8.7]
+ 41%|████      | 411/1000 [00:18<00:10, 57.86it/s] 42%|████▏     | 419/1000 [00:18<00:09, 62.45it/s]2026-01-04 19:37:44.383 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00063	 avg_loss:8.94806
+2026-01-04 19:37:44.383 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.9, 9.3, 7.8, 6.8, 11.4, 9.8, 9.8, 9.6, 8.6, 7.6]
+ 43%|████▎     | 426/1000 [00:19<00:09, 60.00it/s]2026-01-04 19:37:44.546 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00063	 avg_loss:9.01125
+2026-01-04 19:37:44.546 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.6, 10.5, 9.0, 9.8, 9.0, 8.3, 8.2, 9.8, 8.3, 8.6]
+ 43%|████▎     | 433/1000 [00:19<00:09, 58.17it/s]2026-01-04 19:37:44.718 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00063	 avg_loss:8.92811
+2026-01-04 19:37:44.718 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.0, 7.8, 10.1, 8.0, 10.0, 8.4, 10.0, 8.9, 8.5, 7.5]
+ 44%|████▍     | 441/1000 [00:19<00:09, 58.92it/s] 45%|████▌     | 450/1000 [00:19<00:08, 65.75it/s]2026-01-04 19:37:44.870 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00063	 avg_loss:8.96153
+2026-01-04 19:37:44.870 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.2, 9.4, 9.3, 8.8, 9.5, 7.9, 9.5, 9.2, 9.3, 7.7]
+ 46%|████▌     | 457/1000 [00:19<00:09, 57.76it/s]2026-01-04 19:37:45.073 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00063	 avg_loss:8.99054
+2026-01-04 19:37:45.073 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.0, 8.5, 9.1, 9.3, 8.9, 9.6, 9.5, 8.7, 8.2, 9.0]
+ 46%|████▋     | 463/1000 [00:19<00:09, 57.77it/s]2026-01-04 19:37:45.222 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00063	 avg_loss:8.97228
+2026-01-04 19:37:45.223 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[7.9, 9.0, 10.0, 8.8, 9.2, 7.6, 11.2, 8.6, 8.9, 8.3]
+ 47%|████▋     | 471/1000 [00:19<00:09, 58.06it/s]2026-01-04 19:37:45.306 | INFO     | utils.verifyAccuracy:verify_accuracy:66 - mean_pixel_error: 66.07    mean_coord_error: [48.65, 35.86]   second_consume: 0.16
+2026-01-04 19:37:45.306 | INFO     | utils.verifyAccuracy:verify_accuracy:67 - each_camera_pixel_error:[52.5, 47.73, 35.82, 26.98, 33.56, 57.4, 29.5, 18.77, 27.76, 20.63, 39.4, 36.56, 18.26, 19.1, 270.5, 33.74, 25.63, 23.95, 86.12, 552.64, 60.05, 27.24, 27.61, 31.26]
+2026-01-04 19:37:45.307 | WARNING  | extrinsicParameter.refinePose.refinePose:verify_process:292 - clean overstock message number: 15
+ 48%|████▊     | 478/1000 [00:19<00:08, 59.93it/s]2026-01-04 19:37:45.399 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00063	 avg_loss:8.93685
+2026-01-04 19:37:45.399 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.1, 9.3, 8.5, 7.8, 9.3, 8.8, 8.3, 10.0, 8.6, 10.5]
+ 48%|████▊     | 485/1000 [00:20<00:08, 57.91it/s]2026-01-04 19:37:45.583 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00063	 avg_loss:8.91732
+2026-01-04 19:37:45.584 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.2, 9.2, 9.2, 7.4, 9.1, 7.9, 9.9, 9.8, 9.2, 9.3]
+ 49%|████▉     | 491/1000 [00:20<00:09, 55.49it/s] 50%|████▉     | 498/1000 [00:20<00:08, 58.72it/s]2026-01-04 19:37:45.753 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00063	 avg_loss:8.84593
+2026-01-04 19:37:45.753 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.2, 9.3, 10.6, 10.7, 7.1, 10.1, 8.6, 7.4, 9.3, 7.1]
+ 50%|█████     | 504/1000 [00:20<00:08, 57.01it/s]2026-01-04 19:37:45.936 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00031	 avg_loss:8.85987
+2026-01-04 19:37:45.936 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.5, 8.1, 10.5, 8.3, 8.2, 9.5, 7.4, 8.0, 8.3, 11.6]
+ 51%|█████     | 511/1000 [00:20<00:08, 55.48it/s] 52%|█████▏    | 518/1000 [00:20<00:08, 58.75it/s]2026-01-04 19:37:46.109 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00031	 avg_loss:8.87672
+2026-01-04 19:37:46.109 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.0, 8.8, 10.2, 8.5, 9.1, 7.7, 9.6, 7.5, 9.8, 7.6]
+ 52%|█████▏    | 524/1000 [00:20<00:08, 56.36it/s]2026-01-04 19:37:46.293 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00031	 avg_loss:8.82023
+2026-01-04 19:37:46.293 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[7.7, 8.6, 8.1, 7.6, 9.4, 8.7, 8.0, 8.1, 10.2, 11.8]
+ 53%|█████▎    | 531/1000 [00:20<00:08, 54.69it/s] 54%|█████▍    | 538/1000 [00:20<00:07, 58.35it/s]2026-01-04 19:37:46.463 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00031	 avg_loss:8.78139
+2026-01-04 19:37:46.463 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.5, 8.7, 10.8, 7.7, 8.2, 7.7, 8.5, 9.5, 8.5, 8.6]
+ 54%|█████▍    | 544/1000 [00:21<00:09, 50.49it/s]2026-01-04 19:37:46.670 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00031	 avg_loss:8.80072
+2026-01-04 19:37:46.671 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.1, 9.7, 10.2, 8.6, 6.5, 8.4, 9.9, 8.9, 8.9, 8.7]
+ 55%|█████▌    | 551/1000 [00:21<00:08, 51.86it/s] 56%|█████▌    | 558/1000 [00:21<00:08, 55.04it/s]2026-01-04 19:37:46.857 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00031	 avg_loss:8.79759
+2026-01-04 19:37:46.858 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.3, 8.9, 8.3, 7.9, 8.8, 8.9, 8.6, 7.8, 8.3, 10.1]
+ 56%|█████▋    | 564/1000 [00:21<00:08, 54.41it/s]2026-01-04 19:37:47.028 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00031	 avg_loss:8.85715
+2026-01-04 19:37:47.028 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.6, 8.1, 8.5, 7.9, 8.7, 8.0, 9.4, 9.0, 8.4, 10.8]
+ 57%|█████▋    | 571/1000 [00:21<00:07, 55.58it/s] 58%|█████▊    | 580/1000 [00:21<00:06, 63.57it/s]2026-01-04 19:37:47.174 | WARNING  | extrinsicParameter.refinePose.refinePose:sub_process_train:255 - expect 10 num losses but get 9 num losses
+2026-01-04 19:37:47.174 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00031	 avg_loss:8.98784
+2026-01-04 19:37:47.174 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.2, 9.7, 9.7, 8.4, 11.3, 8.6, 8.3, 7.3, 8.4]
+ 59%|█████▊    | 587/1000 [00:21<00:06, 63.65it/s]2026-01-04 19:37:47.325 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00031	 avg_loss:8.81581
+2026-01-04 19:37:47.325 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[11.5, 8.8, 8.8, 7.4, 9.4, 8.6, 10.4, 6.6, 9.2, 7.6]
+ 59%|█████▉    | 594/1000 [00:21<00:06, 63.19it/s]2026-01-04 19:37:47.478 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00031	 avg_loss:8.79198
+2026-01-04 19:37:47.478 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[7.4, 8.5, 8.4, 9.1, 9.1, 8.0, 9.0, 10.5, 9.7, 8.2]
+ 60%|██████    | 601/1000 [00:22<00:06, 61.55it/s] 61%|██████    | 610/1000 [00:22<00:05, 68.25it/s]2026-01-04 19:37:47.624 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00016	 avg_loss:8.75831
+2026-01-04 19:37:47.624 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.2, 9.3, 8.3, 8.7, 8.8, 8.0, 7.9, 10.6, 8.2, 9.4]
+2026-01-04 19:37:47.693 | INFO     | utils.verifyAccuracy:verify_accuracy:66 - mean_pixel_error: 64.78    mean_coord_error: [47.53, 35.16]   second_consume: 0.18
+2026-01-04 19:37:47.693 | INFO     | utils.verifyAccuracy:verify_accuracy:67 - each_camera_pixel_error:[52.52, 47.46, 35.26, 26.36, 33.04, 57.42, 29.18, 18.75, 26.68, 17.86, 38.36, 34.23, 18.05, 18.26, 266.1, 32.72, 25.28, 23.03, 85.16, 541.13, 58.76, 25.92, 27.08, 31.09]
+2026-01-04 19:37:47.695 | WARNING  | extrinsicParameter.refinePose.refinePose:verify_process:292 - clean overstock message number: 13
+ 62%|██████▏   | 617/1000 [00:22<00:05, 64.59it/s]2026-01-04 19:37:47.781 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00016	 avg_loss:8.82286
+2026-01-04 19:37:47.781 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.4, 7.8, 7.9, 10.9, 10.2, 10.4, 8.0, 7.6, 7.5, 8.6]
+ 62%|██████▏   | 624/1000 [00:22<00:06, 61.79it/s]2026-01-04 19:37:47.942 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00016	 avg_loss:8.77739
+2026-01-04 19:37:47.943 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.6, 9.0, 7.4, 8.0, 9.4, 8.4, 7.4, 10.5, 8.4, 8.7]
+ 63%|██████▎   | 631/1000 [00:22<00:06, 52.85it/s] 64%|██████▍   | 639/1000 [00:22<00:06, 58.45it/s]2026-01-04 19:37:48.170 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00016	 avg_loss:8.77892
+2026-01-04 19:37:48.171 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.8, 8.7, 8.4, 10.2, 8.4, 8.4, 10.0, 7.3, 8.1, 8.5]
+ 65%|██████▍   | 646/1000 [00:22<00:06, 57.30it/s]2026-01-04 19:37:48.352 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00016	 avg_loss:8.71786
+2026-01-04 19:37:48.352 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[7.9, 9.6, 10.4, 8.7, 9.7, 6.9, 9.3, 7.9, 8.0, 8.8]
+ 65%|██████▌   | 652/1000 [00:22<00:06, 55.84it/s] 66%|██████▌   | 659/1000 [00:23<00:05, 58.59it/s]2026-01-04 19:37:48.518 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00016	 avg_loss:8.75981
+2026-01-04 19:37:48.518 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.1, 7.8, 11.3, 9.4, 7.3, 9.0, 9.7, 9.0, 7.9, 8.1]
+ 66%|██████▋   | 665/1000 [00:23<00:05, 56.43it/s]2026-01-04 19:37:48.706 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00016	 avg_loss:8.71410
+2026-01-04 19:37:48.706 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.8, 9.3, 9.6, 10.4, 7.5, 6.9, 9.8, 7.9, 8.8, 7.2]
+ 67%|██████▋   | 671/1000 [00:23<00:06, 53.94it/s] 68%|██████▊   | 678/1000 [00:23<00:05, 58.16it/s]2026-01-04 19:37:48.871 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00016	 avg_loss:8.78931
+2026-01-04 19:37:48.872 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.6, 10.0, 10.2, 8.6, 7.5, 8.0, 9.4, 10.3, 8.1, 7.3]
+ 68%|██████▊   | 684/1000 [00:23<00:05, 56.12it/s]2026-01-04 19:37:49.035 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00016	 avg_loss:8.75223
+2026-01-04 19:37:49.035 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.9, 8.2, 8.2, 9.8, 9.3, 8.4, 7.8, 8.8, 9.2, 7.9]
+ 69%|██████▉   | 691/1000 [00:23<00:05, 54.77it/s] 70%|██████▉   | 699/1000 [00:23<00:05, 60.06it/s]2026-01-04 19:37:49.221 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00016	 avg_loss:8.74334
+2026-01-04 19:37:49.221 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[7.5, 9.4, 7.3, 8.2, 8.6, 10.7, 10.7, 8.5, 8.4, 8.0]
+ 71%|███████   | 706/1000 [00:23<00:05, 58.46it/s]2026-01-04 19:37:49.381 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00008	 avg_loss:8.76018
+2026-01-04 19:37:49.382 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.2, 10.2, 8.5, 7.6, 8.5, 8.6, 9.0, 9.0, 9.0, 8.0]
+ 71%|███████   | 712/1000 [00:23<00:05, 56.39it/s]2026-01-04 19:37:49.548 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00008	 avg_loss:8.77641
+2026-01-04 19:37:49.548 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.9, 7.9, 9.4, 8.7, 9.6, 9.6, 7.3, 7.9, 7.9, 9.5]
+ 72%|███████▏  | 721/1000 [00:24<00:04, 59.36it/s] 73%|███████▎  | 728/1000 [00:24<00:04, 61.93it/s]2026-01-04 19:37:49.713 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00008	 avg_loss:8.75047
+2026-01-04 19:37:49.714 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.3, 8.4, 8.1, 9.1, 9.0, 10.2, 8.7, 8.4, 6.5, 8.8]
+ 74%|███████▎  | 735/1000 [00:24<00:05, 52.66it/s]2026-01-04 19:37:49.939 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00008	 avg_loss:8.77776
+2026-01-04 19:37:49.939 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.0, 8.0, 8.4, 9.3, 7.5, 9.4, 10.0, 8.8, 8.3, 9.1]
+ 74%|███████▍  | 741/1000 [00:24<00:04, 53.28it/s] 75%|███████▍  | 749/1000 [00:24<00:04, 58.62it/s]2026-01-04 19:37:50.100 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00008	 avg_loss:8.77545
+2026-01-04 19:37:50.100 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.2, 8.9, 9.3, 8.6, 10.1, 8.4, 7.2, 7.8, 9.5, 8.8]
+ 76%|███████▌  | 756/1000 [00:24<00:04, 59.37it/s]2026-01-04 19:37:50.262 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00008	 avg_loss:8.77936
+2026-01-04 19:37:50.262 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.9, 8.7, 8.1, 9.0, 11.8, 7.5, 8.1, 8.5, 7.5, 9.5]
+ 76%|███████▋  | 763/1000 [00:24<00:04, 57.41it/s] 77%|███████▋  | 769/1000 [00:24<00:04, 55.46it/s]2026-01-04 19:37:50.469 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00008	 avg_loss:8.75020
+2026-01-04 19:37:50.470 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.4, 7.9, 9.6, 8.3, 9.5, 8.6, 8.6, 8.1, 9.5, 9.1]
+2026-01-04 19:37:50.489 | INFO     | utils.verifyAccuracy:verify_accuracy:66 - mean_pixel_error: 64.28    mean_coord_error: [47.09, 34.88]   second_consume: 0.16
+2026-01-04 19:37:50.489 | INFO     | utils.verifyAccuracy:verify_accuracy:67 - each_camera_pixel_error:[52.46, 47.39, 35.01, 26.11, 32.82, 57.43, 29.11, 18.73, 26.46, 16.97, 38.57, 33.92, 17.94, 17.89, 263.57, 32.32, 25.1, 22.66, 84.71, 535.98, 58.36, 25.57, 26.94, 30.96]
+2026-01-04 19:37:50.490 | WARNING  | extrinsicParameter.refinePose.refinePose:verify_process:292 - clean overstock message number: 17
+ 78%|███████▊  | 775/1000 [00:25<00:04, 53.47it/s]2026-01-04 19:37:50.658 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00008	 avg_loss:8.70083
+2026-01-04 19:37:50.659 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.7, 9.0, 9.1, 9.2, 8.8, 7.2, 8.9, 8.2, 8.6, 9.5]
+ 78%|███████▊  | 781/1000 [00:25<00:04, 51.98it/s] 79%|███████▉  | 788/1000 [00:25<00:03, 56.59it/s]2026-01-04 19:37:50.824 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00008	 avg_loss:8.74188
+2026-01-04 19:37:50.824 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.1, 8.5, 8.6, 9.4, 9.6, 8.5, 7.5, 10.6, 7.9, 8.7]
+ 79%|███████▉  | 794/1000 [00:25<00:03, 55.14it/s]2026-01-04 19:37:51.009 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00008	 avg_loss:8.72266
+2026-01-04 19:37:51.010 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.5, 7.5, 9.3, 8.9, 8.0, 8.9, 9.6, 8.7, 7.8, 8.0]
+ 80%|████████  | 801/1000 [00:25<00:03, 54.01it/s] 81%|████████  | 809/1000 [00:25<00:03, 59.22it/s]2026-01-04 19:37:51.172 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00004	 avg_loss:8.75899
+2026-01-04 19:37:51.172 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.2, 7.9, 9.9, 9.6, 8.8, 8.8, 7.9, 7.7, 9.6, 8.2]
+ 82%|████████▏ | 816/1000 [00:25<00:03, 57.58it/s]2026-01-04 19:37:51.358 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00004	 avg_loss:8.75687
+2026-01-04 19:37:51.358 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.8, 10.1, 7.7, 9.1, 7.6, 8.4, 8.3, 9.1, 8.9, 9.5]
+ 82%|████████▏ | 822/1000 [00:26<00:03, 48.17it/s] 83%|████████▎ | 830/1000 [00:26<00:03, 54.46it/s]2026-01-04 19:37:51.579 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00004	 avg_loss:8.77210
+2026-01-04 19:37:51.579 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.5, 7.8, 7.8, 8.5, 9.7, 7.7, 8.9, 10.5, 8.2, 9.1]
+ 84%|████████▎ | 836/1000 [00:26<00:03, 50.49it/s]2026-01-04 19:37:51.773 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00004	 avg_loss:8.75737
+2026-01-04 19:37:51.773 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.6, 8.0, 8.5, 7.5, 8.2, 9.7, 10.4, 9.4, 8.2, 8.9]
+ 84%|████████▍ | 842/1000 [00:26<00:03, 50.27it/s] 85%|████████▌ | 850/1000 [00:26<00:02, 56.45it/s]2026-01-04 19:37:51.959 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00004	 avg_loss:8.71701
+2026-01-04 19:37:51.959 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.1, 8.4, 7.8, 9.0, 6.8, 8.7, 8.8, 9.0, 8.9, 9.6]
+ 86%|████████▌ | 856/1000 [00:26<00:02, 54.41it/s]2026-01-04 19:37:52.138 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00004	 avg_loss:8.72390
+2026-01-04 19:37:52.138 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.1, 8.5, 7.1, 9.0, 7.8, 9.1, 10.7, 9.9, 8.5, 8.5]
+ 86%|████████▌ | 862/1000 [00:26<00:02, 53.85it/s] 87%|████████▋ | 870/1000 [00:26<00:02, 59.11it/s]2026-01-04 19:37:52.299 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00004	 avg_loss:8.73130
+2026-01-04 19:37:52.299 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.5, 8.5, 7.4, 8.7, 8.2, 10.2, 8.4, 9.4, 8.8, 8.3]
+ 88%|████████▊ | 877/1000 [00:26<00:02, 59.39it/s]2026-01-04 19:37:52.459 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00004	 avg_loss:8.71715
+2026-01-04 19:37:52.459 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[7.7, 8.8, 9.9, 8.6, 8.2, 8.7, 9.3, 10.5, 7.7, 7.7]
+ 88%|████████▊ | 884/1000 [00:27<00:01, 59.62it/s]2026-01-04 19:37:52.542 | INFO     | utils.verifyAccuracy:verify_accuracy:66 - mean_pixel_error: 64.16    mean_coord_error: [46.99, 34.8]   second_consume: 0.20
+2026-01-04 19:37:52.542 | INFO     | utils.verifyAccuracy:verify_accuracy:67 - each_camera_pixel_error:[52.44, 47.38, 34.96, 26.06, 32.77, 57.44, 29.09, 18.73, 26.41, 16.81, 38.43, 33.86, 17.92, 17.81, 262.94, 32.24, 25.07, 22.58, 84.62, 534.81, 58.24, 25.5, 26.91, 30.94]
+2026-01-04 19:37:52.544 | WARNING  | extrinsicParameter.refinePose.refinePose:verify_process:292 - clean overstock message number: 11
+2026-01-04 19:37:52.627 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00004	 avg_loss:8.70254
+2026-01-04 19:37:52.627 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[7.5, 9.4, 9.8, 10.2, 7.6, 10.5, 7.8, 9.1, 7.2, 8.0]
+ 89%|████████▉ | 891/1000 [00:27<00:01, 56.74it/s] 90%|████████▉ | 899/1000 [00:27<00:01, 61.31it/s]2026-01-04 19:37:52.788 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00004	 avg_loss:8.72381
+2026-01-04 19:37:52.788 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.0, 8.8, 9.2, 8.2, 7.9, 10.9, 8.4, 7.2, 8.9, 7.8]
+ 91%|█████████ | 906/1000 [00:27<00:01, 59.66it/s]2026-01-04 19:37:52.967 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00002	 avg_loss:8.72991
+2026-01-04 19:37:52.967 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.2, 10.1, 8.2, 8.2, 8.4, 8.5, 8.4, 9.2, 8.5, 9.6]
+ 91%|█████████▏| 913/1000 [00:27<00:01, 58.58it/s] 92%|█████████▏| 920/1000 [00:27<00:01, 61.10it/s]2026-01-04 19:37:53.130 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00002	 avg_loss:8.73555
+2026-01-04 19:37:53.130 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.2, 8.2, 8.9, 8.8, 8.7, 9.1, 7.6, 9.1, 7.6, 9.4]
+ 93%|█████████▎| 927/1000 [00:27<00:01, 51.45it/s]2026-01-04 19:37:53.351 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00002	 avg_loss:8.73104
+2026-01-04 19:37:53.351 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.4, 9.6, 9.0, 7.7, 9.7, 9.1, 8.7, 10.1, 8.0, 7.0]
+ 93%|█████████▎| 934/1000 [00:27<00:01, 52.83it/s]2026-01-04 19:37:53.513 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00002	 avg_loss:8.72241
+2026-01-04 19:37:53.513 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[10.2, 8.2, 8.4, 9.1, 7.7, 7.9, 8.2, 8.6, 9.2, 9.7]
+ 94%|█████████▍| 941/1000 [00:28<00:01, 52.50it/s] 95%|█████████▍| 949/1000 [00:28<00:00, 58.20it/s]2026-01-04 19:37:53.694 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00002	 avg_loss:8.70860
+2026-01-04 19:37:53.695 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.5, 9.9, 7.1, 8.5, 9.8, 8.3, 10.9, 8.5, 8.0, 7.6]
+ 96%|█████████▌| 956/1000 [00:28<00:00, 56.12it/s]2026-01-04 19:37:53.871 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00002	 avg_loss:8.70789
+2026-01-04 19:37:53.871 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.6, 7.7, 10.5, 8.5, 8.5, 8.4, 10.2, 7.2, 9.0, 8.6]
+ 96%|█████████▌| 962/1000 [00:28<00:00, 54.31it/s] 97%|█████████▋| 970/1000 [00:28<00:00, 60.66it/s]2026-01-04 19:37:54.039 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00002	 avg_loss:8.76943
+2026-01-04 19:37:54.039 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.2, 8.7, 8.9, 9.0, 8.6, 7.8, 7.9, 9.3, 7.5, 10.9]
+ 98%|█████████▊| 977/1000 [00:28<00:00, 58.38it/s]2026-01-04 19:37:54.207 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00002	 avg_loss:8.74109
+2026-01-04 19:37:54.208 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[9.3, 7.9, 9.4, 10.2, 8.1, 8.1, 8.2, 8.3, 9.0, 8.9]
+ 98%|█████████▊| 983/1000 [00:28<00:00, 56.04it/s]2026-01-04 19:37:54.376 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:257 - lr:0.00002	 avg_loss:8.77290
+2026-01-04 19:37:54.376 | INFO     | extrinsicParameter.refinePose.refinePose:sub_process_train:258 - each_losses:[8.0, 8.0, 6.7, 9.2, 10.4, 8.2, 9.7, 9.5, 8.3, 9.7]
+ 99%|█████████▉| 991/1000 [00:28<00:00, 57.72it/s]100%|██████████| 1000/1000 [00:29<00:00, 64.22it/s]100%|██████████| 1000/1000 [00:29<00:00, 34.39it/s]
+2026-01-04 19:37:54.818 | INFO     | utils.verifyAccuracy:verify_accuracy:66 - mean_pixel_error: 64.10    mean_coord_error: [46.94, 34.77]   second_consume: 0.17
+2026-01-04 19:37:54.818 | INFO     | utils.verifyAccuracy:verify_accuracy:67 - each_camera_pixel_error:[52.43, 47.37, 34.93, 26.02, 32.74, 57.44, 29.09, 18.73, 26.39, 16.72, 38.45, 33.84, 17.91, 17.78, 262.57, 32.19, 25.06, 22.54, 84.56, 534.21, 58.18, 25.46, 26.9, 30.92]
+2026-01-04 19:37:54.819 | WARNING  | extrinsicParameter.refinePose.refinePose:verify_process:292 - clean overstock message number: 14
+2026-01-04 19:37:56.129 | INFO     | extrinsicParameter.refinePose.refinePose:verify_process:288 - verify process receieve None, stop ..
+2026-01-04 19:37:56.769 | INFO     | utils.verifyAccuracy:verify_accuracy:63 - mean_pixel_error: 64.09    mean_coord_error: [46.9322589195251, 34.76482107094365]
+2026-01-04 19:37:56.769 | INFO     | utils.verifyAccuracy:verify_accuracy:67 - each_camera_pixel_error:[52.43, 47.37, 34.93, 26.02, 32.74, 57.44, 29.08, 18.73, 26.39, 16.71, 38.44, 33.84, 17.91, 17.78, 262.53, 32.19, 25.06, 22.53, 84.56, 534.14, 58.17, 25.46, 26.9, 30.92]
+2026-01-04 19:37:57.019 | INFO     | visualize.vis_reproj_error:vis_reproj_error:103 - visualize reprojection error in folder:vis_reproj
+  0%|          | 0/30 [00:00<?, ?it/s] 67%|██████▋   | 20/30 [00:00<00:00, 22.54it/s]100%|██████████| 30/30 [00:02<00:00, 13.53it/s]100%|██████████| 30/30 [00:02<00:00, 14.70it/s]
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 0 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 1 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 3 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 5 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 7 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 9 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 11 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 13 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 15 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 17 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 18 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 19 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 20 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 22 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 24 for less than threshold:5 cameras
+2026-01-04 19:38:02.013 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 26 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 28 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 30 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 32 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 34 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 36 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 37 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 38 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 39 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 41 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 43 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 45 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 47 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 49 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 51 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 53 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 55 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 57 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 58 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 60 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 62 for less than threshold:5 cameras
+2026-01-04 19:38:02.014 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 64 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 66 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 68 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 70 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 72 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 74 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 76 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 77 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 79 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 81 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 83 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 85 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 87 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 89 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 91 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 93 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 95 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 96 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 98 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 100 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 102 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 104 for less than threshold:5 cameras
+2026-01-04 19:38:02.015 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 106 for less than threshold:5 cameras
+2026-01-04 19:38:02.016 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 108 for less than threshold:5 cameras
+2026-01-04 19:38:02.016 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 110 for less than threshold:5 cameras
+2026-01-04 19:38:02.016 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 112 for less than threshold:5 cameras
+2026-01-04 19:38:02.016 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 114 for less than threshold:5 cameras
+2026-01-04 19:38:02.016 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 115 for less than threshold:5 cameras
+2026-01-04 19:38:02.016 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 117 for less than threshold:5 cameras
+2026-01-04 19:38:02.016 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 119 for less than threshold:5 cameras
+2026-01-04 19:38:02.016 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 121 for less than threshold:5 cameras
+2026-01-04 19:38:02.016 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 123 for less than threshold:5 cameras
+2026-01-04 19:38:02.016 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 125 for less than threshold:5 cameras
+2026-01-04 19:38:02.016 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 127 for less than threshold:5 cameras
+2026-01-04 19:38:02.016 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 129 for less than threshold:5 cameras
+2026-01-04 19:38:02.016 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 131 for less than threshold:5 cameras
+2026-01-04 19:38:02.017 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 133 for less than threshold:5 cameras
+2026-01-04 19:38:02.017 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 134 for less than threshold:5 cameras
+2026-01-04 19:38:02.017 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 136 for less than threshold:5 cameras
+2026-01-04 19:38:02.017 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 138 for less than threshold:5 cameras
+2026-01-04 19:38:02.017 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 140 for less than threshold:5 cameras
+2026-01-04 19:38:02.017 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 142 for less than threshold:5 cameras
+2026-01-04 19:38:02.017 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 144 for less than threshold:5 cameras
+2026-01-04 19:38:02.017 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 146 for less than threshold:5 cameras
+2026-01-04 19:38:02.017 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 148 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 150 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 152 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 153 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 155 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 157 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 159 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 161 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 163 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 165 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 167 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 169 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 170 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 171 for less than threshold:5 cameras
+2026-01-04 19:38:02.018 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 172 for less than threshold:5 cameras
+2026-01-04 19:38:02.019 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 174 for less than threshold:5 cameras
+2026-01-04 19:38:02.019 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 176 for less than threshold:5 cameras
+2026-01-04 19:38:02.019 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 178 for less than threshold:5 cameras
+2026-01-04 19:38:02.019 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 180 for less than threshold:5 cameras
+2026-01-04 19:38:02.019 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 182 for less than threshold:5 cameras
+2026-01-04 19:38:02.019 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 184 for less than threshold:5 cameras
+2026-01-04 19:38:02.019 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 186 for less than threshold:5 cameras
+2026-01-04 19:38:02.019 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 188 for less than threshold:5 cameras
+2026-01-04 19:38:02.019 | WARNING  | extrinsicParameter.worldCoord.get_cam0_extrinsic:get_cam0_extrinsic:146 - discard 3D point 189 for less than threshold:5 cameras
+2026-01-04 19:38:02.020 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:2 reconstruction pixel error: [7.643, 33.485, 5.972, 5.59, 9.378, 18.456, 30.213, 69.343, 44.734]
+2026-01-04 19:38:02.021 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:4 reconstruction pixel error: [9.64, 35.988, 5.223, 16.433, 5.541, 49.714, 96.531, 98.872, 184.624]
+2026-01-04 19:38:02.021 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:6 reconstruction pixel error: [16.105, 12.809, 79.324, 64.829, 58.778, 14.985, 331.049, 204.594]
+2026-01-04 19:38:02.021 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:8 reconstruction pixel error: [11.907, 18.433, 71.693, 9.909, 9.589, 49.09, 14.491, 47.44, 54.515, 36.714, 13.066]
+2026-01-04 19:38:02.022 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:10 reconstruction pixel error: [14.771, 52.157, 10.811, 30.637, 25.002, 17.584, 33.093, 116.43, 41.139]
+2026-01-04 19:38:02.022 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:12 reconstruction pixel error: [2.148, 52.298, 38.899, 48.528, 33.909, 61.553, 88.334, 44.5, 87.343]
+2026-01-04 19:38:02.022 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:14 reconstruction pixel error: [7.172, 19.751, 21.833, 60.478, 46.414, 102.014, 134.695, 30.935]
+2026-01-04 19:38:02.023 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:16 reconstruction pixel error: [126.729, 44.104, 79.297, 495.911, 497.36, 263.128]
+2026-01-04 19:38:02.023 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:21 reconstruction pixel error: [29.425, 12.336, 6.067, 9.787, 15.912, 29.057, 49.697, 25.64]
+2026-01-04 19:38:02.023 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:23 reconstruction pixel error: [14.187, 32.143, 1.16, 6.961, 3.211, 36.17, 49.814, 36.114, 94.509]
+2026-01-04 19:38:02.023 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:25 reconstruction pixel error: [8.704, 8.961, 55.393, 66.352, 62.199, 31.627, 30.047, 291.805, 134.899]
+2026-01-04 19:38:02.024 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:27 reconstruction pixel error: [16.191, 3.145, 52.505, 13.399, 32.915, 34.202, 34.254, 38.741, 36.406]
+2026-01-04 19:38:02.024 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:29 reconstruction pixel error: [2.167, 11.004, 27.986, 12.53, 1.829, 11.236, 36.585, 21.965]
+2026-01-04 19:38:02.024 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:31 reconstruction pixel error: [1.033, 24.915, 13.513, 27.998, 49.764, 48.471, 19.897, 34.383]
+2026-01-04 19:38:02.024 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:33 reconstruction pixel error: [11.317, 9.217, 20.179, 30.647, 66.489, 62.868, 15.815]
+2026-01-04 19:38:02.024 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:35 reconstruction pixel error: [79.098, 71.662, 72.18, 265.644, 270.56, 643.662, 176.793, 161.614]
+2026-01-04 19:38:02.025 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:40 reconstruction pixel error: [13.107, 10.68, 9.362, 4.855, 18.147, 96.595, 96.42, 40.669, 145.086]
+2026-01-04 19:38:02.025 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:42 reconstruction pixel error: [13.966, 30.513, 4.855, 4.735, 24.486, 30.098, 11.302, 73.114]
+2026-01-04 19:38:02.025 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:44 reconstruction pixel error: [20.161, 5.696, 32.624, 63.325, 58.66, 23.403, 30.847, 239.673, 83.39]
+2026-01-04 19:38:02.026 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:46 reconstruction pixel error: [12.804, 5.148, 27.246, 14.686, 29.223, 31.685, 15.253, 25.751, 54.366]
+2026-01-04 19:38:02.026 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:48 reconstruction pixel error: [8.081, 21.128, 4.055, 13.22, 9.332, 12.815, 12.773, 14.127, 17.92]
+2026-01-04 19:38:02.026 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:50 reconstruction pixel error: [3.088, 9.755, 6.506, 18.482, 31.13, 22.325, 17.811, 13.619]
+2026-01-04 19:38:02.026 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:52 reconstruction pixel error: [59.093, 88.191, 107.009, 135.028, 155.379, 1257.134, 73.847, 80.039]
+2026-01-04 19:38:02.027 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:54 reconstruction pixel error: [80.728, 78.67, 57.066, 197.992, 187.208, 683.734, 124.905, 175.726]
+2026-01-04 19:38:02.027 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:56 reconstruction pixel error: [56.588, 57.542, 44.318, 139.847, 130.98]
+2026-01-04 19:38:02.027 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:59 reconstruction pixel error: [22.302, 15.602, 17.231, 14.319, 30.704, 107.369, 69.257, 35.47, 117.993, 129.295]
+2026-01-04 19:38:02.027 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:61 reconstruction pixel error: [24.727, 15.42, 37.07, 49.74, 19.939, 33.163, 36.187, 100.462, 177.202]
+2026-01-04 19:38:02.028 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:63 reconstruction pixel error: [21.056, 6.369, 17.996, 56.252, 49.732, 13.281, 25.822, 175.286, 42.08]
+2026-01-04 19:38:02.028 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:65 reconstruction pixel error: [11.834, 2.789, 13.552, 31.939, 10.711, 32.494, 25.739, 27.017, 44.069, 62.529, 19.461]
+2026-01-04 19:38:02.028 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:67 reconstruction pixel error: [11.142, 3.561, 5.484, 3.757, 15.854, 11.265, 11.245, 17.508, 25.209]
+2026-01-04 19:38:02.028 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:69 reconstruction pixel error: [6.261, 12.899, 14.082, 9.264, 19.834, 22.34, 34.829, 1.522]
+2026-01-04 19:38:02.029 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:71 reconstruction pixel error: [134.629, 117.567, 97.966, 169.247, 115.287, 1126.366, 28.072, 46.882, 133.18]
+2026-01-04 19:38:02.029 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:73 reconstruction pixel error: [82.945, 87.064, 152.825, 136.622, 634.1, 89.634, 205.062]
+2026-01-04 19:38:02.029 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:75 reconstruction pixel error: [35.522, 42.194, 81.381, 120.684, 84.998, 156.101]
+2026-01-04 19:38:02.029 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:78 reconstruction pixel error: [27.248, 23.118, 19.642, 24.219, 142.073, 64.113, 18.167, 21.306, 142.587]
+2026-01-04 19:38:02.029 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:80 reconstruction pixel error: [16.174, 12.883, 33.255, 41.176, 18.376, 25.131, 24.329, 82.97, 139.743]
+2026-01-04 19:38:02.030 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:82 reconstruction pixel error: [10.041, 7.553, 27.892, 44.324, 39.731, 6.172, 16.75, 111.625, 11.006]
+2026-01-04 19:38:02.030 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:84 reconstruction pixel error: [27.298, 38.797, 47.21, 17.292, 6.396, 46.974, 45.56, 260.081, 25.331, 29.412, 76.593, 31.764]
+2026-01-04 19:38:02.030 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:86 reconstruction pixel error: [15.0, 10.195, 5.275, 21.999, 14.308, 19.523, 34.004, 28.709]
+2026-01-04 19:38:02.030 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:88 reconstruction pixel error: [10.077, 35.145, 22.818, 1.605, 8.737, 33.771, 48.792, 14.956]
+2026-01-04 19:38:02.031 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:90 reconstruction pixel error: [167.311, 120.324, 63.645, 170.561, 78.31, 974.973, 29.547, 82.038, 131.638]
+2026-01-04 19:38:02.031 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:92 reconstruction pixel error: [63.843, 63.647, 83.089, 74.231, 564.913, 39.735, 114.336, 138.141, 52.399]
+2026-01-04 19:38:02.031 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:94 reconstruction pixel error: [23.285, 29.658, 55.177, 142.599, 60.065, 180.432]
+2026-01-04 19:38:02.031 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:97 reconstruction pixel error: [19.575, 32.649, 30.796, 40.427, 103.808, 67.205, 14.196, 22.714, 128.528]
+2026-01-04 19:38:02.032 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:99 reconstruction pixel error: [2.261, 6.954, 25.616, 33.913, 18.373, 17.52, 14.563, 79.391, 121.062]
+2026-01-04 19:38:02.032 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:101 reconstruction pixel error: [4.561, 47.494, 21.885, 3.038, 27.177, 17.78, 5.778, 71.585, 20.187]
+2026-01-04 19:38:02.032 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:103 reconstruction pixel error: [22.991, 32.071, 64.877, 38.719, 13.368, 41.113, 27.292, 183.128, 40.556, 43.354, 86.151, 37.969]
+2026-01-04 19:38:02.032 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:105 reconstruction pixel error: [19.534, 13.295, 13.109, 21.48, 6.844, 32.637, 43.442, 40.868, 27.119]
+2026-01-04 19:38:02.033 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:107 reconstruction pixel error: [14.627, 55.951, 34.715, 4.842, 6.513, 2.482, 55.352, 59.738, 29.721, 10.33]
+2026-01-04 19:38:02.033 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:109 reconstruction pixel error: [132.096, 112.99, 12.472, 95.948, 43.036, 787.763, 74.504, 34.3, 43.632]
+2026-01-04 19:38:02.033 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:111 reconstruction pixel error: [41.897, 46.363, 49.06, 40.815, 444.91, 43.279, 89.194, 89.116, 41.037]
+2026-01-04 19:38:02.033 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:113 reconstruction pixel error: [66.603, 33.153, 51.509, 135.931, 185.39]
+2026-01-04 19:38:02.034 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:116 reconstruction pixel error: [0.539, 47.764, 42.015, 69.502, 133.713, 25.926, 121.537]
+2026-01-04 19:38:02.034 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:118 reconstruction pixel error: [7.825, 15.922, 16.766, 17.333, 14.065, 9.527, 87.335, 112.231]
+2026-01-04 19:38:02.034 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:120 reconstruction pixel error: [9.985, 92.524, 6.066, 11.108, 10.485, 13.488, 9.552, 59.842, 37.065]
+2026-01-04 19:38:02.034 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:122 reconstruction pixel error: [26.831, 75.22, 37.688, 39.376, 19.579, 189.065, 60.799, 62.341, 88.101, 51.19]
+2026-01-04 19:38:02.035 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:124 reconstruction pixel error: [25.519, 21.531, 27.362, 20.375, 3.996, 41.224, 53.404, 52.252, 42.97]
+2026-01-04 19:38:02.035 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:126 reconstruction pixel error: [20.788, 75.479, 37.394, 1.833, 6.845, 16.325, 64.617, 51.862, 48.209, 15.519]
+2026-01-04 19:38:02.035 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:128 reconstruction pixel error: [140.621, 85.536, 48.261, 83.743, 22.692, 633.066, 92.515, 65.954, 65.616]
+2026-01-04 19:38:02.035 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:130 reconstruction pixel error: [28.121, 29.194, 24.424, 22.375, 305.568, 80.569, 76.501, 33.912, 30.408]
+2026-01-04 19:38:02.036 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:132 reconstruction pixel error: [105.086, 26.681, 194.799, 192.929, 67.256]
+2026-01-04 19:38:02.036 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:135 reconstruction pixel error: [11.579, 71.129, 61.166, 100.913, 114.502, 29.668, 131.008]
+2026-01-04 19:38:02.036 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:137 reconstruction pixel error: [13.098, 7.197, 4.602, 12.151, 12.092, 3.915, 113.038, 104.443]
+2026-01-04 19:38:02.036 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:139 reconstruction pixel error: [41.498, 18.451, 13.932, 11.472, 12.046, 14.099, 108.03, 42.807]
+2026-01-04 19:38:02.036 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:141 reconstruction pixel error: [20.218, 93.772, 52.38, 30.289, 27.319, 237.263, 75.784, 73.605, 94.876, 65.938]
+2026-01-04 19:38:02.037 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:143 reconstruction pixel error: [32.861, 30.981, 43.342, 17.256, 9.802, 50.229, 58.461, 64.479, 59.93]
+2026-01-04 19:38:02.037 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:145 reconstruction pixel error: [293.643, 255.51, 70.225, 113.209, 134.289, 110.673, 74.467, 668.689, 97.494, 172.629, 178.731]
+2026-01-04 19:38:02.037 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:147 reconstruction pixel error: [173.385, 35.063, 69.073, 89.287, 32.906, 488.353, 107.351, 108.182, 117.186]
+2026-01-04 19:38:02.037 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:149 reconstruction pixel error: [32.765, 57.841, 10.28, 25.372, 170.095, 101.708, 70.017, 32.085]
+2026-01-04 19:38:02.038 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:151 reconstruction pixel error: [156.201, 37.182, 278.32, 266.828, 26.36]
+2026-01-04 19:38:02.038 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:154 reconstruction pixel error: [47.741, 83.406, 69.008, 130.794, 88.761, 26.849, 53.519, 148.512]
+2026-01-04 19:38:02.038 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:156 reconstruction pixel error: [9.826, 10.783, 10.978, 57.492, 6.125, 4.78, 13.19, 148.269, 96.743]
+2026-01-04 19:38:02.038 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:158 reconstruction pixel error: [14.806, 37.458, 27.149, 17.61, 18.727, 15.271, 164.335, 49.215]
+2026-01-04 19:38:02.039 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:160 reconstruction pixel error: [19.874, 119.565, 57.635, 21.186, 43.745, 296.741, 89.643, 85.385, 99.66, 84.952]
+2026-01-04 19:38:02.039 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:162 reconstruction pixel error: [55.735, 69.453, 14.014, 17.083, 54.761, 61.498, 78.509, 85.948]
+2026-01-04 19:38:02.039 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:164 reconstruction pixel error: [359.818, 198.767, 128.637, 137.533, 94.567, 105.172, 568.551, 102.603, 214.217, 235.926]
+2026-01-04 19:38:02.039 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:166 reconstruction pixel error: [228.836, 56.314, 86.343, 102.417, 53.246, 357.927, 122.362, 153.393, 190.728]
+2026-01-04 19:38:02.040 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:168 reconstruction pixel error: [64.269, 26.289, 41.996, 48.94, 109.902, 156.141, 126.313]
+2026-01-04 19:38:02.040 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:173 reconstruction pixel error: [120.492, 91.104, 242.184, 36.451, 150.877]
+2026-01-04 19:38:02.040 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:175 reconstruction pixel error: [22.455, 33.972, 31.635, 49.651, 12.03, 11.535, 23.38, 178.856, 93.03]
+2026-01-04 19:38:02.040 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:177 reconstruction pixel error: [19.067, 53.984, 21.657, 22.285, 23.138, 205.427, 60.477]
+2026-01-04 19:38:02.040 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:179 reconstruction pixel error: [34.251, 160.859, 50.32, 28.983, 66.651, 351.392, 102.09, 92.715, 110.25, 113.22]
+2026-01-04 19:38:02.041 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:181 reconstruction pixel error: [72.426, 77.159, 8.574, 5.018, 29.128, 59.293, 58.965, 104.226, 111.347]
+2026-01-04 19:38:02.041 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:183 reconstruction pixel error: [457.909, 106.917, 129.84, 125.543, 89.89, 127.599, 492.857, 108.774, 235.203, 284.619]
+2026-01-04 19:38:02.041 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:185 reconstruction pixel error: [363.206, 214.548, 105.264, 78.945, 265.229, 148.939, 205.14, 295.447]
+2026-01-04 19:38:02.041 | INFO     | extrinsicParameter.worldCoord.handle_labelme:triangulate_point:100 - label:187 reconstruction pixel error: [112.046, 54.682, 54.035, 71.9, 125.472, 210.6, 283.619]
+2026-01-04 19:38:03.506 | INFO     | extrinsicParameter.worldCoord.rescale:estimate_scale_robust_final:140 - [Method] Point Pair Distance Median (N=86) | [Factor] 1.006524
+2026-01-04 19:38:03.506 | WARNING  | extrinsicParameter.worldCoord.rescale:get_rescale_ratio:168 - scale ratio finish with result : {'scale_factor': 1.0065244436264038, 'method': 'point_pair_distance_median', 'message': ''}
+2026-01-04 19:38:03.518 | WARNING  | extrinsicParameter.worldCoord.rescale:rescale_world_coord:193 - rescale camera parameters, poles and pred_points with ratio : 1.0065244436264038
+2026-01-04 19:38:03.519 | INFO     | extrinsicParameter.worldCoord.solve_icp:solve_icp:22 - icp solver error:[548.6760821181454, 564.3806512170078, 1145.3489135869445, 460.6798669061393, 553.9627918926877, 724.6351271475598, 1140.5019303391161, 4621.268958267496, 631.2155492585591, 367.5492749169531, 1270.9047079355473, 280.7297980112928, 426.69403899482194, 682.9266805499861, 1303.8325177172187, 2602.176548967394, 475.40993774726377, 386.2031882116536, 1189.70298553361, 221.22601326945195, 326.8884347970295, 451.93712131885707, 2093.8703564455395, 2243.0902568254787, 1924.1958964056075, 485.12289515066425, 981.7199006855305, 1038.248466411252, 399.99088574043867, 499.4132677083743, 224.9251730556809, 1506.5178275108156, 1979.733817089559, 1136.3708355476492, 639.0564593474081, 944.2307211968844, 876.5630403131574, 536.7854978846497, 765.6123710412304, 214.71829260524814, 1530.7321545759733, 1146.9767222276857, 598.0828847414106, 583.0257687471789, 844.5001724039104, 411.91432462429583, 654.1005864543455, 928.1809130204352, 402.867925325053, 1229.7944709198573, 700.2402834700474, 196.63518535211387, 547.6444919935304, 661.319163323857, 324.56959772465194, 987.9932173535415, 1124.490486607127, 493.3640295606724, 1203.692128156871, 436.1591605603155, 848.0280773078473, 633.2992667719795, 530.8364199108145, 235.10970056181057, 1226.0228501984227, 1289.8180173471558, 2608.1000465916536, 1564.5301633285794, 739.2175650875739, 1410.8554534881516, 564.5957935882489, 615.863834432623, 255.0433421060897, 1461.4773564427283, 1439.558333765274, 3153.488691601647, 2126.511653419478, 1565.6202960163553, 681.0953221251382, 525.0480743916795, 557.0284846187253, 1647.2919636612537, 1296.951571059739, 3448.265313288848, 2843.366193651205, 2311.6132277990646]mm
+2026-01-04 19:38:03.519 | INFO     | extrinsicParameter.worldCoord.get_cam0_extrinsic:transfer_point_3ds:103 - trans reconstruct points coord: 
+0:	[10.37, 5.368, -0.238]
+1:	[20.264, 4.888, -0.34]
+2:	[31.444, 5.811, -0.317]
+3:	[40.709, 5.221, -0.404]
+4:	[50.752, 5.403, -0.377]
+5:	[60.446, 5.531, -0.423]
+6:	[70.681, 5.988, -0.57]
+7:	[79.952, 9.511, 0.666]
+8:	[10.409, 10.539, -0.154]
+9:	[20.38, 10.106, -0.147]
+10:	[31.44, 11.023, -0.143]
+11:	[40.694, 9.919, -0.269]
+12:	[50.483, 10.201, -0.307]
+13:	[60.585, 10.577, -0.347]
+14:	[70.64, 11.215, -0.469]
+15:	[81.062, 12.448, 0.805]
+16:	[10.255, 15.007, -0.168]
+17:	[20.468, 15.309, 0.01]
+18:	[31.347, 15.998, -0.032]
+19:	[40.674, 14.86, -0.17]
+20:	[50.456, 14.925, -0.204]
+21:	[60.584, 15.366, -0.239]
+22:	[71.443, 16.937, 0.28]
+23:	[81.185, 17.027, 0.829]
+24:	[91.273, 16.811, 0.305]
+25:	[10.23, 20.046, -0.112]
+26:	[20.934, 20.939, 0.166]
+27:	[31.216, 20.899, 0.06]
+28:	[40.491, 19.669, -0.082]
+29:	[50.319, 19.696, -0.109]
+30:	[60.565, 20.126, -0.129]
+31:	[72.075, 20.565, 0.246]
+32:	[81.259, 21.683, 0.88]
+33:	[91.067, 21.007, 0.378]
+34:	[10.255, 25.448, 0.095]
+35:	[20.9, 25.89, 0.246]
+36:	[31.051, 25.791, 0.14]
+37:	[40.752, 24.476, -0.106]
+38:	[50.211, 24.411, -0.0]
+39:	[60.545, 24.852, -0.009]
+40:	[72.211, 24.815, 0.157]
+41:	[81.257, 25.794, 0.613]
+42:	[90.936, 25.44, 0.329]
+43:	[10.238, 30.281, 0.219]
+44:	[20.848, 30.776, 0.299]
+45:	[30.801, 30.355, 0.183]
+46:	[40.487, 29.382, -0.036]
+47:	[50.092, 29.301, 0.057]
+48:	[60.5, 29.657, 0.068]
+49:	[71.93, 30.011, -0.0]
+50:	[81.137, 30.297, 0.46]
+51:	[90.519, 29.99, 0.077]
+52:	[10.206, 35.008, 0.237]
+53:	[20.797, 35.555, 0.346]
+54:	[30.649, 35.246, 0.205]
+55:	[40.182, 34.159, -0.036]
+56:	[49.982, 34.143, 0.124]
+57:	[60.376, 34.643, 0.105]
+58:	[71.777, 34.499, -0.193]
+59:	[81.031, 34.943, 0.279]
+60:	[90.586, 34.168, -0.115]
+61:	[10.136, 40.055, 0.282]
+62:	[20.801, 40.4, 0.334]
+63:	[30.648, 40.165, 0.159]
+64:	[39.901, 39.07, -0.025]
+65:	[49.865, 39.035, 0.185]
+66:	[61.857, 37.802, -0.796]
+67:	[71.648, 38.802, -0.34]
+68:	[80.89, 39.302, 0.153]
+69:	[90.627, 38.629, -0.323]
+70:	[10.198, 45.107, 0.235]
+71:	[20.741, 45.5, 0.357]
+72:	[30.585, 44.841, 0.163]
+73:	[39.597, 44.041, 0.001]
+74:	[49.766, 43.948, 0.304]
+75:	[61.264, 42.081, -1.051]
+76:	[71.485, 43.092, -0.517]
+77:	[80.732, 43.435, -0.031]
+78:	[10.128, 49.649, 0.118]
+79:	[20.675, 50.4, 0.339]
+80:	[30.417, 49.532, 0.107]
+81:	[39.318, 49.104, -0.019]
+82:	[49.81, 49.121, 0.344]
+83:	[60.658, 46.823, -1.339]
+84:	[71.354, 47.409, -0.972]
+85:	[80.692, 47.706, -0.285]
+
+2026-01-04 19:38:05.193 | INFO     | extrinsicParameter.convexHull.getPointCloud:get_sampled_points:12 - sampling voxel in space ..
+2026-01-04 19:38:05.217 | INFO     | extrinsicParameter.convexHull.getPointCloud:get_point_cloud:61 - project sampled points to judge whether in image
+  0%|          | 0/72 [00:00<?, ?it/s]MovieWriter imagemagick unavailable; using Pillow instead.
+  1%|▏         | 1/72 [00:00<01:02,  1.14it/s]  3%|▎         | 2/72 [00:02<01:22,  1.19s/it]  4%|▍         | 3/72 [00:03<01:28,  1.28s/it]  6%|▌         | 4/72 [00:05<01:30,  1.33s/it]  7%|▋         | 5/72 [00:06<01:30,  1.36s/it]  8%|▊         | 6/72 [00:07<01:30,  1.37s/it] 10%|▉         | 7/72 [00:09<01:29,  1.38s/it] 11%|█         | 8/72 [00:10<01:28,  1.38s/it] 12%|█▎        | 9/72 [00:12<01:27,  1.40s/it] 14%|█▍        | 10/72 [00:13<01:26,  1.40s/it] 15%|█▌        | 11/72 [00:14<01:25,  1.40s/it] 17%|█▋        | 12/72 [00:16<01:24,  1.40s/it] 18%|█▊        | 13/72 [00:17<01:23,  1.41s/it] 19%|█▉        | 14/72 [00:19<01:21,  1.41s/it] 21%|██        | 15/72 [00:20<01:20,  1.41s/it] 22%|██▏       | 16/72 [00:21<01:19,  1.41s/it] 24%|██▎       | 17/72 [00:23<01:17,  1.41s/it] 25%|██▌       | 18/72 [00:24<01:16,  1.41s/it] 26%|██▋       | 19/72 [00:26<01:14,  1.41s/it] 28%|██▊       | 20/72 [00:27<01:13,  1.41s/it] 29%|██▉       | 21/72 [00:29<01:12,  1.42s/it] 31%|███       | 22/72 [00:30<01:10,  1.42s/it] 32%|███▏      | 23/72 [00:31<01:09,  1.42s/it] 33%|███▎      | 24/72 [00:33<01:08,  1.43s/it] 35%|███▍      | 25/72 [00:34<01:07,  1.43s/it] 36%|███▌      | 26/72 [00:36<01:05,  1.43s/it] 38%|███▊      | 27/72 [00:37<01:04,  1.44s/it] 39%|███▉      | 28/72 [00:39<01:03,  1.44s/it] 40%|████      | 29/72 [00:40<01:02,  1.44s/it] 42%|████▏     | 30/72 [00:41<01:00,  1.44s/it] 43%|████▎     | 31/72 [00:43<00:59,  1.44s/it] 44%|████▍     | 32/72 [00:44<00:57,  1.44s/it] 46%|████▌     | 33/72 [00:46<00:55,  1.44s/it] 47%|████▋     | 34/72 [00:47<00:54,  1.44s/it] 49%|████▊     | 35/72 [00:49<00:53,  1.44s/it] 50%|█████     | 36/72 [00:50<00:51,  1.44s/it] 51%|█████▏    | 37/72 [00:52<00:50,  1.43s/it] 53%|█████▎    | 38/72 [00:53<00:49,  1.44s/it] 54%|█████▍    | 39/72 [00:54<00:47,  1.45s/it] 56%|█████▌    | 40/72 [00:56<00:46,  1.45s/it] 57%|█████▋    | 41/72 [00:57<00:44,  1.45s/it] 58%|█████▊    | 42/72 [00:59<00:43,  1.45s/it] 60%|█████▉    | 43/72 [01:00<00:42,  1.45s/it] 61%|██████    | 44/72 [01:02<00:40,  1.45s/it] 62%|██████▎   | 45/72 [01:03<00:39,  1.45s/it] 64%|██████▍   | 46/72 [01:05<00:37,  1.46s/it] 65%|██████▌   | 47/72 [01:06<00:36,  1.46s/it] 67%|██████▋   | 48/72 [01:08<00:35,  1.46s/it] 68%|██████▊   | 49/72 [01:09<00:33,  1.46s/it] 69%|██████▉   | 50/72 [01:11<00:32,  1.46s/it] 71%|███████   | 51/72 [01:12<00:30,  1.46s/it] 72%|███████▏  | 52/72 [01:13<00:29,  1.46s/it] 74%|███████▎  | 53/72 [01:15<00:27,  1.46s/it] 75%|███████▌  | 54/72 [01:16<00:26,  1.47s/it] 76%|███████▋  | 55/72 [01:18<00:24,  1.47s/it] 78%|███████▊  | 56/72 [01:19<00:23,  1.47s/it] 79%|███████▉  | 57/72 [01:21<00:21,  1.46s/it] 81%|████████  | 58/72 [01:22<00:20,  1.46s/it] 82%|████████▏ | 59/72 [01:24<00:19,  1.46s/it] 83%|████████▎ | 60/72 [01:25<00:17,  1.46s/it] 85%|████████▍ | 61/72 [01:27<00:16,  1.46s/it] 86%|████████▌ | 62/72 [01:28<00:14,  1.47s/it] 88%|████████▊ | 63/72 [16:55<41:50, 279.00s/it] 89%|████████▉ | 64/72 [16:56<26:05, 195.74s/it] 90%|█████████ | 65/72 [16:58<16:02, 137.45s/it] 92%|█████████▏| 66/72 [16:59<09:39, 96.64s/it]  93%|█████████▎| 67/72 [17:00<05:40, 68.07s/it] 94%|█████████▍| 68/72 [17:02<03:12, 48.07s/it] 96%|█████████▌| 69/72 [17:03<01:42, 34.06s/it] 97%|█████████▋| 70/72 [17:05<00:48, 24.27s/it] 99%|█████████▊| 71/72 [17:06<00:17, 17.41s/it]100%|██████████| 72/72 [17:07<00:00, 12.60s/it]100%|██████████| 72/72 [17:13<00:00, 14.35s/it]

@@ -359,7 +359,7 @@ class BoundleAdjustment(nn.Module):
         )
         # logger.info(f"{torch.squeeze(sequential_losses)}")
         sequential_losses=torch.nan_to_num(sequential_losses) # 将nan变成0
-        sequential_loss=torch.mean(sequential_losses)
+        sequential_loss=torch.mean(sequential_losses,dtype=torch.float32)
         if self.rotation_representation=='matrix':
             essential_loss=torch.mean(self.orthogonal(self.camera_params))
             loss=sequential_loss + essential_loss
@@ -371,11 +371,17 @@ class BoundleAdjustment(nn.Module):
         else:
             raise NotImplementedError(f"rotation representation should be matrix vector or quaternion")
         # loss 的数量级截断
-        if loss.item()>1000:
-            rate=pow(10,len(str(int(loss.item()/1000))))
+        if loss.item()==float('inf'):
+            pass
+            # loss=torch.zeros(size=[1],dtype=torch.float32)
+            # logger.warning(f"detect loss is inf, convert loss to zero")
+        elif loss.item()>1000:
+            rate=pow(10,-len(str(int(loss.item()/1000))))
             origin=loss.item()
-            loss=loss/rate
-            logger.warning(f"update loss to:{loss.item()}. loss_origin:{origin} too large, divide {rate}")
+            loss=loss*rate # 把除法改成乘法 解决了 OverflowError: int too big to convert 的bug
+            logger.warning(f"update loss to:{loss.item()}. loss_origin:{origin} too large, multiple {rate}")
+        else:
+            pass
         return loss
 
 

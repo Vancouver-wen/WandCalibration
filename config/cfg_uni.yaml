@@ -9,7 +9,8 @@
 #     - [extrinsic.json] # 可选:提供的外参初始值
 #     - cam*
 
-seed: 3407 # 3407 null
+seed: 114514 # 3407 null
+format: True
 
 max_process: 100
 refine_mode: 'process' # thread process distributed
@@ -38,17 +39,17 @@ pole:
   d1: 500 # 250
   d2: 1000 # 510
 
-image_path: "imageCollect/qu_gun_qiu_1217"
+image_path: "imageCollect/qu_gun_qiu_1218"
 
 # https://imagecolorpicker.com/ 使用该网站确认 minThreshold
 maskBlobParam:
-  minThreshold: 10
+  minThreshold: 20
   minAreaRatio: 1.0e-7
   maxAreaRatio: 1.0e-2
   expandSize: 10
 
 poleBlobParam:
-  minThreshold: 20
+  minThreshold: 40
   minAreaRatio: 1.0e-6
   maxAreaRatio: 1.0e-3
   minCircularity: 0.1
@@ -57,7 +58,7 @@ poleBlobParam:
   lineAngle: 2
 
 wandBlobParam:
-  minThreshold: 20
+  minThreshold: 40
   minAreaRatio: 1.0e-6
   maxAreaRatio: 1.0e-3
   minCircularity: 0.1
@@ -296,8 +297,8 @@ convexHull:
   # length width height 采样点 范围,单位m
   # sample 点之间的间隔,单位m -> 控制采样点的数量
   # min_vis 最好的共视相机数量阈值
-  length: [-100,100]
-  width: [-100,100]
+  length: [0,100]
+  width: [0,50]
   height: [0,20]
   sample: 0.5
   min_vis: 5

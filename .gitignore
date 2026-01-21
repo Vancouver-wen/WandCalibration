@@ -6,3 +6,4 @@ testData/
 __pycache__/
 *.jpg
 .DS_Store
+intrinsic-calibration/

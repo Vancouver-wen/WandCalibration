@@ -10,6 +10,7 @@
 #     - cam*
 
 seed: 3407 # 3407 null
+format: True
 
 max_process: 100
 refine_mode: 'process' # thread process distributed

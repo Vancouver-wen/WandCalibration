@@ -28,6 +28,7 @@ from extrinsicParameter.worldCoord.adjustCamParam import adjust_camera_params
 from extrinsicParameter.convexHull.getPointCloud import get_point_cloud
 from visualize.visCameraParams import vis_camera_params
 from visualize.vis_reproj_error import vis_reproj_error
+from utils.camFormatTransfer import format_one_camera,format_cameras
 
 class OptiTrack(object):
     def __init__(self,config_path):
@@ -214,7 +215,7 @@ class OptiTrack(object):
             world_coord_param=self.config.worldCoordParam,
         )
         with open(os.path.join(self.config.image_path,'world_pose.json'),'w') as f:
-            json.dump(self.output['calibration'],f,indent=4)
+            json.dump(format_cameras(self.output['calibration']) if self.config.format else self.output['calibration'],f,indent=4)
         with open(os.path.join(self.config.image_path,'world_pole.json'),'w') as f:
             json.dump(self.output['poles'],f,indent=4)
     def visualize(self):
@@ -255,5 +256,5 @@ def main():
 if __name__=="__main__":
     if not os.path.exists("./logs"):
         os.mkdir("./logs")
-    logger.add("./logs/{time}.log")
+    logger.add("./logs/{time}.log",enqueue=True)
     main()
