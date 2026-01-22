@@ -1,8 +1,8 @@
 import os
 import sys
 import json
-
 import glob
+
 from loguru import logger
 from natsort import natsorted
 from easydict import EasyDict
@@ -58,12 +58,13 @@ def get_intrinsic(cam_num,board_config,image_path):
     ]
     intrinsics=dict()
     # n_jobs = len(image_path_lists)
-    Parallel(n_jobs=-1,backend="threading")(
+    Parallel(n_jobs=1,backend="threading")(
         delayed(get_each_intrinsic)(
             intrinsicCalibrator,
             image_path_list,
             intrinsics,
-            step
+            step,
+            image_path
         )
         for step,image_path_list in tqdm(list(zip(not_indexs,image_path_lists)))
     )
@@ -75,10 +76,11 @@ def get_intrinsic(cam_num,board_config,image_path):
     # format intrinsic result
     return [EasyDict(intrinsic[key]) for key in natsorted(intrinsic.keys())]
 
-def get_each_intrinsic(intrinsicCalibrator,image_path_list,intrinsics,step):
-    intrinsic=intrinsicCalibrator(image_path_list=image_path_list,cam_index=step)
+def get_each_intrinsic(intrinsicCalibrator,image_path_list,intrinsics,step,image_path):
+    intrinsic,report=intrinsicCalibrator(image_path_list=image_path_list,cam_index=step)
     intrinsics[f"cam{step+1}"]=intrinsic
-
+    with open(os.path.join(image_path,f'cam{step+1}_quality.md'),'w',encoding='utf-8') as f:
+        f.write(report)
 
 if __name__=="__main__":
     pass

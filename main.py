@@ -33,6 +33,7 @@ from utils.camFormatTransfer import format_one_camera,format_cameras
 class OptiTrack(object):
     def __init__(self,config_path):
         self.config=EasyDict(get_yaml_data(config_path))
+        self.config.image_path=os.path.abspath(self.config.image_path)
         logger.info(self.config)
         if self.config.seed:
             random.seed(self.config.seed)
@@ -247,14 +248,15 @@ class OptiTrack(object):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config_path',default="./config/cfg_uni.yaml",type=str)
+    parser.add_argument('--config_path',type=str)
     args = parser.parse_args()
     myOptitrack=OptiTrack(config_path=args.config_path)
     myOptitrack.run()
 
 
 if __name__=="__main__":
-    if not os.path.exists("./logs"):
-        os.mkdir("./logs")
-    logger.add("./logs/{time}.log",enqueue=True)
+    # 使用 loguru保存打印多进程信息 使用 bash tee 来保存
+    # if not os.path.exists("./logs"):
+    #     os.mkdir("./logs")
+    # logger.add("./logs/{time}.log",enqueue=True)
     main()

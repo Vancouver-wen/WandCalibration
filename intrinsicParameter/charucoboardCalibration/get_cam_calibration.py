@@ -6,7 +6,9 @@ import numpy as np
 import cv2
 from tqdm import tqdm
 
-class IntrinsicCalibration(object):
+from intrinsicParameter.intrinsicCalibration.get_converages import CalibrationQuality
+
+class IntrinsicCalibration(CalibrationQuality):
     def __init__(
             self,
             height,
@@ -16,6 +18,7 @@ class IntrinsicCalibration(object):
             image_path,
             aruco_dict=cv2.aruco.DICT_4X4_1000
         ) -> None:
+        super().__init__()
         self.dictionary = cv2.aruco.getPredefinedDictionary(aruco_dict)
         self.board = cv2.aruco.CharucoBoard((height, width), square_length, markser_length, self.dictionary)
         self.params = cv2.aruco.DetectorParameters()
@@ -24,25 +27,25 @@ class IntrinsicCalibration(object):
         self.debug_path=os.path.join(image_path,"vis_corners")
         self.debug_number=0
     
-    def get_corners(self,image_path):
-        image = cv2.imread(image_path)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        size = image.shape[::-1]
-        img_height, img_width = image.shape[:2]
-        marker_corners, marker_ids, _ = cv2.aruco.detectMarkers(
-            image, 
-            self.dictionary, 
-            parameters=self.params
-        )
-        if marker_ids is None:
-            return None,None,None
-        charuco_retval, charuco_corners, charuco_ids = cv2.aruco.interpolateCornersCharuco(
-            marker_corners, 
-            marker_ids, 
-            image, 
-            self.board
-        )
-        return charuco_retval,charuco_ids,charuco_corners
+    # def get_corners(self,image_path):
+    #     image = cv2.imread(image_path)
+    #     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    #     size = image.shape[::-1]
+    #     img_height, img_width = image.shape[:2]
+    #     marker_corners, marker_ids, _ = cv2.aruco.detectMarkers(
+    #         image, 
+    #         self.dictionary, 
+    #         parameters=self.params
+    #     )
+    #     if marker_ids is None:
+    #         return None,None,None
+    #     charuco_retval, charuco_corners, charuco_ids = cv2.aruco.interpolateCornersCharuco(
+    #         marker_corners, 
+    #         marker_ids, 
+    #         image, 
+    #         self.board
+    #     )
+    #     return charuco_retval,charuco_ids,charuco_corners
 
     def __call__(self, image_path_list,cam_index=0):
         all_charuco_corners = []
@@ -76,6 +79,7 @@ class IntrinsicCalibration(object):
                     self.vis_corners(image,charuco_corners,charuco_ids)
                 all_charuco_corners.append(charuco_corners)
                 all_charuco_ids.append(charuco_ids)
+        report=super().evaluate_quality(all_charuco_corners,img_shape=[img_height,img_width])
         # print(f"detect corners time: {time.time()-start}")
         # import pdb;pdb.set_trace()
         # start=time.time()
@@ -90,11 +94,12 @@ class IntrinsicCalibration(object):
         )
         # print(f"calibrate camera charuco time: {time.time()-start}")
         # import pdb;pdb.set_trace()
-        return {
+        intrinsic={
             "image_size":[img_width,img_height],
             "K":np.squeeze(camera_matrix).tolist(),
             "dist":np.squeeze(dist_coeffs).tolist()
         }
+        return intrinsic,report
     
     def forward(self,img_path):
         image = cv2.imread(img_path)

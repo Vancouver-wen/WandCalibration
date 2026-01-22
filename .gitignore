@@ -7,3 +7,5 @@ __pycache__/
 *.jpg
 .DS_Store
 intrinsic-calibration/
+experiments/*
+!experiments/examples/

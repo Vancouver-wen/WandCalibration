@@ -12,3 +12,5 @@ torch>=2.0.0
 tqdm
 cmap
 labelme
+networkx
+markdown_strings

@@ -7,13 +7,16 @@ import numpy as np
 import glob
 from tqdm import tqdm
 
-class IntrinsicCalibration(object):
+from intrinsicParameter.intrinsicCalibration.get_converages import CalibrationQuality
+
+class IntrinsicCalibration(CalibrationQuality):
     def __init__(
             self,
             height,
             width,
             image_path
         ) -> None:
+        super().__init__()
         # height, width: 棋盘格角点规格
         self.height=height
         self.width=width
@@ -27,22 +30,22 @@ class IntrinsicCalibration(object):
         self.debug_path=os.path.join(image_path,"vis_corners")
         self.debug_number=0
     
-    def get_corners(self,image_path):
-        img = cv2.imread(image_path)
-        img_height, img_width = img.shape[:2]
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        size = gray.shape[::-1]
-        ret, corners = cv2.findChessboardCorners(gray, (self.height,self.width), None)
-        # print(ret,corners)
-        if ret:
-            # 专门用来获取棋盘图上内角点的精确位置的， 即在原角点的基础上寻找亚像素角点
-            corners2 = cv2.cornerSubPix(gray, corners, (5, 5), (-1, -1), self.criteria) 
-            if [corners2]:
-                return ret,self.objp,corners2
-            else:
-                return ret,self.objp,corners
-        else:
-            return None,None,None
+    # def get_corners(self,image_path):
+    #     img = cv2.imread(image_path)
+    #     img_height, img_width = img.shape[:2]
+    #     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    #     size = gray.shape[::-1]
+    #     ret, corners = cv2.findChessboardCorners(gray, (self.height,self.width), None)
+    #     # print(ret,corners)
+    #     if ret:
+    #         # 专门用来获取棋盘图上内角点的精确位置的， 即在原角点的基础上寻找亚像素角点
+    #         corners_precision = cv2.cornerSubPix(gray, corners, (5, 5), (-1, -1), self.criteria) 
+    #         if [corners_precision]:
+    #             return ret,self.objp,corners_precision
+    #         else:
+    #             return ret,self.objp,corners
+    #     else:
+    #         return None,None,None
 
     def __call__(self, image_path_list,cam_index=0):
         obj_points = []
@@ -66,6 +69,7 @@ class IntrinsicCalibration(object):
                     img_points.append(corners2)
                 else:
                     img_points.append(corners)
+        report=super().evaluate_quality(img_points,img_shape=[img_height,img_width])
         # calibration
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(
             objectPoints=obj_points, 
@@ -75,11 +79,12 @@ class IntrinsicCalibration(object):
             distCoeffs=None,
             flags=cv2.CALIB_USE_LU # LU is much faster than SVD
         )
-        return {
+        intrinsic={
             "image_size":[img_width,img_height],
             "K":np.squeeze(mtx).tolist(),
             "dist":np.squeeze(dist).tolist()
         }
+        return intrinsic,report
     
     def vis_corners(self,image,corners):
         if self.debug_number>=30:
