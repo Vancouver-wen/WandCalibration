@@ -39,7 +39,7 @@ def get_init_pose(cam_num,pole_lists,intrinsics,pole_param,save_path):
             poses=json.load(f)
         logger.info(f"find and load {save_path} successfully")
         return poses
-    mst=get_mst(cam_num,pole_lists)
+    mst=get_mst(cam_num,pole_lists,os.path.dirname(save_path))
     logger.info(f"maximum spanning tree:{mst}")
     assert len(mst)+1==cam_num,f"mst_len:{len(mst)}\t cam_num:{cam_num}"
     pole_length=get_pole_len(pole_param)
